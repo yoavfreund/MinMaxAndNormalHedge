@@ -1,0 +1,81 @@
+%\theoremstyle{plain}
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}[lemma]{Claim}
+\newtheorem{theorem}[lemma]{Theorem}
+\newtheorem{corollary}[lemma]{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{question}{Question}
+
+\newcommand{\note}[1]{\par{\bf Note:}#1\par}
+\newcommand{\notem}[1]{{\marginpar{\tiny #1}}}
+
+\newcommand{\figline}{\rule{\textwidth}{1pt}}
+
+%\newcommand{\proof}{\noindent{\bf Proof:} }
+%\newcommand{\qed}{\rule{0.7em}{0.7em}}
+
+\newcommand{\newmcommand}[2]{\newcommand{#1}{{\ifmmode {#2}\else\mbox{${#2}$}\fi}}}
+\newcommand{\newmcommandi}[2]{\newcommand{#1}[1]{{\ifmmode {#2}\else\mbox{${#2}$}\fi}}}
+\newcommand{\newmcommandii}[2]{\newcommand{#1}[2]{{\ifmmode {#2}\else\mbox{${#2}$}\fi}}}
+\newcommand{\newmcommandiii}[2]{\newcommand{#1}[3]{{\ifmmode {#2}\else\mbox{${#2}$}\fi}}}
+
+\newcommand{\E}[2]{{\bf E}_{#1}\left[ #2 \right]}
+\newcommand{\D}[2]{{\bf D}_{#1}\left[ #2 \right]}
+\renewcommand{\P}[2]{{\bf P}_{#1}\left[ #2 \right]}
+\newcommand{\reals}{\mathbb{R}}
+
+\newcommand{\argmin}{\mbox{argmin}}
+\newcommand{\SP}[1]{{\cal P}^{#1}} % strictly positive function of
+                                   % order i
+\newcommand{\R}{R}      % Cumulative regret
+\newcommand{\vR}{\mathbf{R}} %regret vector
+
+\renewcommand{\r}{r}      % Instantaneuous regret
+\newcommand{\state}{{\bf \Psi}}
+\newcommand{\1}[1]{{\mathbf 1}\left[#1\right]} % point mass at #1
+
+\newcommand{\pot}{\phi}
+\newcommand{\potLA}{\pot_{\l,\a}}
+\newcommand{\finalPot}{\pot(T,\R)}
+\newcommand{\upperpot}{\pot^{\downarrow}}
+\newcommand{\lowerpot}{\pot^{\uparrow}}
+\newcommand{\lowerpoteven}{\lowerpot_{\evensplit}}
+\newcommand{\diffweight}{\l^d}   % learner strategy based on taking a difference
+\newcommand{\upperpotdiff}{\upperpot_{\diffweight}}
+
+
+\newcommand{\score}{\Phi}
+\newcommand{\scoreLA}{\score_{\l,\a}}
+\newcommand{\learnerM}{P}
+\renewcommand{\l}{\learnerM}
+\newcommand{\legalLearner}{{\cal L}}
+\newcommand{\adversM}{Q}
+\newcommand{\evensplit}{\adversM^{1/2}}
+\newcommand{\scaledsplit}{\evensplit_{s_i}}
+\renewcommand{\a}{\adversM}
+\newcommand{\legalAdversary}{{\cal A}}
+\newcommand{\agloss}{v}
+\newcommand{\Bias}{B}
+\newcommand{\deltat}{\Delta t}
+
+\newcommand{\Binom}{\mathbb{B}}
+\newcommand{\radsum}{\Binom(s_1,\ldots,s_T)}
+\newcommand{\var}{\mbox{Var}}
+\newcommand{\V}{V}
+
+
+\newcommand{\at}[1]{\left\{ \left. #1  \pot(\tau,\rho)
+\right|_{\begin{tiny}\begin{matrix} \tau,\rho=\\t_i,\R_i \end{matrix} \end{tiny}} \right\}}
+\newcommand{\att}[1]{\left\{ \left. #1  \pot(\tau, \rho)
+\right|_{\begin{tiny}\begin{matrix} \tau,\rho=\\t_i+g \deltat_i,\R_i+g r_i \end{matrix} \end{tiny}} \right\}}
+
+
+\newcommand{\atI}[1]{\left\{ \left. #1  f(x,y)
+\right|_{\begin{tiny}\begin{matrix} x,y=\\x_0,y_0 \end{matrix} \end{tiny}} \right\}}
+\newcommand{\atII}[1]{\left\{ \left. #1  f(x,y)
+\right|_{\begin{tiny}\begin{matrix} x,y=\\x_0+t\Dx,y_0+t\Dy \end{matrix} \end{tiny}} \right\}}
+
+
+\newmcommandi{\paren}{\left({#1}\right)}
+
+

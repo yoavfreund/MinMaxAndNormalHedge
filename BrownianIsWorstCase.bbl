@@ -1,0 +1,100 @@
+\begin{thebibliography}{10}
+
+\bibitem{abernethy2006continuous}
+Jacob Abernethy, John Langford, and Manfred~K Warmuth.
+\newblock Continuous experts and the binning algorithm.
+\newblock In {\em International Conference on Computational Learning Theory},
+  pages 544--558. Springer, 2006.
+
+\bibitem{abernethy2008optimal}
+Jacob Abernethy, Manfred~K Warmuth, and Joel Yellin.
+\newblock Optimal strategies from random walks.
+\newblock In {\em Proceedings of The 21st Annual Conference on Learning
+  Theory}, pages 437--446. Citeseer, 2008.
+
+\bibitem{butt2016generalization}
+Saad~Ihsan Butt, Josip Pe{\v{c}}ari{\'c}, and Ana Vukeli{\'c}.
+\newblock Generalization of popoviciu-type inequalities via fink’s identity.
+\newblock {\em Mediterranean journal of mathematics}, 13(4):1495--1511, 2016.
+
+\bibitem{cesa1997use}
+Nicolo Cesa-Bianchi, Yoav Freund, David Haussler, David~P Helmbold, Robert~E
+  Schapire, and Manfred~K Warmuth.
+\newblock How to use expert advice.
+\newblock {\em Journal of the ACM (JACM)}, 44(3):427--485, 1997.
+
+\bibitem{cesa1996line}
+Nicolo Cesa-Bianchi, Yoav Freund, David~P Helmbold, and Manfred~K Warmuth.
+\newblock On-line prediction and conversion strategies.
+\newblock {\em Machine Learning}, 25(1):71--110, 1996.
+
+\bibitem{cesa2006prediction}
+Nicolo Cesa-Bianchi and G{\'a}bor Lugosi.
+\newblock {\em Prediction, learning, and games}.
+\newblock Cambridge university press, 2006.
+
+\bibitem{cesa2007improved}
+Nicolo Cesa-Bianchi, Yishay Mansour, and Gilles Stoltz.
+\newblock Improved second-order bounds for prediction with expert advice.
+\newblock {\em Machine Learning}, 66(2):321--352, 2007.
+
+\bibitem{chaudhuri2009parameter}
+Kamalika Chaudhuri, Yoav Freund, and Daniel~J Hsu.
+\newblock A parameter-free hedging algorithm.
+\newblock {\em Advances in neural information processing systems}, 22, 2009.
+
+\bibitem{de2005divided}
+Carl de~Boor.
+\newblock Divided differences.
+\newblock {\em arXiv preprint math/0502036}, 2005.
+
+\bibitem{feder1992universal}
+Meir Feder, Neri Merhav, and Michael Gutman.
+\newblock Universal prediction of individual sequences.
+\newblock {\em IEEE transactions on Information Theory}, 38(4):1258--1270,
+  1992.
+
+\bibitem{freund2002drifting}
+Yoav Freund and Manfred Opper.
+\newblock Drifting games and brownian motion.
+\newblock {\em Journal of Computer and System Sciences}, 64(1):113--132, 2002.
+
+\bibitem{freund1997decision}
+Yoav Freund and Robert~E Schapire.
+\newblock A decision-theoretic generalization of on-line learning and an
+  application to boosting.
+\newblock {\em Journal of computer and system sciences}, 55(1):119--139, 1997.
+
+\bibitem{freund1999adaptive}
+Yoav Freund and Robert~E Schapire.
+\newblock Adaptive game playing using multiplicative weights.
+\newblock {\em Games and Economic Behavior}, 29(1-2):79--103, 1999.
+
+\bibitem{littlestone1994weighted}
+Nick Littlestone and Manfred~K Warmuth.
+\newblock The weighted majority algorithm.
+\newblock {\em Information and computation}, 108(2):212--261, 1994.
+
+\bibitem{luo2015achieving}
+Haipeng Luo and Robert~E Schapire.
+\newblock Achieving all with no parameters: Adanormalhedge.
+\newblock In {\em Conference on Learning Theory}, pages 1286--1304. PMLR, 2015.
+
+\bibitem{popoviciu1965certaines}
+Tiberiu Popoviciu.
+\newblock Sur certaines in{\'e}galit{\'e}s qui caract{\'e}risent les fonctions
+  convexes.
+\newblock {\em Analele Stiintifice Univ.“Al. I. Cuza”, Iasi, Sectia Mat},
+  11:155--164, 1965.
+
+\bibitem{schapire2001drifting}
+Robert~E Schapire.
+\newblock Drifting games.
+\newblock {\em Machine Learning}, 43(3):265--291, 2001.
+
+\bibitem{vovk1990aggregating}
+Volodimir~G Vovk.
+\newblock Aggregating strategies.
+\newblock {\em Proc. of Computational Learning Theory, 1990}, 1990.
+
+\end{thebibliography}

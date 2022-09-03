@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2020)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: BrownianIsWorstCase.aux
+The style file: plain.bst
+Database file #1: ref.bib
+You've used 18 entries,
+            2118 wiz_defined-function locations,
+            614 strings with 6733 characters,
+and the built_in function-call counts, 6340 in all, are:
+= -- 652
+> -- 270
+< -- 3
++ -- 109
+- -- 88
+* -- 453
+:= -- 1041
+add.period$ -- 57
+call.type$ -- 18
+change.case$ -- 97
+chr.to.int$ -- 0
+cite$ -- 18
+duplicate$ -- 234
+empty$ -- 498
+format.name$ -- 88
+if$ -- 1325
+int.to.chr$ -- 0
+int.to.str$ -- 18
+missing$ -- 19
+newline$ -- 93
+num.names$ -- 36
+pop$ -- 87
+preamble$ -- 1
+purify$ -- 80
+quote$ -- 0
+skip$ -- 167
+stack$ -- 0
+substring$ -- 478
+swap$ -- 50
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 70
+warning$ -- 0
+while$ -- 67
+width$ -- 20
+write$ -- 200
