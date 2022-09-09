@@ -702,7 +702,7 @@ bound for $\learnerM^1$ is better than the bound for $\learnerM^2$, on the
 other hand, when $\E{l \sim \adversM(t,\R)}{l^2}$ is close to zero,
 $\learnerM^2$ is better than $\learnerM^1$.  
 
-\section{Discrete time game}
+\section{From integer to discrete time}
 \label{sec:discrete}
 
 We start with motivation for using time that is indexed by real
@@ -743,15 +743,6 @@ adversarial strategy. The distribution (state) after $m_k$ iterations is the
 binomial distribution. with mean zero and variance $m_k \frac{1}{k^2}$
 if $m_k \gg \frac{1}{k^2}$ then the variance at the end of the game
 goes to infinity.
-
-\iffalse
-The state after $m_k$ iterations is the
-binomial dist
-\begin{equation}
-  \score^{m(k)} = \frac{1}{2^m} \sum_{i=-m}^m {2m+1 \choose i+m} \pot(m,i/k)
-\end{equation}
-if $m/\deltat_i $
-\fi
 
 By allowing $\Delta t_i$ to vary from iteration to iteration
 we get a more refined quantification of the regret and, as we show
@@ -820,7 +811,9 @@ we assume there exists a finite $n$ such that $t_n = T$.
 We will later give some particular potential functions for which no
 a-priori knowledge of the termination condition is needed. The
 associated bounds will hold for any iteration of the game.
-\vspace{1cm}
+
+\subsection{The discrete time game}
+\label{sec:discrete-Time-Game}
 
 On iteration $i=1,2,\ldots$
 \begin{enumerate}
@@ -1012,9 +1005,9 @@ The theorem follows by forward induction on $k$.
 \qed
 
 \subsection{Strategies for the Learner in the discrete time game}
-The strategies we propose for the learner in the continuous time game
-are an adaptation of the strategies $\learnerM^1,\learnerM^2$ to the
-case where $s_i<1$.
+The strategies we propose for the learner in the discrete time game
+are an adaptation of the strategies $\learnerM^1,\learnerM^2$ from the
+integer time game to the case where $s_i<1$.
 
 We start with the high-level idea. Consider iteration $i$ of the
 continuous time game. We know that the adversary prefers $s_i$ to be
@@ -1056,29 +1049,17 @@ Next, we consider the discrete time version of $\learnerM^2$:
   \state(t_i)}{\left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(t_{i-1}+s_{i-1}^2,r)} \nonumber
 \end{eqnarray}
 
-\section{Continuous time game} \label{sec:continuous}
+\section{Bounds for easy sequences} \label{sec:easy}
 In Section~\ref{sec:discrete} we have shown that the integer time game
 has a natural extension to a setting where $\deltat_i = s_i^2$. We
 also showed that the adversary gains from setting $s_i$ as small as
 possible.
-\iffalse
-\begin{definition}[Continuous Time]
-The continuous time limit is a sequence of games indexed by
-$j=0,1,\ldots$. Suppose the stopping time for all games is equal to
-$T$.
-Let $s_i^j$ be the step size associated with the
-$i'th$ iteration of game $j$. Then $s_i^j$ are supposed to have the
-following properties:
-\begin{itemize}
-\item Let $s^j = \max_i s_i^j$, then $\lim_{j \to \infty} s^j = 0$
-  \item for any $j$, $\sum_i (s_i^j)^2 = T$
-\end{itemize}
-  \end{definition}
-\fi
 
-We already have a worst case bound on this problem, which corresponds
-to the adversary performing Brownian motion. Our goal here is to
-refine this bound for the case where the adversary's strategies are not worst case.
+We characterized the optimal adversarial strategy for the discrete
+time game (Section~\ref{sec:discrete-Time-Game}), which corresponds
+to the adversary choosing the loss to be $s_i$ or $-s_i$ with equal
+probabilities. A natural question at this point is to characterize the
+regret when the adversary is not optimal, or the sequences are ``easy''.
 
 To see that such an improvement is possible, consider the following
 {\em constant} adversary. This adversary associates the same loss to
@@ -1089,54 +1070,94 @@ in turn, implies that $\state(i) = \state(i+1)$. As the state did not
 change, it makes sense to set $t_{i+1}=t_i$, rather than
 $t_{i+1}=t_i+s_i^2$.
 
-We observe two extremes for the adversarial behaviour. The constant adversary for
-which $t_{i+1} = t_i$, and the random walk adversary described
+We observe two extremes for the adversarial behaviour. The constant
+adversary described above for which $t_{i+1} = t_i$, and the random walk adversary described
 earlier, in which each expert is split into two, one half with loss
 $-s_i$ and the other with loss $+s_i$. In which case $t_{i+1} =
-t_i+s_i^2$. The analysis below shows that these are two extremes on a
+t_i+s_i^2$ which is the maximal increase in $t$ that the adversary can
+guarantee. The analysis below shows that these are two extremes on a
 spectrum and that intermediate cases can be characterized using a
 variance-like quantity.
 
-Our characterization applies to the limit where $s_i$ are small. Formally, we define
-\begin{definition}
-We say that an instance of the discrete time game is $(n,s,T)$-bounded if $\forall\;\; 0<i\leq n,\;\; s_i < s$ and $\sum_{i=1}^n s_i^2=T$
-\end{definition}
+We define a variant of the discrete time game
+(\ref{sec:discrete-Time-Game}) For concreteness we include the
+learner's strategy, which is the limit of the strategy in the discrete
+game when $s_i \to 0$.
 
-We let $s \to 0$ keeping $\sum_i s_i^2 = T$. In this limit the strategy $\learnerM^{2c}$ (Equation~(\ref{eqn:learner-strat-2c}) simplifies to 
-\begin{equation} \label{eqn:learner-strat-cc}
+\subsubsection{The continuous time game and a learner strategy}
+\label{sec:contin-Time-Game}
+Set $t_0=0$ \\
+On iteration $i=1,2,\ldots$
+
+\begin{enumerate}
+\item  If $t_{i-1}=T$ the game terminates.
+\item Given $t_{i-1}$, the learner chooses a distribution
+  $\learnerM(i)$ over $\reals$:
+  \begin{equation} \label{eqn:learner-strat-cc}
   \learnerM^{cc}(t,\R) =  \frac{1}{Z^{cc}}
   \left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(t,r)
   \mbox{ where } Z^{cc} = \E{\R \sim \state(t_i)}{\left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(t,r)}
 \end{equation}
 
+\item The adversay chooses a {\em step size} $0<s_i\leq 1$ and a mapping from $\reals$ to distributions
+  over $[-s_i,+s_i]$: $\adversM(t): \reals \to \Delta^{[-s_i,+s_i]}$
+\item The aggregate loss is calculated:
+  \begin{equation} \label{eqn:ell-discrete}
+    \ell(t_i)=\E{\R \sim \state(t_i)}{\learnerM(t_i,\R)
+      \Bias(t_i,\R)},\;\mbox{ where } \Bias(t_i,\R) \doteq \E{y \sim \adversM(t_i,\R)}{y}
+  \end{equation}
+  the aggregate loss is restricted $|\ell(t_i)| \leq c s_i^2$.
+\item  Increment $t_{i} = t_{i-1} + \deltat_i$ where
+\begin{equation} \label{eqn:deltat}
+  \deltat_i= 
+  \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,R)}{\adversM(t_i,\R)
+      (y-\ell(t_i))^2}} 
+\end{equation}
+
+\item The state is updated. The expectation below is over
+  distributions. and the notation $G \oplus \R$ means
+  that distribution $G$ over the reals is shifted by the amount
+  defined by the scalar $\R$:
+  $$\state(t_i) = \E{\R \sim \state(t_{i-1})}{\adversM(t_i)(\R)\oplus (\R-\ell(t_i))}
+  $$
+\end{enumerate}
+
+~\\
+----------------------------------------------------
+~\\
+
+Our characterization applies to the limit where the $s_i$ are small. Formally, we define
+\begin{definition}
+We say that an instance of the discrete time game is
+$(n,s,\tau)$-bounded if it consists of $n$ iterations and $\forall\;\; 0<i\leq n,\;\; s_i < s$ and $\sum_{j=1}^n s_j^2=\tau$
+\end{definition}
+
+Note that $\tau>t_n$ and that $\tau$ depends only on the ranges $s_i$
+while $t_n$ depends on the variance. $t_n = T$ 
+is the dominant term in the regret bound, while $\tau$ controls the
+error term.
 
 \begin{theorem} \label{thm:variancebound} Let $\pot \in \SP{\infty}$
   be a potential function that satisfies the Kolmogorov backward
-  equation~(\ref{eqn:Kolmogorov}).  Let $T$ be fixed and let $G$ be an
-  $(n,s,T)$-bounded instance of the discrete time game using $\pot$.
-  Let the time increment associated with iteration $i$:
-  $\deltat_i = t_{i+1} - t_i$ be set so that
-\begin{equation} \label{eqn:deltat}
-  \deltat_i= 
-  \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,R)}{G(t_i,\R)
-      (y-\ell(t_i))^2}} 
-\end{equation}
-Where
-\[
-  G(t,\R) = \frac{1}{Z^G}
-      \left. \frac{\partial^2}{\partial \rho^2} \right|_{\rho=\R} \pot(t,\rho)
-,\;\; Z^G=\E{\R \sim \state(t_i)}{\left. \frac{\partial^2}{\partial \rho^2} \right|_{\rho=\R} \pot(t,\rho)}
-    \]
-then 
-$$\score(\state(0)) \leq \score(\state(T))+O(sT)$$
+  equation~(\ref{eqn:Kolmogorov}).
+  Assume a sequence of $(n_i,s_i,\tau)$-bounded games where $\tau$ is
+  a constant $n \to \infty$ and $s = \sqrt{\frac{\tau}{n}}$
+
+Then 
+$$\score(\state(i+1)) \leq \score(\state(i))+O(s \tau)$$
 \end{theorem}
 
-The proof of the theorem is given in appendix~\ref{appendix:ProofOfVarianceBound}
+The proof is given in appendix~\ref{appendix:ProofOfVarianceBound}
 
-Theorem~\ref{thm:variancebound} shows that the average potential does
-not stay constant, instead, it increases by at most $O(s^3)$ at each
-iteration. As $T$ increases by at most $s^2$ at each iteration we find
-that the total increasein the potential is at most $Ts$. 
+If we define
+
+\begin{equation} \label{eqn:Vn}
+  V_n = t_n = \sum_{i=1}^n \deltat_i= 
+  \sum_{i=1}^n \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,R)}{\adversM(t_i,\R)
+      (y-\ell(t_i))^2}} 
+\end{equation}
+
+We can use $V_n$ instead of $T$ giving us a variancee based bound.
 
   
 %    \E{\R \sim \state(i-1)}{ \E{y \sim
@@ -1535,3 +1556,17 @@ as $s \to 0$.
 \end{document}
 
 
+\iffalse
+\begin{definition}[Continuous Time]
+The continuous time limit is a sequence of games indexed by
+$j=0,1,\ldots$. Suppose the stopping time for all games is equal to
+$T$.
+Let $s_i^j$ be the step size associated with the
+$i'th$ iteration of game $j$. Then $s_i^j$ are supposed to have the
+following properties:
+\begin{itemize}
+\item Let $s^j = \max_i s_i^j$, then $\lim_{j \to \infty} s^j = 0$
+  \item for any $j$, $\sum_i (s_i^j)^2 = T$
+\end{itemize}
+  \end{definition}
+\fi

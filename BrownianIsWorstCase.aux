@@ -56,12 +56,14 @@
 \newlabel{eqn:value-iteration-upper}{{27}{8}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces This figure depicts the relationship between the different upper and lower bounds used in the analysis. To aid understanding we describe the elements of the figure twice: once for the integer game, and once for the continuous time game. \newline  {\bf  Integer time game:} let the current iteration be $i$ and let the current regret be $R$. Let $r$ be the regret at iteration $i+1$, we have that $R-1-c \leq r \leq R+1+c$. The potential at iteration $i+1$ is $\phi (i+1,r)$ (the red curve). The lower bound (blue line) corresponds to the adversarial strategy: $Q^{1/2}(i,R)$. The first-order learner strategy: $P^1(i,R)$ corresponds to the green line. The second-order learner strategy: $P^2(i,R)$ corresponds to the black curve.\newline  {\bf  Continuous time game:} let the current iteration be $i$, the current time be $t_i$ and the current regret be $R$. Let $0<s_i\leq 1$ be the step size chosen by the adversary, so that the next time is $t_{i+1} = t_i+s_i^2$. Let $r$ be the regret at iteration $i+1$, we have that $R-s_i-c s_i^2 \leq r \leq R+s_i+c s_i^2$. The potential at iteration $i+1$ is $\phi (t_{i+1},r)$ (the red curve). The lower bound (blue line) corresponds to the adversarial strategy: $Q^{1/2}_{\pm s_i}(t_i,R)$. The first-order learner strategy: $P^{1c}(t_i,R)$ corresponds to the green line. The second-order learner strategy: $P^{2c}(i,R)$ corresponds to the black curve. Observe that when $s_i \to 0$ the ratio $\frac  {s_i}{s_i+c s_i^2}$ converges to 1, and the upper and gap between the green and blue lines converges to zero.\\ \rule  [1ex]{6.5in}{0.5pt}}}{9}\protected@file@percent }
 \newlabel{fig:ConvexPot}{{1}{9}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Discrete time game}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}From integer to discrete time}{9}\protected@file@percent }
 \newlabel{sec:discrete}{{4}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}The discrete time game}{10}\protected@file@percent }
+\newlabel{sec:discrete-Time-Game}{{4.1}{10}}
 \newlabel{eqn:ell-discrete}{{28}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Results for the discrete time game}{11}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}The adversary prefers smaller steps}{11}\protected@file@percent }
-\newlabel{sec:smallsteps}{{4.2}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Results for the discrete time game}{11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}The adversary prefers smaller steps}{11}\protected@file@percent }
+\newlabel{sec:smallsteps}{{4.3}{11}}
 \citation{popoviciu1965certaines}
 \citation{butt2016generalization}
 \citation{de2005divided}
@@ -70,22 +72,24 @@
 \newlabel{eqn:Kolmogorov}{{29}{12}}
 \newlabel{lemma:n-strictly-convex}{{9}{12}}
 \newlabel{eqn:4thOrderConvex}{{30}{12}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Strategies for the Learner in the discrete time game}{13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Strategies for the Learner in the discrete time game}{13}\protected@file@percent }
 \newlabel{eqn:learner-strat-1c}{{31}{13}}
 \newlabel{eqn:learner-strat-2c}{{32}{13}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Continuous time game}{13}\protected@file@percent }
-\newlabel{sec:continuous}{{5}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Bounds for easy sequences}{13}\protected@file@percent }
+\newlabel{sec:easy}{{5}{13}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.0.1}The continuous time game and a learner strategy}{14}\protected@file@percent }
+\newlabel{sec:contin-Time-Game}{{5.0.1}{14}}
 \newlabel{eqn:learner-strat-cc}{{33}{14}}
-\newlabel{thm:variancebound}{{11}{14}}
-\newlabel{eqn:deltat}{{34}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Two self-consistent potential functions}{14}\protected@file@percent }
-\newlabel{sec:self-consistent}{{6}{14}}
+\newlabel{eqn:ell-discrete}{{34}{14}}
+\newlabel{eqn:deltat}{{35}{14}}
+\newlabel{thm:variancebound}{{11}{15}}
+\newlabel{eqn:Vn}{{36}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Two self-consistent potential functions}{15}\protected@file@percent }
+\newlabel{sec:self-consistent}{{6}{15}}
+\newlabel{eqn:NormalHedge}{{39}{15}}
 \bibstyle{plain}
 \bibdata{ref.bib}
 \bibcite{abernethy2006continuous}{1}
-\newlabel{eqn:NormalHedge}{{37}{15}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}NormalHedge yields the fastest increasing potential}{15}\protected@file@percent }
-\newlabel{sec:NormalHedge}{{7}{15}}
 \bibcite{abernethy2008optimal}{2}
 \bibcite{butt2016generalization}{3}
 \bibcite{cesa1997use}{4}
@@ -95,6 +99,8 @@
 \bibcite{chaudhuri2009parameter}{8}
 \bibcite{de2005divided}{9}
 \bibcite{feder1992universal}{10}
+\@writefile{toc}{\contentsline {section}{\numberline {7}NormalHedge yields the fastest increasing potential}{16}\protected@file@percent }
+\newlabel{sec:NormalHedge}{{7}{16}}
 \bibcite{freund2002drifting}{11}
 \bibcite{freund1997decision}{12}
 \bibcite{freund1999adaptive}{13}
@@ -107,34 +113,34 @@
 \newlabel{appendix:ProofOfVarianceBound}{{A}{17}}
 \newlabel{lemma:infiniteexpectations}{{12}{17}}
 \newlabel{lemma:Taylor2D}{{13}{17}}
-\newlabel{eqn:d.dn.F}{{43}{17}}
-\newlabel{eqn:Taylor.F}{{44}{17}}
-\newlabel{proof:onestep}{{45}{17}}
-\newlabel{proof:allsteps}{{46}{18}}
-\newlabel{term:Taylor_rdt}{{51}{18}}
-\newlabel{term:Taylor_dtsquare}{{52}{18}}
-\newlabel{term:Taylor_r3}{{53}{18}}
-\newlabel{term:Taylor_r2t}{{54}{18}}
-\newlabel{term:Taylor_rt2}{{55}{18}}
-\newlabel{term:Taylor_t3}{{56}{18}}
-\newlabel{term:coll1}{{58}{19}}
-\newlabel{term:coll2}{{59}{19}}
-\newlabel{term:coll3}{{60}{19}}
-\newlabel{term:coll4}{{61}{19}}
-\newlabel{term:coll5}{{62}{19}}
-\newlabel{term:coll6}{{63}{19}}
-\newlabel{term:coll7}{{64}{19}}
-\newlabel{term:coll8}{{65}{19}}
-\newlabel{term:Taylor_collected_rdt}{{66}{20}}
-\newlabel{term:Taylor_collected_r3}{{66}{20}}
-\newlabel{eqn:Taylor}{{66}{20}}
-\newlabel{eqn:deltatislargeenough}{{67}{20}}
-\newlabel{eqn:contin0}{{69}{20}}
-\newlabel{eqn:contin1}{{70}{20}}
-\newlabel{eqn:contin2}{{71}{20}}
-\newlabel{eqn:contin3}{{72}{20}}
-\newlabel{eqnterm1.1}{{73}{21}}
-\newlabel{eqnterm1.2}{{74}{21}}
-\newlabel{eqn:term2.1}{{75}{21}}
-\newlabel{eqn:term2.2}{{76}{21}}
-\newlabel{eqn:term2.1}{{A}{21}}
+\newlabel{eqn:d.dn.F}{{45}{18}}
+\newlabel{eqn:Taylor.F}{{46}{18}}
+\newlabel{proof:onestep}{{47}{18}}
+\newlabel{proof:allsteps}{{48}{18}}
+\newlabel{term:Taylor_rdt}{{53}{19}}
+\newlabel{term:Taylor_dtsquare}{{54}{19}}
+\newlabel{term:Taylor_r3}{{55}{19}}
+\newlabel{term:Taylor_r2t}{{56}{19}}
+\newlabel{term:Taylor_rt2}{{57}{19}}
+\newlabel{term:Taylor_t3}{{58}{19}}
+\newlabel{term:coll1}{{60}{20}}
+\newlabel{term:coll2}{{61}{20}}
+\newlabel{term:coll3}{{62}{20}}
+\newlabel{term:coll4}{{63}{20}}
+\newlabel{term:coll5}{{64}{20}}
+\newlabel{term:coll6}{{65}{20}}
+\newlabel{term:coll7}{{66}{20}}
+\newlabel{term:coll8}{{67}{20}}
+\newlabel{term:Taylor_collected_rdt}{{68}{21}}
+\newlabel{term:Taylor_collected_r3}{{68}{21}}
+\newlabel{eqn:Taylor}{{68}{21}}
+\newlabel{eqn:deltatislargeenough}{{69}{21}}
+\newlabel{eqn:contin0}{{71}{21}}
+\newlabel{eqn:contin1}{{72}{21}}
+\newlabel{eqn:contin2}{{73}{21}}
+\newlabel{eqn:contin3}{{74}{21}}
+\newlabel{eqnterm1.1}{{75}{22}}
+\newlabel{eqnterm1.2}{{76}{22}}
+\newlabel{eqn:term2.1}{{77}{22}}
+\newlabel{eqn:term2.2}{{78}{22}}
+\newlabel{eqn:term2.1}{{A}{22}}
