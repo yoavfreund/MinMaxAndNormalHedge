@@ -25,6 +25,7 @@
 \newcommand{\reals}{\mathbb{R}}
 
 \newcommand{\argmin}{\mbox{argmin}}
+\newcommand{\argmax}{\mbox{argmax}}
 \newcommand{\SP}[1]{{\cal P}^{#1}} % strictly positive function of
                                    % order i
 \newcommand{\R}{R}      % Cumulative regret
@@ -37,8 +38,8 @@
 \newcommand{\pot}{\phi}
 \newcommand{\potLA}{\pot_{\l,\a}}
 \newcommand{\finalPot}{\pot(T,\R)}
-\newcommand{\upperpot}{\pot^{\downarrow}}
-\newcommand{\lowerpot}{\pot^{\uparrow}}
+\newcommand{\upperpot}{\pot_{\learnerM}^{\downarrow}}
+\newcommand{\lowerpot}{\pot_{\adversM}^{\uparrow}}
 \newcommand{\lowerpoteven}{\lowerpot_{\evensplit}}
 \newcommand{\diffweight}{\l^d}   % learner strategy based on taking a difference
 \newcommand{\upperpotdiff}{\upperpot_{\diffweight}}
@@ -65,7 +66,7 @@
 
 
 \newcommand{\at}[1]{\left\{ \left. #1  \pot(\tau,\rho)
-\right|_{\begin{tiny}\begin{matrix} \tau,\rho=\\t_i,\R_i \end{matrix} \end{tiny}} \right\}}
+\right|_{\begin{tiny}\begin{matrix} \tau,\rho=\\t_i,\R \end{matrix} \end{tiny}} \right\}}
 \newcommand{\att}[1]{\left\{ \left. #1  \pot(\tau, \rho)
 \right|_{\begin{tiny}\begin{matrix} \tau,\rho=\\t_i+g \deltat_i,\R_i+g r_i \end{matrix} \end{tiny}} \right\}}
 

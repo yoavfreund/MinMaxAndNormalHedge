@@ -9,19 +9,20 @@
 
 \input{macros}
 
-\title{An Optimal potential-based hedging algorithm}
+\title{Potential-based hedging algorithms}
 \author{Yoav Freund}
 \begin{document}
 
 \maketitle
 \begin{abstract}
-We study a family of potential functions for online learning. We show
-that if the potential function has strictly positive derivatives of
-order 1-4 then the min-max optimal strategy for the adversary is Brownian
-motion. Using that fact we analyze different potential functions and
-show that the Normal-Hedge potential is optimal.
+We study regret-minimizing online algorithms based on potential
+functions. First, we show that any algorithm with a regret bound that
+holds for any $\epsilon$ is equivalent to a potential minimizing
+algorithm and vice versa. Second we should a min-max learning
+algorithm for known horizon. We show a regret bound that is close to
+optimal when the horizon is not known. Finally we give bounds on the
+learning algorithm in the context of Ito processes.
 \end{abstract}
-
 
 \section{Introduction}
 
@@ -36,102 +37,94 @@ advice called {\em the decision-theoretic online learning game}
   signed} version of the online game.
 
 DTOL is a repeated zero sum game between a {\em learner} and an {\em
-  adversary}. The adversary controls the losses of $N$ experts, or
-actions, while the learner controls a distribution over the actions.
-~\\
-Iteration $t=1,\ldots,T$ of the game consists of the following steps:
+  adversary}. The adversary controls the losses of $N$ actions, while
+the learner controls a distribution over the actions.
+
+\begin{figure}[ht!]
+\framebox{
+\begin{minipage}[t]{6.4in}
+{\bf Decision theoretic online learning}\\~\\
+For $t=1,\ldots,T$
 \begin{enumerate}
-    \item The learner chooses a distribution $P_j^t$ over the
+    \item The learner chooses a weight function $w_j^t$ over the
       actions $j \in \{1,\ldots,N\}$. 
     \item The adversary chooses an {\em instantaneous loss} for each
       of the $N$ actions: \\
       $l_j^t \in [-1,+1]$ for $j \in \{1,\ldots,N\}$.
-    \item The learner incurs an {\em instantanous expected loss} defined as
-      $\ell^t = \sum_{j=1}^N P_j^t l_j^t$
+    \item The {\em cumulative loss of action $j$} at time $0 \leq t \leq T$
+    is  $L^t_j = \sum_{s=1}^t l_j^s$. 
+    \item The learner incurs an {\em instantanous average loss} defined as
+      $\ell^t = \frac{\sum_{j=1}^N w_j^t l_j^t}{\sum_{j=1}^N w_j^t}$
+    \item The {\em cumulative loss of the learner} is
+      $L_\ell^t = \sum_{s=1}^t \ell^s$
+    \item The {\em cumulative regret} of the learner with respect to action $j$ is $\R_j^t = L_\ell^t -L_j^t $.
 \end{enumerate}
+\end{minipage}}
+\end{figure}
 
-Using standard notation we denote the {\em cumulative loss} of
-action $j$ for times $1,\ldots,T$ by $L^T_j = \sum_{t=1}^T l_j^t$.
-Similarly, we denote the {\em cumulative loss} of the learner by
-$L_\ell^T = \sum_{t=1}^T \ell^T$.
-%The {\em instantaneous regret} of
-%the learner with respect to action  $j$ is defined as
-%$r_j^t = \ell^t-l_j^t$.
-The {\em cumulative regret} of the learner
-with respect to action $j$ is $\R_j^T = \sum_{t=1}^T r_j^t =
-L_\ell^T -L_j^T $. Finally, for any $0\leq \epsilon \leq 1$ we define the $\epsilon$ regret
-to $R^T_\epsilon$ to be value $v$ such that the
-fraction of values of $\R_j^T$ that are smaller than $v$ is at most
-$\epsilon N$.
 
-The goal of the learner is to minimize the maximal regret at time $T$
-$R_{\epsilon}^T \doteq \max_j \R_j^T = L_\ell^T - \min_j L_j^T$.
-The goal of the adversary is to maximize $R_{\epsilon}^T$.
+The goal of the learner is to perform almost as well as the best
+actions. Specifically, we sort the regrets in decreasing order $\R_1^t \geq
+\R_2^t \geq \cdots \geq \R_k^t \geq \cdots$ and define $\R_k^t$ to
+as the regret relative to the $\epsilon=k/M$ top percentile, denote $\R_\epsilon^t$. Our goal
+is to find algorithms that guarantee small upper bounds on
+$\R_\epsilon^t$. Known bounds have the form $c \sqrt{t \ln
+  {1/\epsilon}}$, but the algorithm has to be tuned based on prior
+knowledge of $\epsilon$. We seek algorithms with regret bounds that hold {\em simultanously} for all values
+of $\epsilon$. In other words algorithms that do not need to know
+$\epsilon$ or $t$ ahead of time.
 
-Our goal is to identify algorithms that improve over known bounds of the
-form $O(\sqrt{T \ln \frac{1}{\epsilon}})$.
-{\bf Needs comparison to existing results, NormalHedge, Squint, square
-loss bounds}
-
-We are interested in bounds the hold simultanously for all values
-of $\epsilon$. Denote the distribution over regrets at some fixed
-iteration by $\mu$. We say that the distribution $\mu$ satisfies the regret function $B$ if
-
+Formally, we say that the distribution $\state$ satisfied a
+simultanous bound $B$ if
 \begin{definition}[Simultanous regret
-  bound] \label{def:unif-regret-bound}
-  Let $B: \reals \to [0,1]$ be a non-increasing function which maps
-  regret bounds to probabilities.
-  
-  A distribution over regrets $\mu$ is simultanously bounded by $B$ if
+  bound] \label{def:unif-regret-bound} Let $G: \reals \to [0,1]$ be a
+  non-increasing function which maps regret bounds to probabilities.
+  A distribution over regrets $\state$ is simultanously bound by $G$ if
   \[
-    \forall r \in \reals \;\; \P{\R \sim \mu}{\R \geq r} \leq B(r)
+    \forall r \in \reals \;\; \P{\rho \sim \state(T)}{\rho \geq r} \leq G(r)
   \]
-Where $B: \reals \to [0,1]$ is a non-increasing function.
 \end{definition}
 
-Our main tool for designing algorithms and proving bounds is potential
-functions.
-
-We say that  A distribution over regrets $\mu$ satisfies
-the potential function $\pot$ if 
-%We say that the bound $B_1$ dominates $B_2$ if $\forall r  B_1(r) \leq
-%B_2(r)$ and $\exists r B_1(r) <B_2(r)$
-
+A potential function is an increasing function
+$\pot:\reals \to \reals$. Potential based learing algorithm
+are designed to bound the the average potential:
+%$\E{\R \sim \state}{\pot(\R)}$.  
 \begin{definition}[Average potential bound] \label{def:aver-potential-bound}
-  A distribution over he reals $\mu$ satisfies the average
+  A distribution over he reals $\state$ satisfies the average
   potential function $\pot$ if
-  $$\E{\R \sim \mu}{\pot(\R)} \leq 1$$
+  $$\E{\R \sim \state}{\pot(\R)} \leq 1$$
   Where $\pot: \reals \to \reals^+$ is a non decreasing function. 
 \end{definition}
 
-\begin{theorem}
- A distribution $\mu$ is simultanously bounded by $B$ if and only
+We next show that there is a one to one relationship between
+simultanous bounds and average potential bounds. 
+\begin{theorem}\label{thm:simulBoundAveragePot}
+ A distribution $\state$ is simultanously bounded by $B$ if and only
  if it satisfies the average potential bound with $\phi(\R) = B(\R)^{-1}$
 \end{theorem}
+Theorem~\ref{thm:simulBoundAveragePot} allows us to focus on potential
+based algorithms.
 
-Unlike uniform regret bounds, that are rather opaque, one can easily
-write a single step backward recursion for potentials. In other words,
-given a potential function at iteration $t$, one can construct
-potential functions for iteration $t-1$. This povides a way 
-for optimizing the potential function.
+As will be explained in Section~\ref{sec:potentials} potential
+functions can be computed by backwards recursion. In other words,
+given $\pot_T(R)$ and fixing the strategies for both learner and
+adversary we can define a potential function $\pot_{T-1}(R)$ so that
+the average potentials are equal:
+\[
+  \E{\R \sim \state(T-1)}{\pot_{T-1}(\R)} = \E{\R \sim \state(T)}{\pot_T(\R)}
+  \]
+  We use this equality to compare different strategies for both players.
 
-The original DTOL game does not seem to have min-max
-strategies. However, in an extended version of the game we can
-characterize min-max strategies. The extended game provides the
-adversary with additional possibilities, but not the learner. In other
-words, the standard game is more restrictive to the adversary, which
-means that upper bounds on the regret for the extended game also hold
-for the restricted game.
+We are interesting in proving min-max optimal bounds. However, as we
+will show, there are no matching min-max strategies for the original
+DTOL. To achieve min-max we extend the game by giving the adversary a
+larger set of moves. As the learner does not get additional options,
+the min/max bound for the extended game is an upper bound on the
+average potential in the original game.
 
-\begin{itemize}
-\item min-max for known $T$
-\item Almost min/max for unknown $T$
-\item Simultanously for all $\epsilon$
-\item Replacing $T$ with $V_T$
-\item Interpretation of the limit game.
-\end{itemize}
+The rest of the paper is organizes as follows.
 
-\subsection{Some known Bounds}
+\section{Main results}
 Zero-order bounds on the regret ~\cite{freund1999adaptive} depend only on $N$
 and $T$ and typically have the form
 \begin{equation} \label{eqn:0-order-bound}
@@ -175,7 +168,187 @@ we can say that $\V_T$ replaces $T$ in the regret bound. This paper
 provides additional support for replacing $T$ with $\V_T$ and provides
 lower and upper bounds on the regret involving $\V_T$.
 
-\subsection{Potential Functions}
+\begin{figure}[ht]
+\framebox{
+\begin{minipage}[t]{6.4in}
+Initialization:
+\begin{itemize}
+\item input: $T$ : The length of the game.
+\item Regret bound: $G(r)$ the simuotanous bound on the regret as in Definition~\ref{def:unif-regret-bound}.
+\item $\state(1) = \delta(0)$ is the initial state of the game which
+  is a point mass distribution at 0. 
+\end{itemize}
+
+For $i=1,2,\ldots,T-1$:\\
+
+\begin{enumerate}
+\item The learner chooses a non-negative random variable over $\Omega$
+  that is the {\em weight function} $\learnerM(i,\R)$ such that
+  $\E{\R \sim \state(i)}{\learnerM(i,\R)}=1$
+\item The adversary chooses a function $\adversM(i,\R)$ that maps
+  $i,\R$ to a distribution over $[-1,+1]$. This
+  random variable corresponds to the instantanuous loss of each action at
+  time $t$.
+\item 
+  We define the {\em bias} at $(i,\R)$ to be
+  \begin{equation} \label{eqn:Bias}
+    \Bias(i,\R) \doteq \E{l \sim \adversM(i,\R)}{l}
+  \end{equation}
+\item the average loss is 
+  \begin{equation} \label{eqn:aggregate-loss}
+    \ell(i)=\E{\R \sim \state(i)}{\learnerM(i,\R) \Bias(i,\R)}
+  \end{equation}
+\item The state is updated. 
+  \begin{equation} \label{eqn:state-update}
+    \state(i+1) = \E{\R \sim \state(i)}{\R \oplus  \adversM(i,\R)}
+    \oplus -\ell(i)
+    \end{equation}
+  Where $\adversM(i,\R)$ is the distribution of the losses of experts
+  with respect to which the regret is $\R$ after iteration
+  $i-1$. $\oplus$ denotes the convolution as defined above.
+\end{enumerate}
+
+\end{minipage}}
+\caption{The integer time game \label{fig:integerTimeGame}}
+\end{figure}
+
+\section{Preliminaries} \label{sec:preliminaries}
+
+We now formally define the integer time game. Our definition is a
+generalization of the standard definition in that the set of actions
+is not finite. Intuitively, one can think of $N \to \infty$ while
+$\epsilon$ is kept constant.
+
+Formally, we define the set of actions
+to be a probability space $(\Omega,\sigma,\mu)$ such that
+$\omega \in \Omega$ is a particular action. We require that the space
+is {\em arbitrarily divisible}, which means that for any
+$s \in \sigma$ and for any $0\leq p \leq 1$, there exist
+$u,v \in \sigma$ such that $u \cup v = s$, $\P{}{u}=p\P{}{s}$ and
+$\P{}{v}=q\P{}{s}$
+
+The {\em state} of the game at iteration $i$, denoted $\state(i)$, is
+a random variable which maps each action $\omega \in \Omega$
+to the cumulative loss of that action: $L_\omega^i$.
+
+{\em Convolution:} Let $A,B$ be two independent random variables. We define the
+convolution $A \oplus B$ to be the distribution of $x+y$.
+Suppose $R \in \reals$, we associate with $R$ the random variable
+whose distribution is a point mass at $R$.
+
+We describe the integer time game in Figure~\ref{fig:integerTimeGame}.
+
+The condition on the final state $\state{T}$ is
+\begin{equation} \label{eqn:simultanTails}
+    \forall r \in \reals \;\; \P{\rho \sim \state(T)}{\rho \geq r} \leq G(r)
+\end{equation}
+
+\section{Potential Functions and backward induction}
+
+Theorem~\ref{thm:simulBoundAveragePot} implies that 
+that if we define a potential $\pot(T,R) = \frac{1}{G(r)}$ then
+condition~(\ref{eqn:simultanTails}) can be replaced by
+\begin{equation} \label{eqn:PotBound}
+   \E{\R \sim \state(T)}{\pot(T,\R)} \leq 1
+ \end{equation}
+
+ We thereby define the {\em potential game} to be the 
+ integer time game where the goal of the learner is to minimize the
+ LHS of~(\ref{eqn:PotBound}) and the goal of the adversary is to maximize the same.
+ 
+ \newcommand{\potPQ}{\pot_{\learnerM,\adversM}}
+
+In the the potential game, only the final potential function is
+known. However, as we will now show, there is a natural way to define
+a potential function for all iterations.
+
+Fix the strategies for both sides $\learnerM(\cdot,\cdot), \adversM(\cdot,\cdot)$. We
+define the fixed strategies potential $\potPQ(i,R)$ using backward
+induction. The base case is  $\potPQ(T,\R) = \pot(T,\R)$.
+
+We assume that  $\potPQ(i+1,\R)$ is known and compute  $\potPQ(i,\R)$
+We use our knowledge of $\learnerM(i,\R)$ and
+Equations~(\ref{eqn:Bias},\ref{eqn:aggregate-loss}) to calculate
+$\ell(i)$. Define the potential as:
+\begin{equation} \label{eqn:induction}
+  \forall \R\;\;
+  \potPQ(i,\R) \doteq \E{r \sim [(\R-\ell(i)) \oplus \adversM(i,\R)]}{\potPQ(i+1,r)}
+\end{equation}
+
+For the potentials defined using Equation~(\ref{eqn:induction}) we have the
+following theorem:
+\begin{theorem} \label{thm:backward-recursion}
+Assuming $ \learnerM(i,\R), \adversM(i,\R)$ are fixed for all
+$i=1,\ldots,T-1$, then
+\[
+  \E{\R \sim \state(T)}{\pot(T,R)} = \E{\R \sim
+    \state(T-1)}{\potPQ(T-1,R)} = \cdots =  \E{\R \sim
+    \state(1)}{\potPQ(1,R)} = \potPQ(1,0)
+  \]
+\end{theorem}
+\proof
+xxx
+\qed
+
+Theorem~(\ref{thm:backward-recursion}) justifies calling the
+distribution $\state(i)$ the {\em state} of the game, $\state(i)$
+determines the final average potential, regardless of what happened
+before iteration $i$.
+
+Next,we vary the strategies of one side or the other define the upper and lower potential functions as:
+\begin{equation}
+  \upperpot(i,\R) \doteq \sup_{\adversM} \potPQ(i,R),\;\;
+  \lowerpot(i,\R) \doteq \inf_{\learnerM} \potPQ(i,R)
+\end{equation}
+
+In Words, $\upperpot$ is smallest upper bound on the potential that can be
+guaranteed by the the learner strategy $\learnerM$ while $\lowerpot$
+is the largest lower bound that can be guaranteed by the adversarial
+strategy $\adversM$. $\upperpot$ and $\lowerpot$.
+
+
+Our ultimate goal is to find a game for which
+\begin{equation} \label{eqn:infsup}
+ \forall i, \R: \inf_{\learnerM}\upperpot(i,\R)
+  = \inf_{\learnerM} \sup_{\adversM} \potPQ(i,\R) =
+  \sup_{\adversM} \inf_{\learnerM} \potPQ(i,\R) =
+  \sup_{\adversM} \lowerpot(i,\R)
+\end{equation}
+Which means that the game has a min/max value, (but there might not be 
+min/max strategies, instead, there are sequences of strategies that
+get closer and closer to min/max.
+
+ 
+
+ 
+\section{Stuff}
+We assume that the function is {\em strictly positive of degree $k$}, which is defined as follows:
+\begin{definition}[Strict Positivity of degree $k$]
+A function $f:\reals \to \reals$ is strictly positive of degree $k$, 
+denoted $f \in \SP{k}$ if the derivatives of orders 0 to $k$:  
+$f(x), \frac{d}{dx}f(x), \ldots, \frac{d^k}{dx^k}f(x)$ exist and are strictly positive.
+\end{definition}
+
+A simple lemma connects an upper bound on any score function in $\SP{1}$ with a bound on the regret.
+\begin{lemma}
+Let $\finalPot(\cdot) \in \SP{1}$, $\score(T) \leq U$ and $\epsilon=\P{\R \sim
+  \state{t}}{\R >\R'}$ be the probability of the set of actions with
+respect to which the regret is larger than $\R'$ Then
+
+then the regret of the algorithm relative 
+to the top $\epsilon$ of the strategies is upper bounded by
+\[
+  \finalPot(\R') \leq U/\epsilon
+\]
+\end{lemma}
+
+For the rest of the paper we will focus on strategies for upper and lower bounding $\score(T)$. We will come back to the relationship between the bounds on $\score(T)$ and the regret at the end of the paper, where we will argue that NormalHedge is, in a sense, the best possible potential function.
+
+We will first consider the standard setting where time corresponds to
+the natural and is equal to the iteration number $t_i=i$. Later we
+expand the game the $t_i$ can take on any real value in $[0,T]$ under
+the condition that $t_{i-1} \leq t_i \leq t_{i-1}+1$.
+
 A common approach to design online learning algorithms is to define a
 {\em potential function}.  The potential function is a continuous
 positive and increasing function of the regret $\R_j^i$. A popular
@@ -217,7 +390,6 @@ we define potential functions for intermediate steps: $0 \leq t
   variants~\cite{cesa1996line,abernethy2006continuous,abernethy2008optimal}
   as well as drifting games~\cite{schapire2001drifting,freund2002drifting}.}
 
-
 There are two potential functions one corresponding to the
 learner's strategy, denoted $\upperpot$, which defines an upper bound
 on $\score^T$ and one to the adversary's strategy, denoted
@@ -228,7 +400,7 @@ lower bounds derived this way do not match.
 To find min-max matching strategies, we need to move to variable
 time steps.
 
-\subsection{Variable time steps}
+\section{Variable time steps}
 The second order bounds of~\cite{cesa2007improved} show that, in some
 contexts, the time parameter $t$ can be replaced by a variance-type
 parameter $\V_T= \sum_{i=1}^T \var_i$. This corresponds to a
@@ -302,61 +474,6 @@ Our analysis is based on three ideas that are listed below.
 
 \fi
 
-\section{Preliminaries} \label{sec:preliminaries}
-The game takes place on the set $(t,\R) \in [0,T] \times \reals$,
-where $t$ corresponds to time, $T$ correspond to the
-time at the end of the game (i.e. this is a bounded horizon game where the
-horizon is known to both players. $\R$ corresponds to (cumulative) regret).
-
-As in the DTOL setting, an strategy (or expert) correspond to a sequence of instantaneous losses. 
-However, unlike the standard DTOL the number of strategies is not finite or known in advance. In DTOL the {\em state} of the learning process is defined by the 
-by the regret of each of the $N$ strategies: $\langle \R_1(t),\ldots,\R_N(t) \rangle$. In order to represent the regret of a potentially
-uncountable set of strategies we define the state as a  distribution over possible regret values.
-Thus the {\em state} of the game at time $t$ is a distribution (finite measure) over the real line, denoted $\state(t)$. 
-We denote by $\R \sim \state(t)$ a random regret $\R$ that is chosen according to the state at time $t$. 
-
-The transition from an $N$ dimensional vector to a distribution is {\em central} to our analysis. The adversarial strategy we use splits each one of the strategies at time  $t$ into two: one half has instantaneous regret of $+1$ and the other instantaneous regret of $-1$. The adversary might not be able to use
-this strategy when the number of strategies is finite. If there is only one strategy with cumulative regret $\R$ then that strategy cannot, by definition, be split into two. Giving the adversary more possibilities allows us to narrow the gap between upper and lower bounds.
-
-The initial state $\state(0)$ is a point mass at $\R=0$. 
-The state $\state(t)$ is defined by $\state(t_{i-1})$ and the choices made
-by the two players as described in the next section.
-
-The score of the game is defined by $\state(T)$ and a function called the {\em final potential function}
-$\finalPot(\R)$ that is fixed a-priori and is known to both players.  The final score of the game is defined as
-\begin{equation} \label{eqn:FinalExpectedValue}
-  \score(T) =\E{\R \sim \state(T)}{\finalPot(\R)}
-\end{equation}
-The goal of the learner is to minimize $\score(T)$ and the goal of
-the adversary is to maximize it.
-
-We assume that the function is {\em strictly positive of degree $k$}, which is defined as follows:
-\begin{definition}[Strict Positivity of degree $k$]
-A function $f:\reals \to \reals$ is strictly positive of degree $k$, 
-denoted $f \in \SP{k}$ if the derivatives of orders 0 to $k$:  
-$f(x), \frac{d}{dx}f(x), \ldots, \frac{d^k}{dx^k}f(x)$ exist and are strictly positive.
-\end{definition}
-
-A simple lemma connects an upper bound on any score function in $\SP{1}$ with a bound on the regret.
-\begin{lemma}
-Let $\finalPot(\cdot) \in \SP{1}$, $\score(T) \leq U$ and $\epsilon=\P{\R \sim
-  \state{t}}{\R >\R'}$ be the probability of the set of actions with
-respect to which the regret is larger than $\R'$ Then
-
-then the regret of the algorithm relative 
-to the top $\epsilon$ of the strategies is upper bounded by
-\[
-  \finalPot(\R') \leq U/\epsilon
-\]
-\end{lemma}
-
-For the rest of the paper we will focus on strategies for upper and lower bounding $\score(T)$. We will come back to the relationship between the bounds on $\score(T)$ and the regret at the end of the paper, where we will argue that NormalHedge is, in a sense, the best possible potential function.
-
-We will first consider the standard setting where time corresponds to
-the natural and is equal to the iteration number $t_i=i$. Later we
-expand the game the $t_i$ can take on any real value in $[0,T]$ under
-the condition that $t_{i-1} \leq t_i \leq t_{i-1}+1$.
-
 \section{Integer time game} \label{sec:integer}
 We start with the standard setup in which time corresponds to the
 natural numbers, $t_i=i$. to simplify notation we will use the
@@ -368,60 +485,6 @@ over the regret values of the experts on iteration $i$. Note that here the set o
 experts is allowed to be be un-countably infinite. In particular the
 adversary can assign to the experts with regret $x$ at iteration $t$
 an arbitrary distribution of losses in the range $[-1,+1]$.
-
-The game is defined by three parameters:
-\begin{itemize}
-\item $T$ : The number of iterations
-\item $\state(0) = \delta(0)$ is the initial state of the game which
-  is a point mass distribution at 0. 
-\item $\finalPot(\R)$ : The function that is in $\SP{2}$.
-\item $0<c \leq 1$ - An upper bound on aggregate loss (loss of the master)
-  in a single iteration. Note that the cumulative aggregate loss is at
-  most $cT$. Note that $c=1$ is always satisfied and eliminates the
-  constraint.
-\end{itemize}
-
-The transition from $\state(i)$ to $\state(i+1)$ is  defined by the
-choices made by the adversary and the learner.
-
-\begin{enumerate}
-\item The learner chooses weights. Formally, this is
-  a distribution over $\R \in \reals$: $\learnerM(i)$.
-\item The adversary chooses the losses of the strategies. Formally 
-  this is a mapping from $\reals$ to distributions
-  over $[-1,+1]$: $\adversM(i): \reals \to \Delta^{[-1,+1]}$. We use
-  $l \sim \adversM(i,\R)$ to denote the distribution over the
-  instantaneous loss associated with iteration $i$ and regret $\R$.
-\item The aggregate loss (also called ``the loss of the master") is
-  calculated:
-  \begin{equation} \label{eqn:agg-loss-complex}
-  \ell(i)=\E{\R \sim \state(i)}{\learnerM(i,\R) \E{l \sim \adversM(i,\R)}{l}}
-  \end{equation}
-  
-  The adversary is constrained to $\adversM$ such $|\ell(i)| \leq c$. 
-  We define the {\em bias} at $(i,\R)$ to be  $\Bias(i,\R) \doteq \E{l
-    \sim \adversM(i,\R)}{l}$ which allows us to rewrite
-  Eqn~(\ref{eqn:agg-loss-complex}) as
-  \begin{equation} \label{eqn:aggregate-loss}
-    \ell(i)=\E{\R \sim \state(i)}{\learnerM(i,\R) \Bias(i,\R)}
-  \end{equation}
-  note that $\Bias(i,\R)$ is in $[-1,1]$ and that $\ell(i)$ is the mean
-  of $\Bias(i,\cdot)$. Note also that $-1-c \leq y-\ell(i) \leq 1+c$
-  corresponds to the instantanous regret. In the integer game, setting
-  $c \geq 1$ is equivalent to placing no restriction on $\ell(i)$.
-  
-\item The state is updated. 
-  \begin{equation} \label{eqn:state-update}
-    \state(i+1) = \E{\R \sim \state(i)}{\R \oplus  \adversM(i,\R)}
-    \ominus \ell(i)
-    \end{equation}
-  Where $\adversM(i,\R)$ is the distribution of the losses of experts
-  that are at location $\R$ after iteration $i-1$. $\R \oplus
-  \adversM(i,\R)$ is the same distribution shiften right by the amount
-  $\R$. $ \E{\R \sim  \state(i-1)}{\cdot}$ indicates the expectation over distribution,
-  yealding a new distribution. Finally $\ominus \ell(i)$ is a shift
-  left of the resulting distribtion according to the aggregate loss. 
-\end{enumerate}
 
 The final score is the mean of the potential according to the final
 state, as given in
@@ -1086,11 +1149,12 @@ game when $s_i \to 0$.
 
 \subsubsection{The continuous time game and a learner strategy}
 \label{sec:contin-Time-Game}
-Set $t_0=0$ \\
+Set $t_1=0$ \\
+Fix maximal step $0<s<1$ \\
 On iteration $i=1,2,\ldots$
 
 \begin{enumerate}
-\item  If $t_{i-1}=T$ the game terminates.
+\item  If $t_i=T$ the game terminates.
 \item Given $t_{i-1}$, the learner chooses a distribution
   $\learnerM(i)$ over $\reals$:
   \begin{equation} \label{eqn:learner-strat-cc}
@@ -1099,26 +1163,27 @@ On iteration $i=1,2,\ldots$
   \mbox{ where } Z^{cc} = \E{\R \sim \state(t_i)}{\left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(t,r)}
 \end{equation}
 
-\item The adversay chooses a {\em step size} $0<s_i\leq 1$ and a mapping from $\reals$ to distributions
+\item The adversay chooses a {\em step size} $0<s_i\leq s$ and a mapping from $\reals$ to distributions
   over $[-s_i,+s_i]$: $\adversM(t): \reals \to \Delta^{[-s_i,+s_i]}$
 \item The aggregate loss is calculated:
   \begin{equation} \label{eqn:ell-discrete}
-    \ell(t_i)=\E{\R \sim \state(t_i)}{\learnerM(t_i,\R)
+    \ell(t_i)=\E{\R \sim \state(t_i)}{\learnerM^{cc}(t_i,\R)
       \Bias(t_i,\R)},\;\mbox{ where } \Bias(t_i,\R) \doteq \E{y \sim \adversM(t_i,\R)}{y}
   \end{equation}
-  the aggregate loss is restricted $|\ell(t_i)| \leq c s_i^2$.
-\item  Increment $t_{i} = t_{i-1} + \deltat_i$ where
+  the aggregate loss is restricted to $|\ell(t_i)| \leq c s_i^2$.
+\item  Increment $t_{i+1} = t_{i} + \deltat_i$ where
 \begin{equation} \label{eqn:deltat}
-  \deltat_i= 
-  \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,R)}{\adversM(t_i,\R)
-      (y-\ell(t_i))^2}} 
+  \deltat_i=
+  \E{\R \sim \state(t_i)}{\E{y \sim
+      \adversM(t_i,\R)}{\at{\frac{\partial^2}{\partial r^2}}
+      ((y-\ell(t_i))^2)}}
 \end{equation}
 
 \item The state is updated. The expectation below is over
   distributions. and the notation $G \oplus \R$ means
   that distribution $G$ over the reals is shifted by the amount
   defined by the scalar $\R$:
-  $$\state(t_i) = \E{\R \sim \state(t_{i-1})}{\adversM(t_i)(\R)\oplus (\R-\ell(t_i))}
+  $$\state(t_{i+1}) = \E{\R \sim \state(t_{i})}{\adversM(t_i)(\R)\oplus (\R-\ell(t_i))}
   $$
 \end{enumerate}
 
@@ -1144,7 +1209,7 @@ error term.
   a constant $n \to \infty$ and $s = \sqrt{\frac{\tau}{n}}$
 
 Then 
-$$\score(\state(i+1)) \leq \score(\state(i))+O(s \tau)$$
+$$\score(\state(t_{i+1})) \leq \score(\state(t_i))+O(s \tau)$$
 \end{theorem}
 
 The proof is given in appendix~\ref{appendix:ProofOfVarianceBound}
@@ -1268,6 +1333,39 @@ $\epsilon=0$ the mean value becomes infinite.
 \bibliography{ref.bib}
 
 \appendix
+\section{Proof of Theorem~\ref{thm:simulBoundAveragePot}}
+\proof
+  \begin{itemize}
+  \item
+  {\bf $\state$ satisfies a simultanous bound for $B$ if it satisfies an
+  average potential bound for $\pot = B^{-1}$}\\
+Assume by contradiction that $\state$ does not satisfy the simultanous bound. In
+other words there exists $a \in \reals$ such that
+$\P{\R \sim \state}{\R > a} > B(a)$. From Markov inequality and the fact
+that $\phi$ is non decreasing we get
+\[
+  \E{\R \sim \state}{\pot(\R)} \geq \phi(a) \P{\R \sim \state}{\R > a} >
+  \phi(a) B(a) = \frac{B(a)}{B(a)}=1
+\]
+but $ \E{\R \sim \state}{\pot(\R)} >1$ contradicts the average potential
+assumption for the potential $\phi(\R) = B(\R)^{-1}$
+\item
+{\bf $\state$ satisfies an
+  average potential bound for $\pot = B^{-1}$ if it satisfies a simultanous bound for $B$}\\
+As $\phi$ is a non-decreasing function, and assuming $\R,\R'$ are drawn
+independently at random according to $\state$:
+\begin{eqnarray}
+  \E{\R \sim \state}{\pot(\R)} & = & \E{\R \sim \state}{\pot(\R)
+                                  \P{\R' \sim \state}{\phi(R') \geq \phi(\R)}} \\
+                            & \leq & \E{\R \sim \state}{\pot(\R)
+                                     \P{\R' \sim \state}{R' \geq \R}} \\
+                            & < & \E{\R \sim \state}{\pot(\R) B(\R)} \\
+                            & = & \E{\R \sim \state}{\frac{B(\R)}{B(\R)}}
+                                  = \E{\R \sim \state}{1} = 1
+\end{eqnarray}
+\end{itemize}
+\qed
+
 \section{Proof of Theorem~\ref{thm:variancebound}}
 \label{appendix:ProofOfVarianceBound}
 We start with two technical lemmas
@@ -1532,22 +1630,14 @@ term~(\ref{eqn:contin1}) is equal to zero.
 ~\\~\\~\\
 {\bf Term~(\ref{eqn:contin2}) is equal to zero:}\\
 As $\deltat_i$ is a constant relative to $y$, we can take it
-outside the expectaation to give 
+outside the expectation and plug in the definition of $\deltat_i$ (\ref{eqn:deltat})
 \begin{equation} \label{eqn:term2.1}
   \E{\R \sim \state(t_i)}{\E{y \sim
       \adversM(t_i,\R)}{\at{\frac{\partial^2}{\partial r^2}}
-      (y-\ell(t_i))^2}}
-  - \deltat_i  \;  \E{\R \sim \state(t_i)}{\at{\frac{\partial^2}{\partial r^2}}}
+      (y-\ell(t_i))^2} - \deltat_i}=
+  \deltat_i - \deltat_i =0
 \end{equation}
-On the other hand, from the choice of $\deltat_i$ given in
-Eqn~(\ref{eqn:deltat}) we get
-\begin{equation} \label{eqn:term2.2}
-  \deltat_i \; \E{\R \sim \state(t_i)}{\at{\frac{\partial^2}{\partial r^2}}} = 
-  \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,R)}{
-      \at{\frac{\partial^2}{\partial r^2}} (y-\ell(t_i))^2}}
-\end{equation}
-Combining~(\label{eqn:term2.1}) and~(\ref{eqn:term2.2}) we
-find that (\ref{eqn:contin2}) is zero.
+We find that (\ref{eqn:contin2}) is zero.
 
 Finally (\ref{eqn:contin3}) is negligible relative to the other terms
 as $s \to 0$.
