@@ -228,8 +228,13 @@ $u,v \in \sigma$ such that $u \cup v = s$, $\P{}{u}=p\P{}{s}$ and
 $\P{}{v}=q\P{}{s}$
 
 The {\em state} of the game at iteration $i$, denoted $\state(i)$, is
-a random variable which maps each action $\omega \in \Omega$
-to the cumulative loss of that action: $L_\omega^i$.
+a random variable which maps each action $\omega \in \Omega$ to the
+cumulative regret of $\omega$ at time $i$: $\R_\omega^i$. We 
+call the sequence of cumulative regrets corresponding to action
+$\omega$ a {\em path}
+\begin{equation} \label{eqn:path}
+  S_{\omega}=(\R_\omega^1,\R_\omega^2,\ldots,\R_\omega^T)
+\end{equation}
 
 {\em Convolution:} Let $A,B$ be two independent random variables. We define the
 convolution $A \oplus B$ to be the distribution of $x+y$.
@@ -245,6 +250,7 @@ The condition on the final state $\state{T}$ is
 
 \section{Potential Functions and backward induction}
 
+
 Theorem~\ref{thm:simulBoundAveragePot} implies that 
 that if we define a potential $\pot(T,R) = \frac{1}{G(r)}$ then
 condition~(\ref{eqn:simultanTails}) can be replaced by
@@ -258,18 +264,40 @@ condition~(\ref{eqn:simultanTails}) can be replaced by
  
  \newcommand{\potPQ}{\pot_{\learnerM,\adversM}}
 
-In the the potential game, only the final potential function is
-known. However, as we will now show, there is a natural way to define
-a potential function for all iterations.
+ In the setup of the potential game, only the {\em final} potential
+ function, at the end of the game, is defined. However, as we will now
+ show, there is a natural way to define a potential function for all
+ iterations.
 
-Fix the strategies for both sides $\learnerM(\cdot,\cdot), \adversM(\cdot,\cdot)$. We
-define the fixed strategies potential $\potPQ(i,R)$ using backward
-induction. The base case is  $\potPQ(T,\R) = \pot(T,\R)$.
+An action in our game defines a path $S_\omega$
+(\ref{eqn:path}). Fixing the strategies of the learner and the
+adversary implies a fixed distribution over paths.
 
-We assume that  $\potPQ(i+1,\R)$ is known and compute  $\potPQ(i,\R)$
+We define the potential for $\potPQ(i,\R)$ to be the expected value of
+the final potential conditioned on the path passing through cumulative
+regret $\R$ on iteration $i$. Recall that $\state{i}$ is the
+probability distribution of $\R$ on iteration $i$. We can therefor
+calculate the final expected potential by computing the expectation of
+the conditional expectation with respect to $\phi(t)$. Which is
+summarized by the following theorem.
+
+\iffalse
+
+Fix the strategies for both the learner $\learnerM(\cdot,\cdot)$ and
+the adversary $\adversM(\cdot,\cdot)$. We denote the potential
+function for the fixed strategies by $\potPQ(i,R)$.
+
+
+
+Fixing the strategies defines a distribution over paths:
+distribution over paths. The potentials $i,\R$ corresponds to the
+expected final potentail given that the paths 
+
+The base case is  $\potPQ(T,\R) = \pot(T,\R)$.
+In the induction we assume that  $\potPQ(i+1,\R)$ is known and compute  $\potPQ(i,\R)$.
 We use our knowledge of $\learnerM(i,\R)$ and
 Equations~(\ref{eqn:Bias},\ref{eqn:aggregate-loss}) to calculate
-$\ell(i)$. Define the potential as:
+$\ell(i)$. We then define 
 \begin{equation} \label{eqn:induction}
   \forall \R\;\;
   \potPQ(i,\R) \doteq \E{r \sim [(\R-\ell(i)) \oplus \adversM(i,\R)]}{\potPQ(i+1,r)}
@@ -277,6 +305,7 @@ $\ell(i)$. Define the potential as:
 
 For the potentials defined using Equation~(\ref{eqn:induction}) we have the
 following theorem:
+\fi
 \begin{theorem} \label{thm:backward-recursion}
 Assuming $ \learnerM(i,\R), \adversM(i,\R)$ are fixed for all
 $i=1,\ldots,T-1$, then
@@ -286,14 +315,26 @@ $i=1,\ldots,T-1$, then
     \state(1)}{\potPQ(1,R)} = \potPQ(1,0)
   \]
 \end{theorem}
-\proof
-xxx
-\qed
 
-Theorem~(\ref{thm:backward-recursion}) justifies calling the
-distribution $\state(i)$ the {\em state} of the game, $\state(i)$
-determines the final average potential, regardless of what happened
-before iteration $i$.
+Note
+\begin{enumerate}
+\item
+  The final expected potential is equal to $\pot(1,0)$ which is the
+  potential at the common starting point: $i=0$, $\R=0$.
+\item
+  Theorem~(\ref{thm:backward-recursion}) justifies calling the
+  distribution $\state(i)$ the {\em state} of the game, $\state(i)$
+  determines the final average potential, regardless of what happened
+  before iteration $i$.
+  \iffalse
+\item Suppose we fix the strategies for iterations $i+1,\ldots
+  T-1$, and the value of the average loss $\ell(i)$, Then the
+  strategies for both the learner and the adversary can be optimized
+  for each value of $\R$ independently. In other words, there are no
+  interactions (other than through $\ell(i)$) between changes
+  \fi
+\end{enumerate}
+
 
 Next,we vary the strategies of one side or the other define the upper and lower potential functions as:
 \begin{equation}
@@ -306,7 +347,6 @@ guaranteed by the the learner strategy $\learnerM$ while $\lowerpot$
 is the largest lower bound that can be guaranteed by the adversarial
 strategy $\adversM$. $\upperpot$ and $\lowerpot$.
 
-
 Our ultimate goal is to find a game for which
 \begin{equation} \label{eqn:infsup}
  \forall i, \R: \inf_{\learnerM}\upperpot(i,\R)
@@ -318,7 +358,7 @@ Which means that the game has a min/max value, (but there might not be
 min/max strategies, instead, there are sequences of strategies that
 get closer and closer to min/max.
 
- 
+We start with potentials that are convex.  
 
  
 \section{Stuff}
