@@ -74,7 +74,7 @@ knowledge of $\epsilon$. We seek algorithms with regret bounds that hold {\em si
 of $\epsilon$. In other words algorithms that do not need to know
 $\epsilon$ or $t$ ahead of time.
 
-Formally, we say that the distribution $\state$ satisfied a
+Formally, we say that the distribution over regrets $\state$ satisfied a
 simultanous bound $B$ if
 \begin{definition}[Simultanous regret
   bound] \label{def:unif-regret-bound} Let $G: \reals \to [0,1]$ be a
@@ -124,6 +124,29 @@ average potential in the original game.
 
 The rest of the paper is organizes as follows.
 
+\section{related work}
+Most of the papers on potential based online algorithms consider
+one or a few potential functions. Most common is the exponential
+potential, but others have been considered~\cite{cesa2006prediction}.
+A natural question is what is the difference between potential
+functions and whether some potential function is ``best''.
+
+In this paper we consider a large set of potential functions,
+specifically, potential functions that are strictly positive and have
+strictly positive derivatives of orders up to four. The exponential
+potential and the NormalHedge potential~\cite{chaudhuri2009parameter,luo2015achieving}
+are member of this set. 
+
+To analyze these potential functions we define a slightly different
+game, which we call a ``potential game''. In this game the primary
+goal of the learner is not to minimize regret, rather, it is to
+minimize the final score $\score^T$. To do so
+we define potential functions for intermediate steps: $0 \leq t
+<T$.\footnote{The analysis described here builds on a long line of
+  work. Including the Binomial Weights algorithm and it's
+  variants~\cite{cesa1996line,abernethy2006continuous,abernethy2008optimal}
+  as well as drifting games~\cite{schapire2001drifting,freund2002drifting}.}
+
 \section{Main results}
 Zero-order bounds on the regret ~\cite{freund1999adaptive} depend only on $N$
 and $T$ and typically have the form
@@ -144,6 +167,8 @@ Lower bounds have been proven that match these upper bounds up to a
 constant. These lower bounds typically rely on constructions in which
 the losses $l_j^i$ are chosen independently at random to be either
 $+1$ or $-1$ with equal probabilities.
+
+
 
 Several algorithms with refined upper bounds on the regret have been
 studied. Of those, the most relevant to our work is a paper by 
@@ -214,54 +239,84 @@ For $i=1,2,\ldots,T-1$:\\
 
 \section{Preliminaries} \label{sec:preliminaries}
 
-We now formally define the integer time game. Our definition is a
-generalization of the standard definition in that the set of actions
-is not finite. Intuitively, one can think of $N \to \infty$ while
-$\epsilon$ is kept constant.
+We define some notation that will be used in the rest of the paper.
 
-Formally, we define the set of actions
-to be a probability space $(\Omega,\sigma,\mu)$ such that
-$\omega \in \Omega$ is a particular action. We require that the space
-is {\em arbitrarily divisible}, which means that for any
-$s \in \sigma$ and for any $0\leq p \leq 1$, there exist
-$u,v \in \sigma$ such that $u \cup v = s$, $\P{}{u}=p\P{}{s}$ and
-$\P{}{v}=q\P{}{s}$
+Our results apply to potential functions with positivity constraint
+defined as follows.
+\begin{definition}[Strict Positivity of degree $k$]
+A function $f:\reals \to \reals$ is strictly positive of degree $k$, 
+denoted $f \in \SP{k}$ if the derivatives of orders 0 to $k$:  
+$f(x), \frac{d}{dx}f(x), \ldots, \frac{d^k}{dx^k}f(x)$ exist and are strictly positive.
+\end{definition}
+Theorem~\ref{thm:simulBoundAveragePot} implies that any potential
+function has strict connectivity of degree $1$. We will initially restrict
+ourselves to potential functions that are strictly convex, i.e. have
+strict positivity of degree 2. Later on, in
+section~\ref{sec:smallsteps}, we will further restrict our potential
+functions to have strict positivity of degree 4.
 
-The {\em state} of the game at iteration $i$, denoted $\state(i)$, is
-a random variable which maps each action $\omega \in \Omega$ to the
-cumulative regret of $\omega$ at time $i$: $\R_\omega^i$. We 
-call the sequence of cumulative regrets corresponding to action
-$\omega$ a {\em path}
+To reach optimality we need the set of actions to be arbitrarily
+divisible. Intuitively, We replace the finite set of actions with a
+continuous mass, so that each set of actions can be partitioned into
+two parts of equal weight.
+Formally, we define the set of actions to be a probability space
+$(\Omega,\sigma,\mu)$ such that $\omega \in \Omega$ is a particular
+action. We require that the space is {\em arbitrarily divisible},
+which means that for any $s \in \sigma$ ,
+there exist a partition $u,v \in \sigma$ such that $u \cup v = s, u
+\cap v = \emptyset$, and  $\P{}{u}=\P{}{v}=\frac{1}{2} \P{}{s}$.
+
+The {\em state} of a game at iteration $i$, denoted $\state(i)$, is
+a random variable that maps each action $\omega \in \Omega$ to the
+cumulative regret of $\omega$ at time $i$: $\R_\omega^i$. The sequence
+of cumulative regrets corresponding to action $\omega$ is the {\em
+  path} of $\omega$:
 \begin{equation} \label{eqn:path}
   S_{\omega}=(\R_\omega^1,\R_\omega^2,\ldots,\R_\omega^T)
 \end{equation}
 
+Suppose $P$ is a distribution over the reals, and $f:\reals
+\to \reals$, we use the following short-hand notation for the expected
+value of $f$ under the distribution $P$:
+\[ P \cdot f \doteq \E{x \sim P}{f(x)}  \]
+We define the {\em score} at iteration $i$ as
+\[ \score(i) = \state(i) \cdot \pot(i) \doteq \E{\R \sim \state(i)}{\pot(i,\R)}\]
+
 {\em Convolution:} Let $A,B$ be two independent random variables. We define the
-convolution $A \oplus B$ to be the distribution of $x+y$.
-Suppose $R \in \reals$, we associate with $R$ the random variable
-whose distribution is a point mass at $R$.
+convolution $A \oplus B$ to be the distribution of $x+y$. A constant
+$a$ corresponds to the point mass distribution concentrated at
+$a$. For convenience we define $A \ominus B = A \oplus (-B)$
 
-We describe the integer time game in Figure~\ref{fig:integerTimeGame}.
 
-The condition on the final state $\state{T}$ is
-\begin{equation} \label{eqn:simultanTails}
-    \forall r \in \reals \;\; \P{\rho \sim \state(T)}{\rho \geq r} \leq G(r)
-\end{equation}
+\section{Integer time game}
+{\bf Figure~\ref{fig:integerTimeGame}} describes the integer time
+game. However it does contain a definition for who wins the game. We
+consider two definitions:
+\begin{itemize}
+\item The learner wins if the final distribution $\phi(T)$ satisfies
+  the simultanous  regret bound $G$ as defined in~\ref{def:unif-regret-bound}
+\item The learner wins if the final distribution $\phi(T)$ satisfies
+  $\state(T) \cdot \pot(T) \leq 1$ as defined in \ref{def:aver-potential-bound}.
+\end{itemize}
+From theorem~\ref{thm:simulBoundAveragePot} we know that if
+we set the potential as $\pot(R) = \frac{1}{G(x)}$ then the two
+conditions are equivalent.
+
+The simultanous bound is our ultimate goal, the advantage of the
+potential game is that intermediate potential functions can be
+defined, thus decoupling iterations of the game.
+
+We therefore fix the length of the game $T$
+and the final potential function $\pot(T)$. We define the goal of the
+learner to minimize  $\state(T) \cdot \pot(T)$ and the goal of the
+adversary to maximize the same. 
+
+In the next section we define the intermediate potential functions in
+general. We then come back to the integer game and show good
+strategies for each side.
 
 \section{Potential Functions and backward induction}
 
-
-Theorem~\ref{thm:simulBoundAveragePot} implies that 
-that if we define a potential $\pot(T,R) = \frac{1}{G(r)}$ then
-condition~(\ref{eqn:simultanTails}) can be replaced by
-\begin{equation} \label{eqn:PotBound}
-   \E{\R \sim \state(T)}{\pot(T,\R)} \leq 1
- \end{equation}
-
- We thereby define the {\em potential game} to be the 
- integer time game where the goal of the learner is to minimize the
- LHS of~(\ref{eqn:PotBound}) and the goal of the adversary is to maximize the same.
- 
  \newcommand{\potPQ}{\pot_{\learnerM,\adversM}}
 
  In the setup of the potential game, only the {\em final} potential
@@ -281,13 +336,9 @@ calculate the final expected potential by computing the expectation of
 the conditional expectation with respect to $\phi(t)$. Which is
 summarized by the following theorem.
 
-\iffalse
-
 Fix the strategies for both the learner $\learnerM(\cdot,\cdot)$ and
 the adversary $\adversM(\cdot,\cdot)$. We denote the potential
 function for the fixed strategies by $\potPQ(i,R)$.
-
-
 
 Fixing the strategies defines a distribution over paths:
 distribution over paths. The potentials $i,\R$ corresponds to the
@@ -305,14 +356,14 @@ $\ell(i)$. We then define
 
 For the potentials defined using Equation~(\ref{eqn:induction}) we have the
 following theorem:
-\fi
+
 \begin{theorem} \label{thm:backward-recursion}
 Assuming $ \learnerM(i,\R), \adversM(i,\R)$ are fixed for all
 $i=1,\ldots,T-1$, then
 \[
-  \E{\R \sim \state(T)}{\pot(T,R)} = \E{\R \sim
-    \state(T-1)}{\potPQ(T-1,R)} = \cdots =  \E{\R \sim
-    \state(1)}{\potPQ(1,R)} = \potPQ(1,0)
+   \state(T)\cdot \pot(T)=
+   \state(T-1)\cdot \potPQ(T-1)= \cdots =
+   \state(1)\cdot \potPQ(1)=\potPQ(1,0)
   \]
 \end{theorem}
 
@@ -335,261 +386,194 @@ Note
   \fi
 \end{enumerate}
 
-
-Next,we vary the strategies of one side or the other define the upper and lower potential functions as:
-\begin{equation}
-  \upperpot(i,\R) \doteq \sup_{\adversM} \potPQ(i,R),\;\;
-  \lowerpot(i,\R) \doteq \inf_{\learnerM} \potPQ(i,R)
+Next,we vary the strategies of one side or the other to define upper
+and lower potentials.
+\begin{equation} \label{eqn:upperPotentials}
+  \exists \learnerM, \;\;\; \forall \adversM,\;\; \forall 1\leq i \leq
+  T,\;\; \forall \R \in \reals,\;\; \upperpot(i,\R) \geq \potPQ(i,R)
+\end{equation}
+\begin{equation} \label{eqn:lowerPotentials}
+  \exists \adversM, \;\;\; \forall \learnerM, \;\; \;\; \forall 1\leq i \leq
+  T,\;\; \forall \R \in \reals,\;\; \lowerpot(i,\R) \leq \potPQ(i,R)
 \end{equation}
 
-In Words, $\upperpot$ is smallest upper bound on the potential that can be
-guaranteed by the the learner strategy $\learnerM$ while $\lowerpot$
-is the largest lower bound that can be guaranteed by the adversarial
-strategy $\adversM$. $\upperpot$ and $\lowerpot$.
+In words, $\upperpot$ is an upper bound on the potential that is 
+guaranteed by the learner strategy $\learnerM$ while $\lowerpot$
+is a lower bound that is guaranteed by the adversarial
+strategy $\adversM$.
 
-Our ultimate goal is to find a game for which
-\begin{equation} \label{eqn:infsup}
- \forall i, \R: \inf_{\learnerM}\upperpot(i,\R)
-  = \inf_{\learnerM} \sup_{\adversM} \potPQ(i,\R) =
-  \sup_{\adversM} \inf_{\learnerM} \potPQ(i,\R) =
-  \sup_{\adversM} \lowerpot(i,\R)
+Our goal is to find strategies such that $\lowerpot = \upperpot$, as
+that would mean that we have found min-max strategies for both
+players. We will not achieve this goal, instead, we will show
+sequences of strategies $\learnerM(1),\learnerM(2),\ldots$ and
+$\adversM(1),\adversM(2),\ldots$ such that
+\begin{equation} \label{eqn:limitPotential}
+\forall (i,\R)\;\;\lim_{j \to \infty}\lowerpotj(i,\R) = \lim_{j \to
+  \infty} \upperpotj(i,\R)
 \end{equation}
-Which means that the game has a min/max value, (but there might not be 
-min/max strategies, instead, there are sequences of strategies that
-get closer and closer to min/max.
 
-We start with potentials that are convex.  
-
- 
-\section{Stuff}
-We assume that the function is {\em strictly positive of degree $k$}, which is defined as follows:
-\begin{definition}[Strict Positivity of degree $k$]
-A function $f:\reals \to \reals$ is strictly positive of degree $k$, 
-denoted $f \in \SP{k}$ if the derivatives of orders 0 to $k$:  
-$f(x), \frac{d}{dx}f(x), \ldots, \frac{d^k}{dx^k}f(x)$ exist and are strictly positive.
-\end{definition}
-
-A simple lemma connects an upper bound on any score function in $\SP{1}$ with a bound on the regret.
-\begin{lemma}
-Let $\finalPot(\cdot) \in \SP{1}$, $\score(T) \leq U$ and $\epsilon=\P{\R \sim
-  \state{t}}{\R >\R'}$ be the probability of the set of actions with
-respect to which the regret is larger than $\R'$ Then
-
-then the regret of the algorithm relative 
-to the top $\epsilon$ of the strategies is upper bounded by
-\[
-  \finalPot(\R') \leq U/\epsilon
-\]
-\end{lemma}
-
-For the rest of the paper we will focus on strategies for upper and lower bounding $\score(T)$. We will come back to the relationship between the bounds on $\score(T)$ and the regret at the end of the paper, where we will argue that NormalHedge is, in a sense, the best possible potential function.
-
-We will first consider the standard setting where time corresponds to
-the natural and is equal to the iteration number $t_i=i$. Later we
-expand the game the $t_i$ can take on any real value in $[0,T]$ under
-the condition that $t_{i-1} \leq t_i \leq t_{i-1}+1$.
-
-A common approach to design online learning algorithms is to define a
-{\em potential function}.  The potential function is a continuous
-positive and increasing function of the regret $\R_j^i$. A popular
-potential function is the exponential function which has the form
-$\pot(\R_j^i) = \exp(\eta \R_j^i)$ where $\eta>0$ is the {\em learning rate}. The central
-quantity n the design and analysis of potential based online-learning algorithms is
-the {\em average potential} or {\em score}, defined as:
-
-$$\score^t = \frac{1}{N} \sum_{j=1}^N \pot_j^t$$
-
-Proving regret bounds are based on combining the upper and lower
-bounds on the score
-\begin{itemize}
-\item {\bf Upper bound}: If the cumulative loss of the best expert is
-  small then the score is small.
-\item {\bf lower bound}: If the cumulative loss of the learning algorithm is large
-then the score is large.
-\end{itemize}
-
-Most of the papers on potential based online algorithms consider
-one or a few potential functions. Most common is the exponential
-potential, but others have been considered~\cite{cesa2006prediction}.
-A natural question is what is the difference between potential
-functions and whether some potential function is ``best''.
-
-In this paper we consider a large set of potential functions,
-specifically, potential functions that are strictly positive and have
-strictly positive derivatives of orders up to four. The exponential
-potential and the NormalHedge potential~\cite{chaudhuri2009parameter,luo2015achieving}
-are member of this set. 
-
-To analyze these potential functions we define a slightly different
-game, which we call a ``potential game''. In this game the primary
-goal of the learner is not to minimize regret, rather, it is to
-minimize the final score $\score^T$. To do so
-we define potential functions for intermediate steps: $0 \leq t
-<T$.\footnote{The analysis described here builds on a long line of
-  work. Including the Binomial Weights algorithm and it's
-  variants~\cite{cesa1996line,abernethy2006continuous,abernethy2008optimal}
-  as well as drifting games~\cite{schapire2001drifting,freund2002drifting}.}
-
-There are two potential functions one corresponding to the
-learner's strategy, denoted $\upperpot$, which defines an upper bound
-on $\score^T$ and one to the adversary's strategy, denoted
-$\lowerpot$, which defines a lower bound on $\score^T$. We show that
-good strategies for the learner and for the adversary correspond to
-two slightly different random walks. However, the upper bound and
-lower bounds derived this way do not match. 
-To find min-max matching strategies, we need to move to variable
-time steps.
-
-\section{Variable time steps}
-The second order bounds of~\cite{cesa2007improved} show that, in some
-contexts, the time parameter $t$ can be replaced by a variance-type
-parameter $\V_T= \sum_{i=1}^T \var_i$. This corresponds to a
-significant tightening of the bound. For example if instead of $l_j^i
-\in [-\epsilon,+\epsilon]$, then $\V_T = T\epsilon^2$, and if we set
-$T=\epsilon^{-2}$ we get n upper bound on the regret that does not
-depend on $T$. The idea is to replace $T$ with $V_T$ in the definition
-of the upper and lower potentials. Which is what we do in
-Section\ref{sec:discrete}.
-
-In that variant of the potential game the adversary chooses the
-``real-time'' step at each iteration. Surprisingly, it turns out that
-the adversary's preference is to make the time steps as small as
-possible (but not zero). Combining the random walk strategy with the
-infinitesimal time step, we arrive at a strategy that is define by
-Brownian motion, or a Wiener process. Even more surprisingly, the
-strategy of the learning at this limit corresponds to the same
-Brownian motion. In other words, we have a min-max characterization of
-DTOL.
-
-\paragraph*{The rest of the paper is organized as follows}
-In Section~\ref{sec:preliminaries} we provide some basic definitions.
-In Section~\ref{sec:integer} we describe the potential game in the standard
-integer time case and prove some upper and lower bounds for this
-case. In Section~\ref{sec:discrete} we define a the discrete time
-game, where time advances are real valued and finite. The core of our
-argument, which is based on the theory of ``divided-differences''
-appears in Section~\ref{sec:smallsteps}. In
-Section~\ref{sec:continuous} we define the continuous time limit of
-the game. In Section~\ref{sec:self-consistent} we show that optimal
-any-time potential functions correspond to the solution of the
-kolmogorov Backwards differential equation, and show the Exponential weights and
-NormalHedge are solutions for that Equation. Finally, in
-Section~\ref{sec:NormalHedge}
-we argue that NormalHedge is the best possible potential function.
+Before we attempt this goal, we start by analyzing the integer time game. 
 
 
-\iffalse
-\subsubsection*{Our Contributions}
-\begin{itemize}
-\item We characterize the min/max strategies for 
-  potential functions that have strictly positive derivatives up to
-  order four.
-\item We show that the optimal adversarial strategy for all of
-  these potential functions is a strategy corresponding to
-  Brownian motion.
-\item We show that $V_T$ replaces $T$ for any of these games.
-\item  We show that all potential functions that satisfy a particular
-  partial differential equations yield min/max solutions to the
-  potential game.
-\item We show that both the exponential weights algorithm and
-  NormalHedge are solutions to the PDE.
-  \item We show that NormalHedge provides the best possible regret bounds.
-\end{itemize}
+\section{Strategies for the integer time  game} \label{sec:strat-integer}
 
-In this paper we extend and refine the analysis of the potential
-function to
-provide a min/max analysis for a large set of potential functions. We
-then show that NormalHedge is, in a strong sense the best of those
-potential functions.
+We go back to the integer time game and show the strategies for both
+sides and the corresponding upper and lower potentials.
 
-Our analysis is based on three ideas that are listed below.
-\begin{itemize}
-    \item {\bf Potential games:} We focus on the potential function, rather than on the problem of minimizing regret. In other words, we define a new game, in which the goal of the learner is to minimize  the final average potential.
-    \item {\bf Experts as a probability space:} Instead of restricting the game to $N$ strategies, we allow the set of strategies to be an arbitrary probability space. This allows the adversary the following simple but powerful strategy.  At each iteration $i$ the adversary splits each one of the strategies into two equal parts, once part incurs loss $-1$ and the other loss $+1$. In other words, at iteration $i$ there are $2^i$ strategies, each corresponding to a sequence in $\{-1,+1\}^i$. It is intuitively clear that the instantaneous loss of the learner is always zero, regardless of it's choice of $P$.
-    \item {\bf Reducing the time step and continuous time:} Regret bounds of the form $C\sqrt{T \ln N}$ are tight for the case in which the adversary assigns losses of $\pm 1$ with equal probabilities.
-    Suppose however, that the adversary produces the exact same sequence of losses, but divides the range of each loss by 2. In this case the losses and the regrets will all be divided by two, but the bound will remain the same! This suggest that defining $T$ as the number of iterations in the game leaves some slack. To remedy this situation we let time take on real values such that $t_{i+1}-t_i \leq 1$. At the same time we 
-    allow the adversary to declare, before each iteration, the range $[-s_i,+s_i]$ for the losses, in which case the following time would be 
-    $t_{i+1}=t_i +s_i^2$. Surprisingly, we find out that for a large set of potential functions, the preference of the adversary is to make $s_i$ as small as possible, making iterative game into a continuous time game and the adversarial strategy to be Brownian motion.
-\end{itemize}
+We assume that $\pot(T)  \in \SP{2}$, in other words, the final
+potential is positive, increasing and convex.
 
-\fi
-
-\section{Integer time game} \label{sec:integer}
-We start with the standard setup in which time corresponds to the
-natural numbers, $t_i=i$. to simplify notation we will use the
-iteration number $i$ instead of time.
-
-Connecting this back to decision theoretic online learning
-(DTOL~\cite{}). The state $\state(i)$ corresponds to the distribution
-over the regret values of the experts on iteration $i$. Note that here the set of
-experts is allowed to be be un-countably infinite. In particular the
-adversary can assign to the experts with regret $x$ at iteration $t$
-an arbitrary distribution of losses in the range $[-1,+1]$.
-
-The final score is the mean of the potential according to the final
-state, as given in
-Equation~(\ref{eqn:FinalExpectedValue})
-\begin{equation}
-  \score(T) =\E{\R \sim \state(T)}{\finalPot(\R)}
+We define the adversarial strategy
+\begin{equation} \label{eqn:adv-strat-p}
+  \adversM^I(i-1,\R) =
+  \begin{cases}
+    +1 & \mbox{ w.p. } \frac{1}{2}\\
+    -1 & \mbox{ w.p. } \frac{1}{2}\\
+  \end{cases}
 \end{equation}
-The goal of the learner is to minimize the final score and the goal of
-the adversary is to maximize it.
-\subsection{Results for integer time game}
 
-We prove two results for the integer game. One is a strategy for the
-adversary that guarantees a lower bound on $\score(T)$ for any
-strateyg of the learner,  the other is a strategy for the learner that
-that guarantees an upper bound on $\score(T)$.
+and the learner strategy
+\begin{equation} \label{eqn:learner-strat-1}
+\learnerM^I(i-1,\R) = \frac{1}{Z} \frac{\pot(i,\R+2) - \pot(i,\R-2)}{2}
+\end{equation}
+Where $Z$ is a normalization factor
+$$Z = \E{\R \sim \state(i)}{\frac{\pot(i,\R+2) - \pot(i,\R-2)}{2}}$$
 
-We use $B(n,s)$ to denote the binomial distribution that assigns
-probability ${n \choose i} 2^{-n}$ to the point $(2i-n)s$ for
-$i=0,\ldots,n$
+We next give upper and lower bounds on the final average potential
+based on these strategies.
 
-\begin{theorem}
-  ~\\
+Let $B(n,a)$ denote the distribution over the reals defined by
+$\sum_{i=1}^n X_i$ where $X_i$ are iid binary random variables which
+attain the values $-a,+a$ with equal probabilities.
+
+\begin{theorem} \label{thm:IntegerGameBounds}
+  Let $\pot_T \in \SP{2}$, for any iteration $0 \leq i \leq T$ and
+  initial regret $\R_0 \in \reals$ we define $\state(i,\R_0)$ to
+  contain all paths that are equal to $\R_0$ on iteration $i$. We
+  consider the final score $\score(T)$ starting from state
+  $\state(i,\R_0)$ and using a particular strategy
   \begin{itemize}
-    \item
-    There exists a strategy for the adversary such that for any strategy
-    of the learner, $$\score(T) \geq \E{\R \sim B(T,1)}{\pot(T,\R)}$$
   \item
-    There exists a strategy for the learner such that for any strategy
-    of the adversary, $$\score(T) \leq \E{\R \sim B(T,1+c)}{\pot(T,\R)}$$
+    The adversarial strategy~(\ref{eqn:adv-strat-p}) starting from
+    $\state(i,\R_0)$. Guarantees a final potential 
+     
+    $$\score(T) \geq \E{\R \sim \R_0 \oplus B(T-i,1)}{\pot(T,\R)}$$
+  \item
+    There learner strategy~(\ref{eqn:learner-strat-1}) guarantees 
+    $$\score(T) \leq \E{\R \sim \R_0 \oplus B(T-i,2)}{\pot(T,\R)}$$
   \end{itemize}
 \end{theorem}
 
-\subsection{Analysis of the integer time game}
+\iffalse
+\begin{lemma} \label{lemma:adversary-prefers-extremes}
+ Suppose $\lowerpot(i,\R)$ is strictly convex with respect to  $\R$.
+Let ${\cal Q}(i-1,\R,\Bias)$ be the set of adversarial strategies 
+$\adversM(i-1,\R)$ that have bias
+$\Bias=\Bias(i-1,\R)= \E{y \sim \adversM(i-1,\R)}{y}$ then the
+strategy in ${\cal Q}(i-1,\R,\Bias)$ that is best for the adversary is
 
-The final potential $\finalPot(\R)$ is part of the setup of the
-game. We will extend the notion of the potential to earlier steps of
-the game.
+\begin{equation} \label{eqn:value-iteration-lower-recursion}
+  \lowerpot(i-1, \R) = p \lowerpot(i,\R+1) + (1-p)\lowerpot(i,\R-1)
+\end{equation}
+which is strictly higher than $\lowerpot(i-1,\R)$ for any other
+distribution in ${\cal Q}(i-1,\R,\Bias)$. In addition,
+$\lowerpot(i-1, \R)$ is strictly convex.
+\end{lemma}
+\fi
 
-More specifically, we associate with any learner strategy an {\em
-  upper potential} for the game and with any adversarial strategy a
-{\em lower potential} for the game. When the upper and lower
-potentials are equal, the associated strategies are min/max optimal.
+The next Lemma is the main part of the proof ot
+Theorem~(\ref{thm:IntegerGameBounds}). We use the backward induction
+from Theorem~(\ref{thm:backward-recursion}) To compute upper and lower
+potentials (Equations~(\ref{eqn:upperPotentials},\ref{eqn:lowerPotentials})) for
+Strategies~(\ref{eqn:adv-strat-p}) and~(\ref{eqn:learner-strat-1})
 
-We describe the upper potential, the lower potential
-description is the same other than the learner and the adversary
-are switched. Let $\l$ denote a learner
-strategy and $\a$ denote an adversarial strategy. A legal strategy is
-any mapping from sequences of actions (of both players) at previous steps to an
-action for the current step. We will denote the set of all legal
-strategies for the learner by $\legalLearner$, and for the adversary
-by $\legalAdversary$. Let $\l$ and $\a$ be strategies for learner and
-adversary respectively and $\state(i) = \delta(\R)$ defines a game
-that starts at iteration $i$ with a state that is a point mass at
-$\R$.
-Then $\score(\l,\a,i,\R)$ is the final score if the game starts at
-iteration $i$ with state $\state(i) = \delta(\R)$ and the players use
-strategies $\l,\a$ respectively.
+For the first step in the backward induction we define
+$$  \lowerpot(T,\R) = \upperpot(T,\R) = \pot(T,\R) $$
 
-The upper potential for learner strategy $\l$ is defined as
-\[
-  \upperpot(\l,i,\R) = \sup_{\a \in \legalAdversary}\score(\l,\a,o,\R)
-\]
+\begin{lemma} \label{lemma:first-order-bound}
+  If $\pot(i,\R) \in \SP{2}$
+  \begin{enumerate}
+    \item The adversarial strategy
+    Guarantees the lower potential
+ \begin{equation} \label{eqn:value-iteration-lower}
+   \lowerpot(i-1, \R) = \frac{\lowerpot(i,\R+1) + \lowerpot(i,\R-1)}{2}
+ \end{equation}
+   
+    \item The learner strategy:
+      guarantees the upper potential 
+      \begin{equation} \label{eqn:value-iteration-upper-recursion}
+        \upperpot(i-1, \R) = \frac{\upperpot(i,\R+2) + \upperpot(i,\R-2)}{2}
+      \end{equation}
+    \end{enumerate}
+    
+\end{lemma}
 
-\subsection{Strategies for integer time game}
 
+\proof
+\begin{enumerate}
+\item By symmetry adversarial strategy~(\ref{eqn:adv-strat-p}) guarantees that
+  the aggregate loss~(\ref{eqn:aggregate-loss}) is zero regardless of
+  the choice of the learner: $\ell(t)=0$.
+  Therefor the state update~(\ref{eqn:state-update}) is equivalent to
+  the symmetric random walk:
+  $$\state(i) = \frac{1}{2} \paren{(\state(i-1) \oplus 1) + (\state(i-1)
+    \ominus 1)}$$
+  Which in turn implies that if the adversary plays $\adversM^*$
+  and the learner plays an arbitrary strategy $\learnerM$
+  \begin{equation} \label{eqn:lower}
+    \lowerpot(i-1,\R) = \frac{\lowerpot(i,\R-1)+\lowerpot(i,\R+1)}{2}
+  \end{equation}
+  As this adversaril strategy is oblivious to the strategy, it
+  guarantees that the average value at iteration $i$ is {\em equal} to the
+  average of the lower value at iteration $i-1$.
+\item
+ Plugging learner's strategy~(\ref{eqn:learner-strat-1}) into equation~(\ref{eqn:aggregate-loss}) we find that
+ \begin{equation} \label{eqn:ell-optimal-learner}
+   \ell(i-1) = \frac{1}{Z_{i-1}} \E{\R \sim \state(i-1)}{\paren{\upperpot(i,\R+2)-\upperpot(i,\R-2)}
+   \Bias(i-1,\R)}
+\end{equation}
+  Consider the average value at iteration $i-1$ when the learner's strategy
+  is $\learnerM^*$ and the adversarial strategy is arbitrary $\adversM$:
+  
+   \begin{equation} \label{eqn:Pot-Update}
+    \score_{\learnerM^*,\adversM}(i-1,\R) = \E{\R \sim \state(i-1)}{ \E{y \sim
+      \adversM(i-1)(\R)}{\pot(i,\R+y-\ell(i-1))}}
+  \end{equation}
+  As $\pot(i,\cdot)$ is convex and as $(y-\ell(i-1)) \in [-2,2]$,
+  \begin{equation} \label{eqn:pot-upper}
+    \pot(i,\R+y) \leq \frac{\pot(i,\R+2)+\pot(i,\R-2)}{2} +
+    (y-\ell(i)) \frac{\pot(i,\R+2)-\pot(i,\R-2)}{2}
+    \end{equation}
+  Combining the equations~(\ref{eqn:ell-optimal-learner}) and~(\ref{eqn:Pot-Update}) we find that
+  \begin{eqnarray}
+  \score_{\learnerM^*,\adversM}(i-1,\R)&=&\E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{\pot(i,\R+y-\ell(i-1))}}\\
+  &\leq & \E{\R \sim \state(i-1)}{\frac{\pot(i,\R+2)+\pot(i,\R-2)}{2}}\\
+  &+&
+  \E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{(y-\ell(i-1)) \frac{\pot(i,\R+2)-\pot(i,\R-2)}{2}}} \label{eqn:zero-term}
+  \end{eqnarray}
+  
+The final step is to show that the term~(\ref{eqn:zero-term}) is equal
+to zero. As $\ell(i-1)$ is a constant with respect to $\R$ and $y$ the
+term~(\ref{eqn:zero-term}) can be written as:
+\begin{eqnarray}
+&&\E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{(y-\ell(i-1))
+   \frac{\pot(i,\R+2)-\pot(i,\R-2)}{2}}}\\
+&=&
+\E{\R \sim \state(i-1)}{\Bias(i-1,\R)
+    \frac{\pot(i,\R+2)-\pot(i,\R-2)}{2}}\\
+  &-& \ell(i) \E{\R \sim \state(i-1)}{
+    \frac{\pot(i,\R+2)-\pot(i,\R-2)}{2}}\\
+  &=& 0
+\end{eqnarray}
+\end{enumerate}
+\qed
+
+\proof {\em of Theorem~\ref{thm:IntegerGameBounds}}
+
+
+\qed
+
+\iffalse
 Consider the states at two consecutive iterations $\state(i-1),\state(i)$.
 Suppose that $\pot(i,\R)$, the value function for iteration $i$ is fixed.
 We say that $\lowerpot(i-1,\R)$ is a lower bound on the value at iteration
@@ -602,122 +586,6 @@ $\adversM$,
 $$ \E{\R \sim \state(i-1)}{\upperpot(i-1)} \geq \E{\R \sim \state(i)}{\pot(i)}$$
 
 
-\begin{lemma} \label{lemma:adversary-prefers-extremes}
- Suppose $\lowerpot(i,\R)$ is strictly convex with respect to  $\R$.
-Let ${\cal Q}(i-1,\R,\Bias)$ be the set of adversarial strategies 
-$\adversM(i-1,\R)$ that have bias
-$\Bias=\Bias(i-1,\R)= \E{y \sim \adversM(i-1,\R)}{y}$ then the
-strategy in ${\cal Q}(i-1,\R,\Bias)$ that is best for the adversary is
-\begin{equation} \label{eqn:adv-strat-p}
-  \adversM^p(i-1,\R) =
-  \begin{cases}
-    +1 & \mbox{ w.p. } \frac{1+\Bias}{2}\\
-    -1 & \mbox{ w.p. } \frac{1-\Bias}{2}\\
-  \end{cases}
-\end{equation}
-
-\begin{equation} \label{eqn:value-iteration-lower-recursion}
-  \lowerpot(i-1, \R) = p \lowerpot(i,\R+1) + (1-p)\lowerpot(i,\R-1)
-\end{equation}
-which is strictly higher than $\lowerpot(i-1,\R)$ for any other
-distribution in ${\cal Q}(i-1,\R,\Bias)$. In addition,
-$\lowerpot(i-1, \R)$ is strictly convex.
-\end{lemma}
-
-
-In the next lemma we describe strategies for the adversary and the
-learner and prove upper and lower bounds on the potential that they
-guarantee.
-
-\begin{lemma} \label{lemma:first-order-bound}
-  If $\pot(i,\R)$  is CIC then
-  \begin{enumerate}
-    \item The adversarial strategy
-      \begin{equation} \label{eqn:adv-strat}
-      \adversM^{1/2}(i-1,\R) =
-      \begin{cases}
-        -1 & \mbox{ w.p. } 1/2\\
-        +1 & \mbox{ w.p. } 1/2
-      \end{cases}
-    \end{equation}
-    Guarantees the lower potential
- \begin{equation} \label{eqn:value-iteration-lower}
-   \lowerpot(i-1, \R) = \frac{\pot(i,\R+1) + \pot(i,\R-1)}{2}
- \end{equation}
-   
-    \item The learner strategy:
-      \begin{equation} \label{eqn:learner-strat-1}
-      \learnerM^1(i-1,\R) = \frac{1}{Z} \frac{\pot(i,\R+1+c) - \pot(i,\R-1-c)}{2}
-      \end{equation}
-      Where $Z$ is a normalization factor
-      $$Z = \E{\R \sim \state(i)}{\frac{\pot(i,\R+1+c) - \pot(i,\R-1-c)}{2}}$$
-      guarantees the upper potential 
-      \begin{equation} \label{eqn:value-iteration-upper-recursion}
-        \upperpot(i-1, \R) = \frac{\pot(i,\R+1+c) + \pot(i,\R-1-c)}{2}
-      \end{equation}
-    \end{enumerate}
-    
-\end{lemma}
-
-
-\proof
-\begin{enumerate}
-\item By symmetry adversarial strategy~(\ref{eqn:adv-strat}) guarantees that
-  the aggregate loss~(\ref{eqn:aggregate-loss}) is zero regardless of
-  the choice of the learner: $\ell(t)=0$.
-  Therefor the state update~(\ref{eqn:state-update}) is equivalent to
-  the symmetric random walk:
-  $$\state(i) = \frac{1}{2} \paren{(\state(i-1) \oplus 1) + (\state(i-1)
-    \ominus 1)}$$
-  Which in turn implies that if the adversary plays $\adversM^*$
-  and the learner plays an arbitrary strategy $\learnerM$
-  \begin{equation} \label{eqn:lower}
-    \lowerpot(i-1,\R) = \frac{1}{2} \paren{\pot(i,\R-1)+\pot(i,\R+1)}
-  \end{equation}
-  As this adversaril strategy is oblivious to the strategy, it
-  guarantees that the average value at iteration $i$ is {\em equal} to the
-  average of the lower value at iteration $i-1$.
-\item
- Plugging learner's strategy~(\ref{eqn:learner-strat-1}) into equation~(\ref{eqn:aggregate-loss}) we find that
- \begin{equation} \label{eqn:ell-optimal-learner}
-   \ell(i-1) = \frac{1}{Z_{i-1}} \E{\R \sim \state(i-1)}{\paren{\pot(i,\R+1+c)-\pot(i,\R-1-c)}
-   \Bias(i-1,\R)}
-\end{equation}
-  Consider the average value at iteration $i-1$ when the learner's strategy
-  is $\learnerM^*$ and the adversarial strategy is arbitrary $\adversM$:
-  
-   \begin{equation} \label{eqn:Pot-Update}
-    \score_{\learnerM^*,\adversM}(i-1,\R) = \E{\R \sim \state(i-1)}{ \E{y \sim
-      \adversM(i-1)(\R)}{\pot(i,\R+y-\ell(i-1))}}
-  \end{equation}
-  As $\pot(i,\cdot)$ is convex and as $(y-\ell(i-1)) \in [-1-c,1+c]$,
-  \begin{equation} \label{eqn:pot-upper}
-    \pot(i,\R+y) \leq \frac{\pot(i,\R+1+c)+\pot(i,\R-1-c)}{2} +
-    (y-\ell(i)) \frac{\pot(i,\R+1+c)-\pot(i,\R-1-c)}{2}
-    \end{equation}
-  Combining the equations~(\ref{eqn:ell-optimal-learner}) and~(\ref{eqn:Pot-Update}) we find that
-  \begin{eqnarray}
-  \score_{\learnerM^*,\adversM}(i-1,\R)&=&\E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{\pot(i,\R+y-\ell(i-1))}}\\
-  &\leq & \E{\R \sim \state(i-1)}{\frac{\pot(i,\R+1+c)+\pot(i,\R-1-c)}{2}}\\
-  &+&
-  \E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{(y-\ell(i-1)) \frac{\pot(i,\R+1+c)-\pot(i,\R-1-c)}{2}}} \label{eqn:zero-term}
-  \end{eqnarray}
-  
-The final step is to show that the term~(\ref{eqn:zero-term}) is equal
-to zero. As $\ell(i-1)$ is a constant with respect to $\R$ and $y$ the
-term~(\ref{eqn:zero-term}) can be written as:
-\begin{eqnarray}
-&&\E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{(y-\ell(i-1))
-   \frac{\pot(i+1,\R+1)-\pot(i+1,\R-1)}{2}}}\\
-&=&
-\E{\R \sim \state(i-1)}{\Bias(i-1,\R)
-    \frac{\pot(i,\R+1+c)-\pot(i,\R-1-c)}{2}}\\
-  &-& \ell(i) \E{\R \sim \state(i-1)}{
-    \frac{\pot(i,\R+1+c)-\pot(i,\R-1-c)}{2}}\\
-  &=& 0
-\end{eqnarray}
-\end{enumerate}
-\qed
 
   We find that the lower bound corredponds to an unbiased random
   walk with step size $\pm 1$. The upper bound also corresponds to a an
@@ -732,7 +600,7 @@ term~(\ref{eqn:zero-term}) can be written as:
   $\ell(t)$ is always zero, regardless of the strategy of the
   learner, and state progression is independent of the
   learner's choices.
-
+\fi
   \begin{figure}[t]
 %\vskip -0.2in
 \begin{center}
@@ -744,9 +612,8 @@ term~(\ref{eqn:zero-term}) can be written as:
   game, and once for the continuous time game. \newline
   {\bf Integer time game:} let
   the current iteration be $i$ and let the current regret be $\R$. Let
-  $r$ be the regret at iteration $i+1$, we have that $\R-1-c \leq r
-  \leq \R+1+c$. The
-  potential at iteration $i+1$ is $\pot(i+1,r)$ (the red curve). The lower bound
+  $r$ be the regret at iteration $i+1$, we have that $\R-2 \leq r
+  \leq \R+2$. The potential at iteration $i+1$ is $\pot(i+1,r)$ (the red curve). The lower bound
   (blue line) corresponds to the adversarial strategy:
   $\adversM^{1/2}(i,\R)$. The first-order learner strategy:
   $\learnerM^1(i,\R)$ corresponds to the green line. The second-order
@@ -795,9 +662,13 @@ term~(\ref{eqn:zero-term}) can be written as:
       \begin{equation} \label{eqn:value-iteration-upper}
         \upperpot(i-1, \R) = \pot(i,\R) + b(i,\R) \E{l \sim \adversM(i,\R)}{l^2}
       \end{equation}
-      where $b(i,\R) = \pot(i,\R+1+c) -\pot(i,\R) - (1+c) \left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(i,r)$
+      where $b(i,\R) = \pot(i,\R+2) -\pot(i,\R) - 2 \left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(i,r)$
    \end{lemma}
 
+   \proof
+   To Do
+   \qed
+   
 We compare the bound for $\learnerM^2$ to the bound for $\learnerM^1$
 given in Lemma~\ref{lemma:first-order-bound}. We find that when the 
 adversary is optimal: $\E{l \sim \adversM(t,\R)}{l^2}=1$ then the
@@ -1215,8 +1086,13 @@ On iteration $i=1,2,\ldots$
 \begin{equation} \label{eqn:deltat}
   \deltat_i=
   \E{\R \sim \state(t_i)}{\E{y \sim
-      \adversM(t_i,\R)}{\at{\frac{\partial^2}{\partial r^2}}
+      \adversM(t_i,\R)}{G(t_i,\R)
       ((y-\ell(t_i))^2)}}
+\end{equation}
+Where
+\begin{equation} \label{eqn:SecondOrderDerivative}
+G(t_i,\R) = \frac{\at{\frac{\partial^2}{\partial r^2}}}{Z},\;\;
+Z=\E{\R \sim \state(t_i)}{\at{\frac{\partial^2}{\partial r^2}}}
 \end{equation}
 
 \item The state is updated. The expectation below is over
@@ -1673,10 +1549,10 @@ As $\deltat_i$ is a constant relative to $y$, we can take it
 outside the expectation and plug in the definition of $\deltat_i$ (\ref{eqn:deltat})
 \begin{equation} \label{eqn:term2.1}
   \E{\R \sim \state(t_i)}{\E{y \sim
-      \adversM(t_i,\R)}{\at{\frac{\partial^2}{\partial r^2}}
-      (y-\ell(t_i))^2} - \deltat_i}=
+      \adversM(t_i,\R)}{G(t_i,\R)(y-\ell(t_i))^2} - \deltat_i}=
   \deltat_i - \deltat_i =0
 \end{equation}
+Where $G(t_i,\R)$ is defined in Equation~(\ref{eqn:SecondOrderDerivative})
 We find that (\ref{eqn:contin2}) is zero.
 
 Finally (\ref{eqn:contin3}) is negligible relative to the other terms
@@ -1699,4 +1575,84 @@ following properties:
   \item for any $j$, $\sum_i (s_i^j)^2 = T$
 \end{itemize}
   \end{definition}
+
+\section{Old Stuff}
+
+
+
+
+
+\section{Variable time steps}
+The second order bounds of~\cite{cesa2007improved} show that, in some
+contexts, the time parameter $t$ can be replaced by a variance-type
+parameter $\V_T= \sum_{i=1}^T \var_i$. This corresponds to a
+significant tightening of the bound. For example if instead of $l_j^i
+\in [-\epsilon,+\epsilon]$, then $\V_T = T\epsilon^2$, and if we set
+$T=\epsilon^{-2}$ we get n upper bound on the regret that does not
+depend on $T$. The idea is to replace $T$ with $V_T$ in the definition
+of the upper and lower potentials. Which is what we do in
+Section\ref{sec:discrete}.
+
+In that variant of the potential game the adversary chooses the
+``real-time'' step at each iteration. Surprisingly, it turns out that
+the adversary's preference is to make the time steps as small as
+possible (but not zero). Combining the random walk strategy with the
+infinitesimal time step, we arrive at a strategy that is define by
+Brownian motion, or a Wiener process. Even more surprisingly, the
+strategy of the learning at this limit corresponds to the same
+Brownian motion. In other words, we have a min-max characterization of
+DTOL.
+
+\paragraph*{The rest of the paper is organized as follows}
+In Section~\ref{sec:preliminaries} we provide some basic definitions.
+In Section~\ref{sec:integer} we describe the potential game in the standard
+integer time case and prove some upper and lower bounds for this
+case. In Section~\ref{sec:discrete} we define a the discrete time
+game, where time advances are real valued and finite. The core of our
+argument, which is based on the theory of ``divided-differences''
+appears in Section~\ref{sec:smallsteps}. In
+Section~\ref{sec:continuous} we define the continuous time limit of
+the game. In Section~\ref{sec:self-consistent} we show that optimal
+any-time potential functions correspond to the solution of the
+kolmogorov Backwards differential equation, and show the Exponential weights and
+NormalHedge are solutions for that Equation. Finally, in
+Section~\ref{sec:NormalHedge}
+we argue that NormalHedge is the best possible potential function.
+
+  \fi
+
+  \iffalse
+\subsubsection*{Our Contributions}
+\begin{itemize}
+\item We characterize the min/max strategies for 
+  potential functions that have strictly positive derivatives up to
+  order four.
+\item We show that the optimal adversarial strategy for all of
+  these potential functions is a strategy corresponding to
+  Brownian motion.
+\item We show that $V_T$ replaces $T$ for any of these games.
+\item  We show that all potential functions that satisfy a particular
+  partial differential equations yield min/max solutions to the
+  potential game.
+\item We show that both the exponential weights algorithm and
+  NormalHedge are solutions to the PDE.
+  \item We show that NormalHedge provides the best possible regret bounds.
+\end{itemize}
+
+In this paper we extend and refine the analysis of the potential
+function to
+provide a min/max analysis for a large set of potential functions. We
+then show that NormalHedge is, in a strong sense the best of those
+potential functions.
+
+Our analysis is based on three ideas that are listed below.
+\begin{itemize}
+    \item {\bf Potential games:} We focus on the potential function, rather than on the problem of minimizing regret. In other words, we define a new game, in which the goal of the learner is to minimize  the final average potential.
+    \item {\bf Experts as a probability space:} Instead of restricting the game to $N$ strategies, we allow the set of strategies to be an arbitrary probability space. This allows the adversary the following simple but powerful strategy.  At each iteration $i$ the adversary splits each one of the strategies into two equal parts, once part incurs loss $-1$ and the other loss $+1$. In other words, at iteration $i$ there are $2^i$ strategies, each corresponding to a sequence in $\{-1,+1\}^i$. It is intuitively clear that the instantaneous loss of the learner is always zero, regardless of it's choice of $P$.
+    \item {\bf Reducing the time step and continuous time:} Regret bounds of the form $C\sqrt{T \ln N}$ are tight for the case in which the adversary assigns losses of $\pm 1$ with equal probabilities.
+    Suppose however, that the adversary produces the exact same sequence of losses, but divides the range of each loss by 2. In this case the losses and the regrets will all be divided by two, but the bound will remain the same! This suggest that defining $T$ as the number of iterations in the game leaves some slack. To remedy this situation we let time take on real values such that $t_{i+1}-t_i \leq 1$. At the same time we 
+    allow the adversary to declare, before each iteration, the range $[-s_i,+s_i]$ for the losses, in which case the following time would be 
+    $t_{i+1}=t_i +s_i^2$. Surprisingly, we find out that for a large set of potential functions, the preference of the adversary is to make $s_i$ as small as possible, making iterative game into a continuous time game and the adversarial strategy to be Brownian motion.
+\end{itemize}
+
 \fi

@@ -6,29 +6,6 @@
 \citation{cesa2006prediction}
 \citation{freund1997decision}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}\protected@file@percent }
-\citation{freund1999adaptive}
-\citation{cesa2007improved}
-\citation{cesa2007improved}
-\newlabel{def:unif-regret-bound}{{1}{2}}
-\newlabel{def:aver-potential-bound}{{2}{2}}
-\newlabel{thm:simulBoundAveragePot}{{1}{2}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Main results}{2}\protected@file@percent }
-\newlabel{eqn:0-order-bound}{{1}{2}}
-\newlabel{eqn:0-epsilon-order-bound}{{2}{2}}
-\newlabel{eqn:2nd-order-bound}{{3}{2}}
-\newlabel{eqn:Bias}{{4}{3}}
-\newlabel{eqn:aggregate-loss}{{5}{3}}
-\newlabel{eqn:state-update}{{6}{3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The integer time game }}{3}\protected@file@percent }
-\newlabel{fig:integerTimeGame}{{1}{3}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Preliminaries}{3}\protected@file@percent }
-\newlabel{sec:preliminaries}{{3}{3}}
-\newlabel{eqn:path}{{7}{3}}
-\newlabel{eqn:simultanTails}{{8}{4}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Potential Functions and backward induction}{4}\protected@file@percent }
-\newlabel{eqn:PotBound}{{9}{4}}
-\newlabel{thm:backward-recursion}{{2}{4}}
-\newlabel{eqn:infsup}{{11}{4}}
 \citation{cesa2006prediction}
 \citation{chaudhuri2009parameter}
 \citation{luo2015achieving}
@@ -37,66 +14,83 @@
 \citation{abernethy2008optimal}
 \citation{schapire2001drifting}
 \citation{freund2002drifting}
+\citation{freund1999adaptive}
+\newlabel{def:unif-regret-bound}{{1}{2}}
+\newlabel{def:aver-potential-bound}{{2}{2}}
+\newlabel{thm:simulBoundAveragePot}{{1}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}related work}{2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Main results}{2}\protected@file@percent }
+\newlabel{eqn:0-order-bound}{{1}{2}}
 \citation{cesa2007improved}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Stuff}{5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Variable time steps}{6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Integer time game}{6}\protected@file@percent }
-\newlabel{sec:integer}{{7}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Results for integer time game}{6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Analysis of the integer time game}{7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Strategies for integer time game}{7}\protected@file@percent }
-\newlabel{lemma:adversary-prefers-extremes}{{5}{7}}
-\newlabel{eqn:adv-strat-p}{{13}{7}}
-\newlabel{eqn:value-iteration-lower-recursion}{{14}{7}}
-\newlabel{lemma:first-order-bound}{{6}{7}}
-\newlabel{eqn:adv-strat}{{15}{7}}
-\newlabel{eqn:value-iteration-lower}{{16}{7}}
-\newlabel{eqn:learner-strat-1}{{17}{8}}
-\newlabel{eqn:value-iteration-upper-recursion}{{18}{8}}
-\newlabel{eqn:lower}{{19}{8}}
-\newlabel{eqn:ell-optimal-learner}{{20}{8}}
-\newlabel{eqn:Pot-Update}{{21}{8}}
-\newlabel{eqn:pot-upper}{{22}{8}}
-\newlabel{eqn:zero-term}{{25}{8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces This figure depicts the relationship between the different upper and lower bounds used in the analysis. To aid understanding we describe the elements of the figure twice: once for the integer game, and once for the continuous time game. \newline  {\bf  Integer time game:} let the current iteration be $i$ and let the current regret be $R$. Let $r$ be the regret at iteration $i+1$, we have that $R-1-c \leq r \leq R+1+c$. The potential at iteration $i+1$ is $\phi (i+1,r)$ (the red curve). The lower bound (blue line) corresponds to the adversarial strategy: $Q^{1/2}(i,R)$. The first-order learner strategy: $P^1(i,R)$ corresponds to the green line. The second-order learner strategy: $P^2(i,R)$ corresponds to the black curve.\newline  {\bf  Continuous time game:} let the current iteration be $i$, the current time be $t_i$ and the current regret be $R$. Let $0<s_i\leq 1$ be the step size chosen by the adversary, so that the next time is $t_{i+1} = t_i+s_i^2$. Let $r$ be the regret at iteration $i+1$, we have that $R-s_i-c s_i^2 \leq r \leq R+s_i+c s_i^2$. The potential at iteration $i+1$ is $\phi (t_{i+1},r)$ (the red curve). The lower bound (blue line) corresponds to the adversarial strategy: $Q^{1/2}_{\pm s_i}(t_i,R)$. The first-order learner strategy: $P^{1c}(t_i,R)$ corresponds to the green line. The second-order learner strategy: $P^{2c}(i,R)$ corresponds to the black curve. Observe that when $s_i \to 0$ the ratio $\frac  {s_i}{s_i+c s_i^2}$ converges to 1, and the upper and gap between the green and blue lines converges to zero.\\ \rule  [1ex]{6.5in}{0.5pt}}}{9}\protected@file@percent }
-\newlabel{fig:ConvexPot}{{2}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}A learner strategy with a variance-dependent bound}{9}\protected@file@percent }
-\newlabel{lemma:second-order-bound}{{7}{10}}
-\newlabel{eqn:learner-strat-2}{{30}{10}}
-\newlabel{eqn:value-iteration-upper}{{31}{10}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}From integer to discrete time}{10}\protected@file@percent }
-\newlabel{sec:discrete}{{8}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}The discrete time game}{11}\protected@file@percent }
-\newlabel{sec:discrete-Time-Game}{{8.1}{11}}
-\newlabel{eqn:ell-discrete}{{32}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Results for the discrete time game}{12}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}The adversary prefers smaller steps}{12}\protected@file@percent }
-\newlabel{sec:smallsteps}{{8.3}{12}}
-\newlabel{thm:smallerSteps}{{9}{12}}
-\newlabel{eqn:Kolmogorov}{{33}{12}}
+\citation{cesa2007improved}
+\newlabel{eqn:0-epsilon-order-bound}{{2}{3}}
+\newlabel{eqn:2nd-order-bound}{{3}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Preliminaries}{3}\protected@file@percent }
+\newlabel{sec:preliminaries}{{4}{3}}
+\newlabel{eqn:path}{{7}{3}}
+\newlabel{eqn:Bias}{{4}{4}}
+\newlabel{eqn:aggregate-loss}{{5}{4}}
+\newlabel{eqn:state-update}{{6}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The integer time game }}{4}\protected@file@percent }
+\newlabel{fig:integerTimeGame}{{1}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Integer time game}{4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Potential Functions and backward induction}{5}\protected@file@percent }
+\newlabel{eqn:induction}{{8}{5}}
+\newlabel{thm:backward-recursion}{{2}{5}}
+\newlabel{eqn:upperPotentials}{{9}{5}}
+\newlabel{eqn:lowerPotentials}{{10}{5}}
+\newlabel{eqn:limitPotential}{{11}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Strategies for the integer time game}{5}\protected@file@percent }
+\newlabel{sec:strat-integer}{{7}{5}}
+\newlabel{eqn:adv-strat-p}{{12}{6}}
+\newlabel{eqn:learner-strat-1}{{13}{6}}
+\newlabel{thm:IntegerGameBounds}{{3}{6}}
+\newlabel{lemma:first-order-bound}{{4}{6}}
+\newlabel{eqn:value-iteration-lower}{{14}{6}}
+\newlabel{eqn:value-iteration-upper-recursion}{{15}{6}}
+\newlabel{eqn:lower}{{16}{6}}
+\newlabel{eqn:ell-optimal-learner}{{17}{7}}
+\newlabel{eqn:Pot-Update}{{18}{7}}
+\newlabel{eqn:pot-upper}{{19}{7}}
+\newlabel{eqn:zero-term}{{22}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}A learner strategy with a variance-dependent bound}{7}\protected@file@percent }
+\newlabel{lemma:second-order-bound}{{5}{7}}
+\newlabel{eqn:learner-strat-2}{{27}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces This figure depicts the relationship between the different upper and lower bounds used in the analysis. To aid understanding we describe the elements of the figure twice: once for the integer game, and once for the continuous time game. \newline  {\bf  Integer time game:} let the current iteration be $i$ and let the current regret be $R$. Let $r$ be the regret at iteration $i+1$, we have that $R-2 \leq r \leq R+2$. The potential at iteration $i+1$ is $\phi (i+1,r)$ (the red curve). The lower bound (blue line) corresponds to the adversarial strategy: $Q^{1/2}(i,R)$. The first-order learner strategy: $P^1(i,R)$ corresponds to the green line. The second-order learner strategy: $P^2(i,R)$ corresponds to the black curve.\newline  {\bf  Continuous time game:} let the current iteration be $i$, the current time be $t_i$ and the current regret be $R$. Let $0<s_i\leq 1$ be the step size chosen by the adversary, so that the next time is $t_{i+1} = t_i+s_i^2$. Let $r$ be the regret at iteration $i+1$, we have that $R-s_i-c s_i^2 \leq r \leq R+s_i+c s_i^2$. The potential at iteration $i+1$ is $\phi (t_{i+1},r)$ (the red curve). The lower bound (blue line) corresponds to the adversarial strategy: $Q^{1/2}_{\pm s_i}(t_i,R)$. The first-order learner strategy: $P^{1c}(t_i,R)$ corresponds to the green line. The second-order learner strategy: $P^{2c}(i,R)$ corresponds to the black curve. Observe that when $s_i \to 0$ the ratio $\frac  {s_i}{s_i+c s_i^2}$ converges to 1, and the upper and gap between the green and blue lines converges to zero.\\ \rule  [1ex]{6.5in}{0.5pt}}}{8}\protected@file@percent }
+\newlabel{fig:ConvexPot}{{2}{8}}
+\newlabel{eqn:value-iteration-upper}{{28}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}From integer to discrete time}{8}\protected@file@percent }
+\newlabel{sec:discrete}{{8}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}The discrete time game}{10}\protected@file@percent }
+\newlabel{sec:discrete-Time-Game}{{8.1}{10}}
+\newlabel{eqn:ell-discrete}{{29}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Results for the discrete time game}{10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}The adversary prefers smaller steps}{10}\protected@file@percent }
+\newlabel{sec:smallsteps}{{8.3}{10}}
 \citation{popoviciu1965certaines}
 \citation{butt2016generalization}
 \citation{de2005divided}
 \citation{butt2016generalization}
-\newlabel{lemma:n-strictly-convex}{{10}{13}}
-\newlabel{eqn:4thOrderConvex}{{34}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Strategies for the Learner in the discrete time game}{14}\protected@file@percent }
-\newlabel{eqn:learner-strat-1c}{{35}{14}}
-\newlabel{eqn:learner-strat-2c}{{36}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Bounds for easy sequences}{14}\protected@file@percent }
-\newlabel{sec:easy}{{9}{14}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.0.1}The continuous time game and a learner strategy}{14}\protected@file@percent }
-\newlabel{sec:contin-Time-Game}{{9.0.1}{14}}
-\newlabel{eqn:learner-strat-cc}{{37}{15}}
-\newlabel{eqn:ell-discrete}{{38}{15}}
-\newlabel{eqn:deltat}{{39}{15}}
-\newlabel{thm:variancebound}{{12}{15}}
-\newlabel{eqn:Vn}{{40}{15}}
-\@writefile{toc}{\contentsline {section}{\numberline {10}Two self-consistent potential functions}{16}\protected@file@percent }
-\newlabel{sec:self-consistent}{{10}{16}}
-\newlabel{eqn:NormalHedge}{{43}{16}}
-\@writefile{toc}{\contentsline {section}{\numberline {11}NormalHedge yields the fastest increasing potential}{16}\protected@file@percent }
-\newlabel{sec:NormalHedge}{{11}{16}}
+\newlabel{thm:smallerSteps}{{7}{11}}
+\newlabel{eqn:Kolmogorov}{{30}{11}}
+\newlabel{lemma:n-strictly-convex}{{8}{11}}
+\newlabel{eqn:4thOrderConvex}{{31}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Strategies for the Learner in the discrete time game}{12}\protected@file@percent }
+\newlabel{eqn:learner-strat-1c}{{32}{12}}
+\newlabel{eqn:learner-strat-2c}{{33}{12}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Bounds for easy sequences}{13}\protected@file@percent }
+\newlabel{sec:easy}{{9}{13}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.0.1}The continuous time game and a learner strategy}{13}\protected@file@percent }
+\newlabel{sec:contin-Time-Game}{{9.0.1}{13}}
+\newlabel{eqn:learner-strat-cc}{{34}{13}}
+\newlabel{eqn:ell-discrete}{{35}{13}}
+\newlabel{eqn:deltat}{{36}{13}}
+\newlabel{eqn:SecondOrderDerivative}{{37}{13}}
+\newlabel{thm:variancebound}{{10}{14}}
+\newlabel{eqn:Vn}{{38}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Two self-consistent potential functions}{14}\protected@file@percent }
+\newlabel{sec:self-consistent}{{10}{14}}
+\newlabel{eqn:NormalHedge}{{41}{14}}
 \bibstyle{plain}
 \bibdata{ref.bib}
 \bibcite{abernethy2006continuous}{1}
@@ -105,6 +99,8 @@
 \bibcite{cesa1997use}{4}
 \bibcite{cesa1996line}{5}
 \bibcite{cesa2006prediction}{6}
+\@writefile{toc}{\contentsline {section}{\numberline {11}NormalHedge yields the fastest increasing potential}{15}\protected@file@percent }
+\newlabel{sec:NormalHedge}{{11}{15}}
 \bibcite{cesa2007improved}{7}
 \bibcite{chaudhuri2009parameter}{8}
 \bibcite{de2005divided}{9}
@@ -117,37 +113,37 @@
 \bibcite{popoviciu1965certaines}{16}
 \bibcite{schapire2001drifting}{17}
 \bibcite{vovk1990aggregating}{18}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Proof of Theorem\nobreakspace  {}1\hbox {}}{18}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B}Proof of Theorem\nobreakspace  {}12\hbox {}}{18}\protected@file@percent }
-\newlabel{appendix:ProofOfVarianceBound}{{B}{18}}
-\newlabel{lemma:infiniteexpectations}{{13}{18}}
-\newlabel{lemma:Taylor2D}{{14}{19}}
-\newlabel{eqn:d.dn.F}{{53}{19}}
-\newlabel{eqn:Taylor.F}{{54}{19}}
-\newlabel{proof:onestep}{{55}{19}}
-\newlabel{proof:allsteps}{{56}{19}}
-\newlabel{term:Taylor_rdt}{{61}{20}}
-\newlabel{term:Taylor_dtsquare}{{62}{20}}
-\newlabel{term:Taylor_r3}{{63}{20}}
-\newlabel{term:Taylor_r2t}{{64}{20}}
-\newlabel{term:Taylor_rt2}{{65}{20}}
-\newlabel{term:Taylor_t3}{{66}{20}}
-\newlabel{term:coll1}{{68}{21}}
-\newlabel{term:coll2}{{69}{21}}
-\newlabel{term:coll3}{{70}{21}}
-\newlabel{term:coll4}{{71}{21}}
-\newlabel{term:coll5}{{72}{21}}
-\newlabel{term:coll6}{{73}{21}}
-\newlabel{term:coll7}{{74}{21}}
-\newlabel{term:coll8}{{75}{21}}
-\newlabel{term:Taylor_collected_rdt}{{76}{22}}
-\newlabel{term:Taylor_collected_r3}{{76}{22}}
-\newlabel{eqn:Taylor}{{76}{22}}
-\newlabel{eqn:deltatislargeenough}{{77}{22}}
-\newlabel{eqn:contin0}{{79}{22}}
-\newlabel{eqn:contin1}{{80}{22}}
-\newlabel{eqn:contin2}{{81}{22}}
-\newlabel{eqn:contin3}{{82}{22}}
-\newlabel{eqnterm1.1}{{83}{23}}
-\newlabel{eqnterm1.2}{{84}{23}}
-\newlabel{eqn:term2.1}{{85}{23}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Proof of Theorem\nobreakspace  {}1\hbox {}}{16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Proof of Theorem\nobreakspace  {}10\hbox {}}{17}\protected@file@percent }
+\newlabel{appendix:ProofOfVarianceBound}{{B}{17}}
+\newlabel{lemma:infiniteexpectations}{{11}{17}}
+\newlabel{lemma:Taylor2D}{{12}{17}}
+\newlabel{eqn:d.dn.F}{{51}{17}}
+\newlabel{eqn:Taylor.F}{{52}{18}}
+\newlabel{proof:onestep}{{53}{18}}
+\newlabel{proof:allsteps}{{54}{18}}
+\newlabel{term:Taylor_rdt}{{59}{18}}
+\newlabel{term:Taylor_dtsquare}{{60}{18}}
+\newlabel{term:Taylor_r3}{{61}{18}}
+\newlabel{term:Taylor_r2t}{{62}{18}}
+\newlabel{term:Taylor_rt2}{{63}{18}}
+\newlabel{term:Taylor_t3}{{64}{18}}
+\newlabel{term:coll1}{{66}{19}}
+\newlabel{term:coll2}{{67}{19}}
+\newlabel{term:coll3}{{68}{19}}
+\newlabel{term:coll4}{{69}{19}}
+\newlabel{term:coll5}{{70}{19}}
+\newlabel{term:coll6}{{71}{19}}
+\newlabel{term:coll7}{{72}{19}}
+\newlabel{term:coll8}{{73}{19}}
+\newlabel{term:Taylor_collected_rdt}{{74}{20}}
+\newlabel{term:Taylor_collected_r3}{{74}{20}}
+\newlabel{eqn:Taylor}{{74}{20}}
+\newlabel{eqn:deltatislargeenough}{{75}{20}}
+\newlabel{eqn:contin0}{{77}{20}}
+\newlabel{eqn:contin1}{{78}{20}}
+\newlabel{eqn:contin2}{{79}{20}}
+\newlabel{eqn:contin3}{{80}{20}}
+\newlabel{eqnterm1.1}{{81}{21}}
+\newlabel{eqnterm1.2}{{82}{21}}
+\newlabel{eqn:term2.1}{{83}{21}}
