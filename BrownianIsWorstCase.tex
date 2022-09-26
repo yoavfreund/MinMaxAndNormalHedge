@@ -1086,13 +1086,8 @@ On iteration $i=1,2,\ldots$
 \begin{equation} \label{eqn:deltat}
   \deltat_i=
   \E{\R \sim \state(t_i)}{\E{y \sim
-      \adversM(t_i,\R)}{G(t_i,\R)
+      \adversM(t_i,\R)}{\at{\frac{\partial^2}{\partial r^2}}
       ((y-\ell(t_i))^2)}}
-\end{equation}
-Where
-\begin{equation} \label{eqn:SecondOrderDerivative}
-G(t_i,\R) = \frac{\at{\frac{\partial^2}{\partial r^2}}}{Z},\;\;
-Z=\E{\R \sim \state(t_i)}{\at{\frac{\partial^2}{\partial r^2}}}
 \end{equation}
 
 \item The state is updated. The expectation below is over
@@ -1134,7 +1129,7 @@ If we define
 
 \begin{equation} \label{eqn:Vn}
   V_n = t_n = \sum_{i=1}^n \deltat_i= 
-  \sum_{i=1}^n \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,R)}{\adversM(t_i,\R)
+  \sum_{i=1}^n \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,R)}{\at{\frac{\partial^2}{\partial r^2}}
       (y-\ell(t_i))^2}} 
 \end{equation}
 
@@ -1549,7 +1544,8 @@ As $\deltat_i$ is a constant relative to $y$, we can take it
 outside the expectation and plug in the definition of $\deltat_i$ (\ref{eqn:deltat})
 \begin{equation} \label{eqn:term2.1}
   \E{\R \sim \state(t_i)}{\E{y \sim
-      \adversM(t_i,\R)}{G(t_i,\R)(y-\ell(t_i))^2} - \deltat_i}=
+      \adversM(t_i,\R)}{\adversM(t_i,\R)}{\at{\frac{\partial^2}{\partial r^2}}
+      (y-\ell(t_i))^2} - \deltat_i}=
   \deltat_i - \deltat_i =0
 \end{equation}
 Where $G(t_i,\R)$ is defined in Equation~(\ref{eqn:SecondOrderDerivative})
