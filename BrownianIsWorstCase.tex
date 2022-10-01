@@ -24,8 +24,8 @@ optimal when the horizon is not known. Finally we give bounds on the
 learning algorithm in the context of Ito processes.
 \end{abstract}
 
-\section{Introduction}
 
+\section{Introduction}
 Online prediction with expert advise has been studied extensively over
 the years and the number of publications in the area is vast (see
 e.g.~\cite{vovk1990aggregating, feder1992universal,
@@ -198,13 +198,13 @@ lower and upper bounds on the regret involving $\V_T$.
 \begin{minipage}[t]{6.4in}
 Initialization:
 \begin{itemize}
-\item input: $T$ : The length of the game.
+\item input: $N$ : The length of the game.
 \item Regret bound: $G(r)$ the simuotanous bound on the regret as in Definition~\ref{def:unif-regret-bound}.
 \item $\state(1) = \delta(0)$ is the initial state of the game which
   is a point mass distribution at 0. 
 \end{itemize}
 
-For $i=1,2,\ldots,T-1$:\\
+For $i=0,1,2,\ldots,N-1$:\\
 
 \begin{enumerate}
 \item The learner chooses a non-negative random variable over $\Omega$
@@ -272,7 +272,7 @@ cumulative regret of $\omega$ at time $i$: $\R_\omega^i$. The sequence
 of cumulative regrets corresponding to action $\omega$ is the {\em
   path} of $\omega$:
 \begin{equation} \label{eqn:path}
-  S_{\omega}=(\R_\omega^1,\R_\omega^2,\ldots,\R_\omega^T)
+  S_{\omega}=(\R_\omega^1,\R_\omega^2,\ldots,\R_\omega^N)
 \end{equation}
 
 Suppose $P$ is a distribution over the reals, and $f:\reals
@@ -293,10 +293,10 @@ $a$. For convenience we define $A \ominus B = A \oplus (-B)$
 game. However it does contain a definition for who wins the game. We
 consider two definitions:
 \begin{itemize}
-\item The learner wins if the final distribution $\phi(T)$ satisfies
+\item The learner wins if the final distribution $\phi(N)$ satisfies
   the simultanous  regret bound $G$ as defined in~\ref{def:unif-regret-bound}
-\item The learner wins if the final distribution $\phi(T)$ satisfies
-  $\state(T) \cdot \pot(T) \leq 1$ as defined in \ref{def:aver-potential-bound}.
+\item The learner wins if the final distribution $\phi(N)$ satisfies
+  $\state(N) \cdot \pot(N) \leq 1$ as defined in \ref{def:aver-potential-bound}.
 \end{itemize}
 From theorem~\ref{thm:simulBoundAveragePot} we know that if
 we set the potential as $\pot(R) = \frac{1}{G(x)}$ then the two
@@ -306,9 +306,9 @@ The simultanous bound is our ultimate goal, the advantage of the
 potential game is that intermediate potential functions can be
 defined, thus decoupling iterations of the game.
 
-We therefore fix the length of the game $T$
-and the final potential function $\pot(T)$. We define the goal of the
-learner to minimize  $\state(T) \cdot \pot(T)$ and the goal of the
+We therefore fix the length of the game $N$
+and the final potential function $\pot(N)$. We define the goal of the
+learner to minimize  $\state(N) \cdot \pot(N)$ and the goal of the
 adversary to maximize the same. 
 
 In the next section we define the intermediate potential functions in
@@ -344,7 +344,7 @@ Fixing the strategies defines a distribution over paths:
 distribution over paths. The potentials $i,\R$ corresponds to the
 expected final potentail given that the paths 
 
-The base case is  $\potPQ(T,\R) = \pot(T,\R)$.
+The base case is  $\potPQ(N,\R) = \pot(N,\R)$.
 In the induction we assume that  $\potPQ(i+1,\R)$ is known and compute  $\potPQ(i,\R)$.
 We use our knowledge of $\learnerM(i,\R)$ and
 Equations~(\ref{eqn:Bias},\ref{eqn:aggregate-loss}) to calculate
@@ -359,10 +359,10 @@ following theorem:
 
 \begin{theorem} \label{thm:backward-recursion}
 Assuming $ \learnerM(i,\R), \adversM(i,\R)$ are fixed for all
-$i=1,\ldots,T-1$, then
+$i=1,\ldots,N-1$, then
 \[
-   \state(T)\cdot \pot(T)=
-   \state(T-1)\cdot \potPQ(T-1)= \cdots =
+   \state(N)\cdot \pot(N)=
+   \state(N-1)\cdot \potPQ(N-1)= \cdots =
    \state(1)\cdot \potPQ(1)=\potPQ(1,0)
   \]
 \end{theorem}
@@ -390,11 +390,11 @@ Next,we vary the strategies of one side or the other to define upper
 and lower potentials.
 \begin{equation} \label{eqn:upperPotentials}
   \exists \learnerM, \;\;\; \forall \adversM,\;\; \forall 1\leq i \leq
-  T,\;\; \forall \R \in \reals,\;\; \upperpot(i,\R) \geq \potPQ(i,R)
+  N,\;\; \forall \R \in \reals,\;\; \upperpot(i,\R) \geq \potPQ(i,R)
 \end{equation}
 \begin{equation} \label{eqn:lowerPotentials}
   \exists \adversM, \;\;\; \forall \learnerM, \;\; \;\; \forall 1\leq i \leq
-  T,\;\; \forall \R \in \reals,\;\; \lowerpot(i,\R) \leq \potPQ(i,R)
+  N,\;\; \forall \R \in \reals,\;\; \lowerpot(i,\R) \leq \potPQ(i,R)
 \end{equation}
 
 In words, $\upperpot$ is an upper bound on the potential that is 
@@ -420,7 +420,7 @@ Before we attempt this goal, we start by analyzing the integer time game.
 We go back to the integer time game and show the strategies for both
 sides and the corresponding upper and lower potentials.
 
-We assume that $\pot(T)  \in \SP{2}$, in other words, the final
+We assume that $\pot(N)  \in \SP{2}$, in other words, the final
 potential is positive, increasing and convex.
 
 We define the adversarial strategy
@@ -447,20 +447,20 @@ $\sum_{i=1}^n X_i$ where $X_i$ are iid binary random variables which
 attain the values $-a,+a$ with equal probabilities.
 
 \begin{theorem} \label{thm:IntegerGameBounds}
-  Let $\pot_T \in \SP{2}$, for any iteration $0 \leq i \leq T$ and
+  Let $\pot_N \in \SP{2}$, for any iteration $0 \leq i \leq N$ and
   initial regret $\R_0 \in \reals$ we define $\state(i,\R_0)$ to
   contain all paths that are equal to $\R_0$ on iteration $i$. We
-  consider the final score $\score(T)$ starting from state
+  consider the final score $\score(N)$ starting from state
   $\state(i,\R_0)$ and using a particular strategy
   \begin{itemize}
   \item
     The adversarial strategy~(\ref{eqn:adv-strat-p}) starting from
     $\state(i,\R_0)$. Guarantees a final potential 
      
-    $$\score(T) \geq \E{\R \sim \R_0 \oplus B(T-i,1)}{\pot(T,\R)}$$
+    $$\score(N) \geq \E{\R \sim \R_0 \oplus B(N-i,1)}{\pot(N,\R)}$$
   \item
     There learner strategy~(\ref{eqn:learner-strat-1}) guarantees 
-    $$\score(T) \leq \E{\R \sim \R_0 \oplus B(T-i,2)}{\pot(T,\R)}$$
+    $$\score(N) \leq \E{\R \sim \R_0 \oplus B(N-i,2)}{\pot(N,\R)}$$
   \end{itemize}
 \end{theorem}
 
@@ -488,7 +488,7 @@ potentials (Equations~(\ref{eqn:upperPotentials},\ref{eqn:lowerPotentials})) for
 Strategies~(\ref{eqn:adv-strat-p}) and~(\ref{eqn:learner-strat-1})
 
 For the first step in the backward induction we define
-$$  \lowerpot(T,\R) = \upperpot(T,\R) = \pot(T,\R) $$
+$$  \lowerpot(N,\R) = \upperpot(N,\R) = \pot(N,\R) $$
 
 \begin{lemma} \label{lemma:first-order-bound}
   If $\pot(i,\R) \in \SP{2}$
@@ -573,221 +573,10 @@ term~(\ref{eqn:zero-term}) can be written as:
 
 \qed
 
-\iffalse
-Consider the states at two consecutive iterations $\state(i-1),\state(i)$.
-Suppose that $\pot(i,\R)$, the value function for iteration $i$ is fixed.
-We say that $\lowerpot(i-1,\R)$ is a lower bound on the value at iteration
-$i-1$ if there is exists an adversarial strategy $\adversM^*$ such that
-for any strategy of the learner $\learnerM$, 
-$$ \E{\R \sim \state(i-1)}{\lowerpot(i-1)} \leq \E{\R \sim \state(i)}{\pot(i)}$$
-Similarly, $\upperpot(i-1,\R)$ is an upper potential if there exists a
-learner strategy $\learnerM^*$ such that for any adversarial strategy
-$\adversM$,
-$$ \E{\R \sim \state(i-1)}{\upperpot(i-1)} \geq \E{\R \sim \state(i)}{\pot(i)}$$
 
-
-
-  We find that the lower bound corredponds to an unbiased random
-  walk with step size $\pm 1$. The upper bound also corresponds to a an
-  unbiasd random walk with step size $\pm(1+c)$. The natural setting
-  in the natural game is $c=1$, which means that there is a
-  significant difference between the upper and lower bounds. As we
-  show in the next section, this gap converges to zero in the
-  continuous time setting, and the upper and lower bounds match,
-  making the strategies for both sides min-max optimal. 
-
-  Note also that the adversarial strategy the aggregate loss
-  $\ell(t)$ is always zero, regardless of the strategy of the
-  learner, and state progression is independent of the
-  learner's choices.
-\fi
-  \begin{figure}[t]
-%\vskip -0.2in
-\begin{center}
-
- \centerline{\includegraphics[width=\textwidth]{figures/convexPot.pdf}}
-\caption{This figure depicts the relationship between the different
-  upper and lower bounds used in the analysis. To aid understanding we
-  describe the elements of the figure twice: once for the integer
-  game, and once for the continuous time game. \newline
-  {\bf Integer time game:} let
-  the current iteration be $i$ and let the current regret be $\R$. Let
-  $r$ be the regret at iteration $i+1$, we have that $\R-2 \leq r
-  \leq \R+2$. The potential at iteration $i+1$ is $\pot(i+1,r)$ (the red curve). The lower bound
-  (blue line) corresponds to the adversarial strategy:
-  $\adversM^{1/2}(i,\R)$. The first-order learner strategy:
-  $\learnerM^1(i,\R)$ corresponds to the green line. The second-order
-  learner strategy:  $\learnerM^2(i,\R)$ corresponds to the black
-  curve.\newline
-{\bf Continuous time game:} let
-  the current iteration be $i$, the current time be $t_i$ and the
-  current regret be $\R$. Let $0<s_i\leq 1$ be the step size chosen by the
-  adversary, so that the next time is $t_{i+1} = t_i+s_i^2$. Let $r$
-  be the regret at iteration
-  $i+1$, we have that $\R-s_i-c s_i^2 \leq r \leq \R+s_i+c s_i^2$.
-  The potential at iteration $i+1$ is $\pot(t_{i+1},r)$ (the red
-  curve).  The lower bound (blue line) corresponds to the adversarial
-  strategy: $\adversM^{1/2}_{\pm s_i}(t_i,\R)$. The first-order learner strategy:
-  $\learnerM^{1c}(t_i,\R)$ corresponds to the green line. The second-order
-  learner strategy: $\learnerM^{2c}(i,\R)$ corresponds to the black
-  curve.   Observe that when $s_i \to 0$ the ratio $\frac{s_i}{s_i+c
-    s_i^2}$ converges to 1, and the upper and gap between the green
-  and blue lines converges to zero.\\
-\rule[1ex]{6.5in}{0.5pt}}
-\label{fig:ConvexPot}
-\end{center}
-\vskip -0.4in
-\end{figure} 
-
-  \subsection{A learner strategy with a variance-dependent bound}
-
-  As shown in Lemma~\ref{lemma:adversary-prefers-extremes}, the
-  adversary always prefers mixed strategies that assign zero
-  probability for all steps other than $\pm 1$. Suppose, however, that
-  the adversary is not worst-case optimal and chooses steps whose
-  length is less than one. The following lemma gives a slightly
-  different strategy for the learner, which guarantees a tighter bound
-  for this case.
-
-  \begin{lemma} \label{lemma:second-order-bound}
-      The learner strategy:
-      \begin{equation} \label{eqn:learner-strat-2}
-      \learnerM^2(i-1,\R) =  \frac{1}{Z}
-      \left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(i,r)
-      \end{equation}
-      Where $Z$ is a normalization factor
-      $$Z = \E{\R \sim \state(i)}{\left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(i,r)}$$
-      guarantees the following upper potential against any adversarial
-      strategy $\adversM$
-      \begin{equation} \label{eqn:value-iteration-upper}
-        \upperpot(i-1, \R) = \pot(i,\R) + b(i,\R) \E{l \sim \adversM(i,\R)}{l^2}
-      \end{equation}
-      where $b(i,\R) = \pot(i,\R+2) -\pot(i,\R) - 2 \left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(i,r)$
-   \end{lemma}
-
-   \proof
-   To Do
-   \qed
-   
-We compare the bound for $\learnerM^2$ to the bound for $\learnerM^1$
-given in Lemma~\ref{lemma:first-order-bound}. We find that when the 
-adversary is optimal: $\E{l \sim \adversM(t,\R)}{l^2}=1$ then the
-bound for $\learnerM^1$ is better than the bound for $\learnerM^2$, on the
-other hand, when $\E{l \sim \adversM(t,\R)}{l^2}$ is close to zero,
-$\learnerM^2$ is better than $\learnerM^1$.  
-
-\section{From integer to discrete time}
-\label{sec:discrete}
-
-We start with motivation for using time that is indexed by real
-values rather than the natural numbers. We distinguish between two
-notions of time. The first notion of time is a counter that
-counts the iterations of the game, we will call this counter the {\em
-  iteration counter } and denote it by $i=0,1,\ldots$. The second,
-more interesting notion of time is the time that appears in the regret
-bounds, we denote this time by $t_i$ where $i$ is the iteration
-number. We restrict the time increments $\Delta t_i =t_i-t_{i-1}$ to
-the range $0\leq \Delta t_i \leq 1$.  The magnitude of $\deltat_i$
-corresponds to the {\em hardness} of iteration $i$. $\deltat_i=0$
-corresponds to the case where the losses of all of the strategies are
-equal to a common value $-1 \leq a \leq 1$. In this case the aggregate
-loss $\ell=a$, the state does not change:
-$\state(i-1)=\state(i)$, $\Delta t_i=0$ and the instantanous regret is zero. On the
-other hand $\Delta t_i=1$ corresponds to the adversarial strategy
-$\adversM^{1/2}(t-1,R)$ (Eqn.~\ref{eqn:adv-strat}) which maximizes the
-instantanous regret.
-
-We introduce an additional step to the integer game. Before the
-learner makes it's choice, the 
-adversary chooses a real number $0 \leq s_i \leq 1$, by doing so, the
-adversary commits that all of the instantanous expert lossesat that
-step be in the range $[-s_i,s_i]$. The time step is defined to be $\deltat_i =
-s_i^2$.
-
-First, note that the adversary in this game is at least as powerful as
-the adversary in the integer game. This is because the adversary can
-always choose $s_i=1$, effectively reducing the game to the integer
-game.
-
-Next, we justify the choice $\deltat_i = s_i^2$. Our argument is that
-any significantly different choice would give the game to one side or
-the other.  Suppose that $s_i = 1/k$ on all $m_k$ iterations of the game. In
-other words, this is a rescaling of the integer game. Consider the
-adversarial strategy. The distribution (state) after $m_k$ iterations is the
-binomial distribution. with mean zero and variance $m_k \frac{1}{k^2}$
-if $m_k \gg \frac{1}{k^2}$ then the variance at the end of the game
-goes to infinity.
-
-By allowing $\Delta t_i$ to vary from iteration to iteration
-we get a more refined quantification of the regret and, as we show
-below, min/max optimality.
-
-To find the relationship between loss magnitude and time increments 
-we compare two adversarial strategies.  The first strategy, discussed above,
-generates losses $\pm 1$ with equal probability, we deonte this
-strategy by $\adversM^{1/2}_{\pm 1}$. The other strategy, denoted
-$\adversM^{1/2}_{\pm 1/k}$, generates losses of $\pm 1/k$ with equal
-probabilities.
-
-From the adversarial point of view $\adversM^{1/2}_{\pm 1/k}$ is worse
-than $\adversM^{1/2}_{\pm 1}$. So it should correspond to a smaller
-time increment. But how much smaller? Suppose we start with the
-initial state $\state(0)$ which is a delta functions at $\R=0$.  One
-iteration of $\adversM^{1/2}_{\pm 1}$ results in a distribution
-$\pm 1$ w.p, $(1/2,1/2)$, which has mean $0$ and variance $1$.
-Suppose we associate $\Delta t =1/j$ with a single step of
-$\adversM^{1/2}_{\pm 1/k}$.  Equivalently, we associate $j$ iterations
-of $\adversM^{1/2}_{\pm 1/k}$ with $t=1$.  How should we set $j$? the
-distribution generated by $j$ steps is a binomial distribution
-supported on $j+1$ points, so there is no hope of making the two
-distributions identical. However, as it turns out, it is enough to
-equalize the mean and the variance of the two distributions. The mean
-of $\adversM^{1/2}_{\pm 1/k}$ is zero for any $k$. As for the
-variances, a single iteration of $\adversM^{1/2}_{\pm 1}$ is 1 and a
-single iteration of $\adversM^{1/2}_{\pm 1/k}$ is $1/k^2$. It follows
-that the variance after $j$ iterations of $\adversM^{1/2}_{\pm 1/k}$
-$j/k^2$. Equating this variance with that of a single step of
-$\adversM^{1/2}_{\pm 1}$ we get $j=k^2$ and $\Delta t= 1/k^2$.
-
-Note a curious behaviour of the {\em range} of $\R$ as $k \to \infty$
-the number of steps increases like $k^2$ while the size of each step
-is $1/k$. This means that the range of $\R$ is $[-k,k]$, which becomes
-converges to $(-\infty, + \infty)$ when $k \to \infty$. On the other
-hand, the variance increases like $t$.
-
-Next lets consider effect of reducing the step size on a {\em biased}
-strategy $\adversM^{1/2+\gamma}_{\pm 1}$ as defined in
-Eqn~(\ref{eqn:adv-strat-p}) for some
-$0\leq \gamma \leq 1/2$.  We now figure out what  $\gamma'$ should be
-so that the distribution generated by $k^2$ iterations of $\adversM^{1/2+\gamma'}_{\pm 1/k}$ has the
-same mean as a single iteration of $\adversM^{1/2+\gamma}_{\pm
-  1}$. The mean of a single iteration of
-$\adversM^{1/2+\gamma}_{\pm 1}$ is $2\gamma$ while the mean of a
-single iteration of $\adversM^{1/2+\gamma'}_{\pm 1/k}$ is
-$2\gamma'/k$. Therefor to keep the means equal we need to set
-$2\gamma'/k = 2\gamma$ or $\gamma' = \gamma/k$.
-
-
-Note that as $k \to \infty$, $\gamma' \to 0$. This observation
-motivates scaling the bound on $\ell(t)$ like $c s_i^2$ (see the
-description of the game below.)
-
-
-
-This leads to the following formulation of a continuous time game.
-The game is a generalization of the integer time game in that it
-reduces to the integer time game if the adversary always chooses $s_i=1$. 
-
-In this game we use $i=1,2,3,\ldots$ as the iteration index. We use
-$t_i$ to indicate a sequence of real-valued time points. $t_0=0$ and
-we assume there exists a finite $n$ such that $t_n = T$.
-
-We will later give some particular potential functions for which no
-a-priori knowledge of the termination condition is needed. The
-associated bounds will hold for any iteration of the game.
-
-\subsection{The discrete time game}
-\label{sec:discrete-Time-Game}
+\begin{figure}[ht!]
+\framebox{
+\begin{minipage}[t]{6.4in}
 
 On iteration $i=1,2,\ldots$
 \begin{enumerate}
@@ -796,13 +585,14 @@ On iteration $i=1,2,\ldots$
   time by $t_i = t_{i-1}+s_i^2$.
 \item Given $s_i$, the learner chooses a distribution $\learnerM(i)$ over $\reals$.
 \item The adversary chooses a mapping from $\reals$ to distributions
-  over $[-s_i,+s_i]$: $\adversM(t): \reals \to \Delta^{[-s_i,+s_i]}$
+  over $[-s_i,+s_i]:\;\adversM(t): \reals \to \Delta^{[-s_i,+s_i]}$
+  
 \item The aggregate loss is calculated:
   \begin{equation} \label{eqn:ell-discrete}
-    \ell(t_i)=\E{\R \sim \state(t_i)}{\learnerM(t_i,\R)
-      \Bias(t_i,\R)},\;\mbox{ where } \Bias(t_i,\R) \doteq \E{y \sim \adversM(t_i,\R)}{y}
+    \ell(t_i)=\E{\R \sim \state(t_i)}{\learnerM(t_i,\R) \Bias(t_i,\R)}
+    \mbox{ where } \Bias(t_i,\R) \doteq \E{y \sim \adversM(t_i,\R)}{y}
   \end{equation}
-\item the aggregate loss is restricted $|\ell(t_i)| \leq c s_i^2$.
+  Such that $|\ell(t_i)| \leq s_i^2$
 \item The state is updated. The expectation below is over
   distributions. and the notation $G \oplus \R$ means
   that distribution $G$ over the reals is shifted by the amount
@@ -811,8 +601,78 @@ On iteration $i=1,2,\ldots$
   $$
 \end{enumerate}
 
-When $t_i=T$ the game is terminated, and the final value is calculated:
-$$\score(T) =\E{\R \sim \state(T)}{\finalPot(\R)}$$
+Upon termination, the final value is calculated:
+$$\score(T) =\E{\R \sim \state(T)}{\finalPot}$$
+
+\end{minipage}}
+\caption{The discrete time game  \label{fig:discrete-Time-Game}}
+\end{figure}
+
+\section{From integer to discrete time}
+\label{sec:discrete}
+
+Theorem~\ref{thm:IntegerGameBounds} gives upper and lower bounds on
+the final score. There is a gap between the upper and lower bounds,
+because $\E{\R \sim \R_0 \oplus B(N-i,1)}{\pot(N,\R)} < \E{\R \sim
+  \R_0 \oplus B(N-i,2)}{\pot(N,\R)}$. In other words, the
+strategies~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}) are not a
+min/max pair. There might be other (pure) strategies for the integer
+game that are a min/max pair, but we conjecture that is not the case.
+
+In order to close the gap and find min/max strategies we extend the
+game by giving the adversary additional choices,
+we call the extended game the {\em discrete time game}. While
+in the integer time game the loss of each action is in the range $[-1,+1]$,
+in the discrete time game the adversary chooses, on iteration $i$ a
+step size $0<s_i\leq 1$ which restricts the losses to be in the range
+$[-s_i,+s_i]$. Note that by always choosing $s_i=1$, the adversary can
+recreate the integer time game.
+
+We give an informal argument for using the total variance instead of
+the number of steps. Suppose we use the adversarial
+strategy~(\label{eqn:adv-strat-p}) for $N$ iterations and that $N$ is
+large. The central limit theorem implies that $B(N,1) \approx {\cal N}(0,N)$
+i.e. the normal distribution with mean 0 and variance $N$. therefor
+the final potential is approximately 
+$$\score(N) \approx \E{\R \sim {\cal N}(0,N)}{\pot(N,\R)}$$
+
+Suppose we half the step size $s_i=1/2$ for all $0\leq i \leq N-1$. 
+The variance in each step decreases to $1/4$, so the total variance is
+$N/4$. and the final score is
+$$\score(N) \approx \E{\R \sim {\cal N}(0,\frac{N}{4})}{\pot(N,\R)}$$
+To keep the total variance unchanged we need to {\em quadruple} the
+number of iterations from $N$ to $4N$. In general, we need to replace
+the number of iterations $N$ with the total variance. Said
+differently, we replace the iteration counter $i$ with 
+a real values notion of time, which is the cumulative variance: $t_i =
+\sum_{j=1}^i s^i$. As expected, in the integer time game $s_i=1$ which
+implies that $t_i = i$
+
+
+Without further restrictions, this game allows the cumulative loss of
+the algorithm at a fixed time $t_N=1$ to grow infinitely large.
+For example, suppose the conditional distribution of losses at each
+iteration $i$ and regret value $\R$
+\begin{equation} \label{eqn:adv-strat-k}
+  \adversM^k(i,\R) =
+  \begin{cases}
+    +1/k & \mbox{ w.p. } \frac{3}{4}\\
+    -1/k & \mbox{ w.p. } \frac{1}{4}\\
+  \end{cases}
+\end{equation}
+
+In this case $s_i=1/k$, we set the number of iterations to $N=k^2$ so
+that the final time (or total variance) is $1$. Note that the expected
+total loss (total learner loss) is $N (3/4-1/4)/k = k/2$. In other words, as $k \to \infty$
+the total loss of the learner also goes to infinity. We avoid this
+case by requiring that the single iteration learner loss is at most
+$s_i^2$.~\footnote{We conjecture that removing this requirements
+  implies the existance of adversarial strategies that guarantee that
+  the final score is arbitrarily high, regardless of the learner's
+  strategy. Demonstrating such a strategy is an open problem.}
+
+Figure~(\ref{fig:discrete-Time-Game}) describes the Discrete-time game.
+
 
 \subsection{Results for the discrete time game}
 
@@ -847,8 +707,8 @@ std $\sigma$.
 As noted before, if the adversary chooses $s_i=1$ for all $i$ the game
 reduces the the integer time game. The question is whether the
 adversary would prefer to stick with $s_i=1$ or instead prefer to use
-$s_i<1$. In this section we give a surprising answer to this question
--- the adversary always prefers a smaller value of $s_i$ to a larger
+$s_i<1$. In this section we give a somewhat surprising answer to this question
+-- the adversary {\em always} prefers a smaller value of $s_i$ to a larger
 one. This leads to a preference for $s_i \to 0$, as it turns out, this
 limit is well defined and corrsponds to Brownian motion, also known as
 Wiener process.
@@ -1023,7 +883,7 @@ Next, we consider the discrete time version of $\learnerM^2$:
   \state(t_i)}{\left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(t_{i-1}+s_{i-1}^2,r)} \nonumber
 \end{eqnarray}
 
-\section{Bounds for easy sequences} \label{sec:easy}
+\section{The continuous time game and bounds for easy sequences} \label{sec:easy}
 In Section~\ref{sec:discrete} we have shown that the integer time game
 has a natural extension to a setting where $\deltat_i = s_i^2$. We
 also showed that the adversary gains from setting $s_i$ as small as
@@ -1058,7 +918,7 @@ We define a variant of the discrete time game
 learner's strategy, which is the limit of the strategy in the discrete
 game when $s_i \to 0$.
 
-\subsubsection{The continuous time game and a learner strategy}
+\subsubsection{The continuous time game and a strategy for the learner}
 \label{sec:contin-Time-Game}
 Set $t_1=0$ \\
 Fix maximal step $0<s<1$ \\
@@ -1085,9 +945,12 @@ On iteration $i=1,2,\ldots$
 \item  Increment $t_{i+1} = t_{i} + \deltat_i$ where
 \begin{equation} \label{eqn:deltat}
   \deltat_i=
-  \E{\R \sim \state(t_i)}{\E{y \sim
-      \adversM(t_i,\R)}{\at{\frac{\partial^2}{\partial r^2}}
-      ((y-\ell(t_i))^2)}}
+  \E{\R \sim \state(t_i)}{H(t_i,\R) \;\; \E{y \sim \adversM(t_i,\R)}{(y-\ell(t_i))^2}}
+\end{equation}
+Where
+\begin{equation}
+ H(t_i,R)=\frac{1}{Z^H} \left. \frac{\partial^2}{\partial r^2} \right|_{r=\R} \pot(t_i,r)
+  \mbox{ and } Z^H = \E{\R \sim \state(t_i)}{\left. \frac{\partial^2}{\partial r^2} \right|_{r=\R} \pot(t_i,r)}
 \end{equation}
 
 \item The state is updated. The expectation below is over
@@ -1129,8 +992,7 @@ If we define
 
 \begin{equation} \label{eqn:Vn}
   V_n = t_n = \sum_{i=1}^n \deltat_i= 
-  \sum_{i=1}^n \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,R)}{\at{\frac{\partial^2}{\partial r^2}}
-      (y-\ell(t_i))^2}} 
+  \sum_{i=1}^n \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,\R)}{H(t_i,\R) ((y-\ell(t_i))^2)}}
 \end{equation}
 
 We can use $V_n$ instead of $T$ giving us a variancee based bound.
@@ -1650,5 +1512,274 @@ Our analysis is based on three ideas that are listed below.
     allow the adversary to declare, before each iteration, the range $[-s_i,+s_i]$ for the losses, in which case the following time would be 
     $t_{i+1}=t_i +s_i^2$. Surprisingly, we find out that for a large set of potential functions, the preference of the adversary is to make $s_i$ as small as possible, making iterative game into a continuous time game and the adversarial strategy to be Brownian motion.
 \end{itemize}
+
+  \subsection{A learner strategy with a variance-dependent bound}
+
+  As shown in Lemma~\ref{lemma:adversary-prefers-extremes}, the
+  adversary always prefers mixed strategies that assign zero
+  probability for all steps other than $\pm 1$. Suppose, however, that
+  the adversary is not worst-case optimal and chooses steps whose
+  length is less than one. The following lemma gives a slightly
+  different strategy for the learner, which guarantees a tighter bound
+  for this case.
+
+  \begin{lemma} \label{lemma:second-order-bound}
+      The learner strategy:
+      \begin{equation} \label{eqn:learner-strat-2}
+      \learnerM^2(i-1,\R) =  \frac{1}{Z}
+      \left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(i,r)
+      \end{equation}
+      Where $Z$ is a normalization factor
+      $$Z = \E{\R \sim \state(i)}{\left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(i,r)}$$
+      guarantees the following upper potential against any adversarial
+      strategy $\adversM$
+      \begin{equation} \label{eqn:value-iteration-upper}
+        \upperpot(i-1, \R) = \pot(i,\R) + b(i,\R) \E{l \sim \adversM(i,\R)}{l^2}
+      \end{equation}
+      where $b(i,\R) = \pot(i,\R+2) -\pot(i,\R) - 2 \left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(i,r)$
+   \end{lemma}
+
+   \proof
+   To Do
+   \qed
+   
+We compare the bound for $\learnerM^2$ to the bound for $\learnerM^1$
+given in Lemma~\ref{lemma:first-order-bound}. We find that when the 
+adversary is optimal: $\E{l \sim \adversM(t,\R)}{l^2}=1$ then the
+bound for $\learnerM^1$ is better than the bound for $\learnerM^2$, on the
+other hand, when $\E{l \sim \adversM(t,\R)}{l^2}$ is close to zero,
+$\learnerM^2$ is better than $\learnerM^1$.  
+
+\fi
+
+\iffalse
+We start with motivation for using time that is indexed by real
+values rather than the natural numbers. We distinguish between two
+notions of time. The first notion of time is a counter that
+counts the iterations of the game, we will call this counter the {\em
+  iteration counter } and denote it by $i=0,1,\ldots$. The second,
+more interesting notion of time is the time that appears in the regret
+bounds, we denote this time by $t_i$ where $i$ is the iteration
+number. We restrict the time increments $\Delta t_i =t_i-t_{i-1}$ to
+the range $0\leq \Delta t_i \leq 1$.  The magnitude of $\deltat_i$
+corresponds to the {\em hardness} of iteration $i$. $\deltat_i=0$
+corresponds to the case where the losses of all of the strategies are
+equal to a common value $-1 \leq a \leq 1$. In this case the aggregate
+loss $\ell=a$, the state does not change:
+$\state(i-1)=\state(i)$, $\Delta t_i=0$ and the instantanous regret is zero. On the
+other hand $\Delta t_i=1$ corresponds to the adversarial strategy
+$\adversM^{1/2}(t-1,R)$ (Eqn.~\ref{eqn:adv-strat}) which maximizes the
+instantanous regret.
+
+We introduce an additional step to the integer game. Before the
+learner makes it's choice, the 
+adversary chooses a real number $0 \leq s_i \leq 1$, by doing so, the
+adversary commits that all of the instantanous expert lossesat that
+step be in the range $[-s_i,s_i]$. The time step is defined to be $\deltat_i =
+s_i^2$.
+
+First, note that the adversary in this game is at least as powerful as
+the adversary in the integer game. This is because the adversary can
+always choose $s_i=1$, effectively reducing the game to the integer
+game.
+
+Next, we justify the choice $\deltat_i = s_i^2$. Our argument is that
+any significantly different choice would give the game to one side or
+the other.  Suppose that $s_i = 1/k$ on all $m_k$ iterations of the game. In
+other words, this is a rescaling of the integer game. Consider the
+adversarial strategy. The distribution (state) after $m_k$ iterations is the
+binomial distribution. with mean zero and variance $m_k \frac{1}{k^2}$
+if $m_k \gg \frac{1}{k^2}$ then the variance at the end of the game
+goes to infinity.
+
+By allowing $\Delta t_i$ to vary from iteration to iteration
+we get a more refined quantification of the regret and, as we show
+below, min/max optimality.
+
+To find the relationship between loss magnitude and time increments 
+we compare two adversarial strategies.  The first strategy, discussed above,
+generates losses $\pm 1$ with equal probability, we deonte this
+strategy by $\adversM^{1/2}_{\pm 1}$. The other strategy, denoted
+$\adversM^{1/2}_{\pm 1/k}$, generates losses of $\pm 1/k$ with equal
+probabilities.
+
+From the adversarial point of view $\adversM^{1/2}_{\pm 1/k}$ is worse
+than $\adversM^{1/2}_{\pm 1}$. So it should correspond to a smaller
+time increment. But how much smaller? Suppose we start with the
+initial state $\state(0)$ which is a delta functions at $\R=0$.  One
+iteration of $\adversM^{1/2}_{\pm 1}$ results in a distribution
+$\pm 1$ w.p, $(1/2,1/2)$, which has mean $0$ and variance $1$.
+Suppose we associate $\Delta t =1/j$ with a single step of
+$\adversM^{1/2}_{\pm 1/k}$.  Equivalently, we associate $j$ iterations
+of $\adversM^{1/2}_{\pm 1/k}$ with $t=1$.  How should we set $j$? the
+distribution generated by $j$ steps is a binomial distribution
+supported on $j+1$ points, so there is no hope of making the two
+distributions identical. However, as it turns out, it is enough to
+equalize the mean and the variance of the two distributions. The mean
+of $\adversM^{1/2}_{\pm 1/k}$ is zero for any $k$. As for the
+variances, a single iteration of $\adversM^{1/2}_{\pm 1}$ is 1 and a
+single iteration of $\adversM^{1/2}_{\pm 1/k}$ is $1/k^2$. It follows
+that the variance after $j$ iterations of $\adversM^{1/2}_{\pm 1/k}$
+$j/k^2$. Equating this variance with that of a single step of
+$\adversM^{1/2}_{\pm 1}$ we get $j=k^2$ and $\Delta t= 1/k^2$.
+
+Note a curious behaviour of the {\em range} of $\R$ as $k \to \infty$
+the number of steps increases like $k^2$ while the size of each step
+is $1/k$. This means that the range of $\R$ is $[-k,k]$, which becomes
+converges to $(-\infty, + \infty)$ when $k \to \infty$. On the other
+hand, the variance increases like $t$.
+
+Next lets consider effect of reducing the step size on a {\em biased}
+strategy $\adversM^{1/2+\gamma}_{\pm 1}$ as defined in
+Eqn~(\ref{eqn:adv-strat-p}) for some
+$0\leq \gamma \leq 1/2$.  We now figure out what  $\gamma'$ should be
+so that the distribution generated by $k^2$ iterations of $\adversM^{1/2+\gamma'}_{\pm 1/k}$ has the
+same mean as a single iteration of $\adversM^{1/2+\gamma}_{\pm
+  1}$. The mean of a single iteration of
+$\adversM^{1/2+\gamma}_{\pm 1}$ is $2\gamma$ while the mean of a
+single iteration of $\adversM^{1/2+\gamma'}_{\pm 1/k}$ is
+$2\gamma'/k$. Therefor to keep the means equal we need to set
+$2\gamma'/k = 2\gamma$ or $\gamma' = \gamma/k$.
+
+
+Note that as $k \to \infty$, $\gamma' \to 0$. This observation
+motivates scaling the bound on $\ell(t)$ like $c s_i^2$ (see the
+description of the game below.)
+
+
+
+This leads to the following formulation of a continuous time game.
+The game is a generalization of the integer time game in that it
+reduces to the integer time game if the adversary always chooses $s_i=1$. 
+
+In this game we use $i=1,2,3,\ldots$ as the iteration index. We use
+$t_i$ to indicate a sequence of real-valued time points. $t_0=0$ and
+we assume there exists a finite $n$ such that $t_n = T$.
+
+We will later give some particular potential functions for which no
+a-priori knowledge of the termination condition is needed. The
+associated bounds will hold for any iteration of the game.
+
+\iffalse
+Consider the states at two consecutive iterations $\state(i-1),\state(i)$.
+Suppose that $\pot(i,\R)$, the value function for iteration $i$ is fixed.
+We say that $\lowerpot(i-1,\R)$ is a lower bound on the value at iteration
+$i-1$ if there is exists an adversarial strategy $\adversM^*$ such that
+for any strategy of the learner $\learnerM$, 
+$$ \E{\R \sim \state(i-1)}{\lowerpot(i-1)} \leq \E{\R \sim \state(i)}{\pot(i)}$$
+Similarly, $\upperpot(i-1,\R)$ is an upper potential if there exists a
+learner strategy $\learnerM^*$ such that for any adversarial strategy
+$\adversM$,
+$$ \E{\R \sim \state(i-1)}{\upperpot(i-1)} \geq \E{\R \sim \state(i)}{\pot(i)}$$
+
+
+
+  We find that the lower bound corredponds to an unbiased random
+  walk with step size $\pm 1$. The upper bound also corresponds to a an
+  unbiasd random walk with step size $\pm(1+c)$. The natural setting
+  in the natural game is $c=1$, which means that there is a
+  significant difference between the upper and lower bounds. As we
+  show in the next section, this gap converges to zero in the
+  continuous time setting, and the upper and lower bounds match,
+  making the strategies for both sides min-max optimal. 
+
+  Note also that the adversarial strategy the aggregate loss
+  $\ell(t)$ is always zero, regardless of the strategy of the
+  learner, and state progression is independent of the
+  learner's choices.
+\fi
+  \begin{figure}[t]
+%\vskip -0.2in
+\begin{center}
+
+ \centerline{\includegraphics[width=\textwidth]{figures/convexPot.pdf}}
+\caption{This figure depicts the relationship between the different
+  upper and lower bounds used in the analysis. To aid understanding we
+  describe the elements of the figure twice: once for the integer
+  game, and once for the continuous time game. \newline
+  {\bf Integer time game:} let
+  the current iteration be $i$ and let the current regret be $\R$. Let
+  $r$ be the regret at iteration $i+1$, we have that $\R-2 \leq r
+  \leq \R+2$. The potential at iteration $i+1$ is $\pot(i+1,r)$ (the red curve). The lower bound
+  (blue line) corresponds to the adversarial strategy:
+  $\adversM^{1/2}(i,\R)$. The first-order learner strategy:
+  $\learnerM^1(i,\R)$ corresponds to the green line. The second-order
+  learner strategy:  $\learnerM^2(i,\R)$ corresponds to the black
+  curve.\newline
+{\bf Continuous time game:} let
+  the current iteration be $i$, the current time be $t_i$ and the
+  current regret be $\R$. Let $0<s_i\leq 1$ be the step size chosen by the
+  adversary, so that the next time is $t_{i+1} = t_i+s_i^2$. Let $r$
+  be the regret at iteration
+  $i+1$, we have that $\R-s_i-c s_i^2 \leq r \leq \R+s_i+c s_i^2$.
+  The potential at iteration $i+1$ is $\pot(t_{i+1},r)$ (the red
+  curve).  The lower bound (blue line) corresponds to the adversarial
+  strategy: $\adversM^{1/2}_{\pm s_i}(t_i,\R)$. The first-order learner strategy:
+  $\learnerM^{1c}(t_i,\R)$ corresponds to the green line. The second-order
+  learner strategy: $\learnerM^{2c}(i,\R)$ corresponds to the black
+  curve.   Observe that when $s_i \to 0$ the ratio $\frac{s_i}{s_i+c
+    s_i^2}$ converges to 1, and the upper and gap between the green
+  and blue lines converges to zero.\\
+\rule[1ex]{6.5in}{0.5pt}}
+\label{fig:ConvexPot}
+\end{center}
+\vskip -0.4in
+\end{figure} 
+
+
+%%%%%%%%%%%%
+
+number of iterations by the
+total variance. 
+The time on iteration $i+1$ is $t_{i+1}=t_i+s_i^2$. To motivate this
+update consider the natural extension of the adversarial and learner
+strategies~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1})
+for an arbitrary $0<s_i\leq 1$.
+
+The adversarial strategy is 
+\begin{equation} \label{eqn:adv-strat-s}
+  \adversM^I(i-1,\R) =
+  \begin{cases}
+    +s_i & \mbox{ w.p. } \frac{1}{2}\\
+    -s_i & \mbox{ w.p. } \frac{1}{2}\\
+  \end{cases}
+\end{equation}
+
+and the learner strategy is
+\begin{equation} \label{eqn:learner-strat-s}
+\learnerM^I(i-1,\R) = \frac{1}{Z} \frac{\pot(i,\R+2s_i) - \pot(i,\R-2s_i)}{2}
+\end{equation}
+Where $Z$ is a normalization factor.
+
+
+
+Following the same line of argument as in the proof of
+Theorem~(\ref{thm:IntegerGameBounds}), and specializing for
+$i=0,\R_0=0$ we get the bounds
+
+  \begin{itemize}
+  \item
+    The adversarial strategy~(\ref{eqn:adv-strat-s}) starting from
+    $\state(i,\R_0)$. Guarantees a final potential 
+     
+    $$\score(T) \geq \E{\R \sim B(\langle s_0,\ldots,s_{T-1}\rangle)}{\pot(T,\R)}$$
+  \item
+    There learner strategy~(\ref{eqn:learner-strat-s}) guarantees
+    $$\score(T) \geq \E{\R \sim B(\langle 2s_0,\ldots,2s_{T-1}\rangle)}{\pot(T,\R)}$$
+  \end{itemize}
+
+Where for any sequence of $T$ non-negative numbers
+$a_0,\ldots,a_{T-1}$
+we denote by $B(\langle a_0,\ldots,a_{T-1}\rangle)$ the distribution of
+the sum of $T$ i.i.d. random variables
+$$X_i =   \begin{cases}
+    +a_i & \mbox{ w.p. } \frac{1}{2}\\
+    -a_i & \mbox{ w.p. } \frac{1}{2}\\
+  \end{cases}
+$$
+It is easy to verify that  $B(\langle a_0,\ldots,a_{T-1}\rangle)$ is a
+symmetric distribution with mean zero and variance $\sum_{i=0}^{T-1}
+a_i^2$. 
+
 
 \fi

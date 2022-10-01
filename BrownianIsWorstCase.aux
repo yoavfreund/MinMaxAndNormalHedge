@@ -53,51 +53,47 @@
 \newlabel{eqn:Pot-Update}{{18}{7}}
 \newlabel{eqn:pot-upper}{{19}{7}}
 \newlabel{eqn:zero-term}{{22}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}A learner strategy with a variance-dependent bound}{7}\protected@file@percent }
-\newlabel{lemma:second-order-bound}{{5}{7}}
-\newlabel{eqn:learner-strat-2}{{27}{7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces This figure depicts the relationship between the different upper and lower bounds used in the analysis. To aid understanding we describe the elements of the figure twice: once for the integer game, and once for the continuous time game. \newline  {\bf  Integer time game:} let the current iteration be $i$ and let the current regret be $R$. Let $r$ be the regret at iteration $i+1$, we have that $R-2 \leq r \leq R+2$. The potential at iteration $i+1$ is $\phi (i+1,r)$ (the red curve). The lower bound (blue line) corresponds to the adversarial strategy: $Q^{1/2}(i,R)$. The first-order learner strategy: $P^1(i,R)$ corresponds to the green line. The second-order learner strategy: $P^2(i,R)$ corresponds to the black curve.\newline  {\bf  Continuous time game:} let the current iteration be $i$, the current time be $t_i$ and the current regret be $R$. Let $0<s_i\leq 1$ be the step size chosen by the adversary, so that the next time is $t_{i+1} = t_i+s_i^2$. Let $r$ be the regret at iteration $i+1$, we have that $R-s_i-c s_i^2 \leq r \leq R+s_i+c s_i^2$. The potential at iteration $i+1$ is $\phi (t_{i+1},r)$ (the red curve). The lower bound (blue line) corresponds to the adversarial strategy: $Q^{1/2}_{\pm s_i}(t_i,R)$. The first-order learner strategy: $P^{1c}(t_i,R)$ corresponds to the green line. The second-order learner strategy: $P^{2c}(i,R)$ corresponds to the black curve. Observe that when $s_i \to 0$ the ratio $\frac  {s_i}{s_i+c s_i^2}$ converges to 1, and the upper and gap between the green and blue lines converges to zero.\\ \rule  [1ex]{6.5in}{0.5pt}}}{8}\protected@file@percent }
-\newlabel{fig:ConvexPot}{{2}{8}}
-\newlabel{eqn:value-iteration-upper}{{28}{8}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}From integer to discrete time}{8}\protected@file@percent }
-\newlabel{sec:discrete}{{8}{8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}The discrete time game}{10}\protected@file@percent }
-\newlabel{sec:discrete-Time-Game}{{8.1}{10}}
-\newlabel{eqn:ell-discrete}{{29}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Results for the discrete time game}{10}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}The adversary prefers smaller steps}{10}\protected@file@percent }
-\newlabel{sec:smallsteps}{{8.3}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}From integer to discrete time}{7}\protected@file@percent }
+\newlabel{sec:discrete}{{8}{7}}
+\newlabel{eqn:adv-strat-p}{{8}{7}}
+\newlabel{eqn:ell-discrete}{{27}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The discrete time game }}{8}\protected@file@percent }
+\newlabel{fig:discrete-Time-Game}{{2}{8}}
+\newlabel{eqn:adv-strat-k}{{28}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Results for the discrete time game}{9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}The adversary prefers smaller steps}{9}\protected@file@percent }
+\newlabel{sec:smallsteps}{{8.2}{9}}
+\newlabel{thm:smallerSteps}{{6}{9}}
+\newlabel{eqn:Kolmogorov}{{29}{9}}
 \citation{popoviciu1965certaines}
 \citation{butt2016generalization}
 \citation{de2005divided}
 \citation{butt2016generalization}
-\newlabel{thm:smallerSteps}{{7}{11}}
-\newlabel{eqn:Kolmogorov}{{30}{11}}
-\newlabel{lemma:n-strictly-convex}{{8}{11}}
-\newlabel{eqn:4thOrderConvex}{{31}{12}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.4}Strategies for the Learner in the discrete time game}{12}\protected@file@percent }
-\newlabel{eqn:learner-strat-1c}{{32}{12}}
-\newlabel{eqn:learner-strat-2c}{{33}{12}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Bounds for easy sequences}{13}\protected@file@percent }
-\newlabel{sec:easy}{{9}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.0.1}The continuous time game and a learner strategy}{13}\protected@file@percent }
-\newlabel{sec:contin-Time-Game}{{9.0.1}{13}}
-\newlabel{eqn:learner-strat-cc}{{34}{13}}
-\newlabel{eqn:ell-discrete}{{35}{13}}
-\newlabel{eqn:deltat}{{36}{13}}
-\newlabel{thm:variancebound}{{10}{14}}
-\newlabel{eqn:Vn}{{37}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {10}Two self-consistent potential functions}{14}\protected@file@percent }
-\newlabel{sec:self-consistent}{{10}{14}}
+\newlabel{lemma:n-strictly-convex}{{7}{10}}
+\newlabel{eqn:4thOrderConvex}{{30}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Strategies for the Learner in the discrete time game}{11}\protected@file@percent }
+\newlabel{eqn:learner-strat-1c}{{31}{11}}
+\newlabel{eqn:learner-strat-2c}{{32}{11}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}The continuous time game and bounds for easy sequences}{11}\protected@file@percent }
+\newlabel{sec:easy}{{9}{11}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.0.1}The continuous time game and a strategy for the learner}{11}\protected@file@percent }
+\newlabel{sec:contin-Time-Game}{{9.0.1}{11}}
+\newlabel{eqn:learner-strat-cc}{{33}{12}}
+\newlabel{eqn:ell-discrete}{{34}{12}}
+\newlabel{eqn:deltat}{{35}{12}}
+\newlabel{thm:variancebound}{{9}{12}}
+\newlabel{eqn:Vn}{{37}{12}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Two self-consistent potential functions}{13}\protected@file@percent }
+\newlabel{sec:self-consistent}{{10}{13}}
+\newlabel{eqn:NormalHedge}{{40}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {11}NormalHedge yields the fastest increasing potential}{13}\protected@file@percent }
+\newlabel{sec:NormalHedge}{{11}{13}}
 \bibstyle{plain}
 \bibdata{ref.bib}
 \bibcite{abernethy2006continuous}{1}
 \bibcite{abernethy2008optimal}{2}
 \bibcite{butt2016generalization}{3}
 \bibcite{cesa1997use}{4}
-\newlabel{eqn:NormalHedge}{{40}{15}}
-\@writefile{toc}{\contentsline {section}{\numberline {11}NormalHedge yields the fastest increasing potential}{15}\protected@file@percent }
-\newlabel{sec:NormalHedge}{{11}{15}}
 \bibcite{cesa1996line}{5}
 \bibcite{cesa2006prediction}{6}
 \bibcite{cesa2007improved}{7}
@@ -112,37 +108,37 @@
 \bibcite{popoviciu1965certaines}{16}
 \bibcite{schapire2001drifting}{17}
 \bibcite{vovk1990aggregating}{18}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Proof of Theorem\nobreakspace  {}1\hbox {}}{16}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B}Proof of Theorem\nobreakspace  {}10\hbox {}}{17}\protected@file@percent }
-\newlabel{appendix:ProofOfVarianceBound}{{B}{17}}
-\newlabel{lemma:infiniteexpectations}{{11}{17}}
-\newlabel{lemma:Taylor2D}{{12}{17}}
-\newlabel{eqn:d.dn.F}{{50}{17}}
-\newlabel{eqn:Taylor.F}{{51}{18}}
-\newlabel{proof:onestep}{{52}{18}}
-\newlabel{proof:allsteps}{{53}{18}}
-\newlabel{term:Taylor_rdt}{{58}{18}}
-\newlabel{term:Taylor_dtsquare}{{59}{18}}
-\newlabel{term:Taylor_r3}{{60}{18}}
-\newlabel{term:Taylor_r2t}{{61}{18}}
-\newlabel{term:Taylor_rt2}{{62}{18}}
-\newlabel{term:Taylor_t3}{{63}{18}}
-\newlabel{term:coll1}{{65}{19}}
-\newlabel{term:coll2}{{66}{19}}
-\newlabel{term:coll3}{{67}{19}}
-\newlabel{term:coll4}{{68}{19}}
-\newlabel{term:coll5}{{69}{19}}
-\newlabel{term:coll6}{{70}{19}}
-\newlabel{term:coll7}{{71}{19}}
-\newlabel{term:coll8}{{72}{19}}
-\newlabel{term:Taylor_collected_rdt}{{73}{20}}
-\newlabel{term:Taylor_collected_r3}{{73}{20}}
-\newlabel{eqn:Taylor}{{73}{20}}
-\newlabel{eqn:deltatislargeenough}{{74}{20}}
-\newlabel{eqn:contin0}{{76}{20}}
-\newlabel{eqn:contin1}{{77}{20}}
-\newlabel{eqn:contin2}{{78}{20}}
-\newlabel{eqn:contin3}{{79}{20}}
-\newlabel{eqnterm1.1}{{80}{21}}
-\newlabel{eqnterm1.2}{{81}{21}}
-\newlabel{eqn:term2.1}{{82}{21}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Proof of Theorem\nobreakspace  {}1\hbox {}}{15}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Proof of Theorem\nobreakspace  {}9\hbox {}}{15}\protected@file@percent }
+\newlabel{appendix:ProofOfVarianceBound}{{B}{15}}
+\newlabel{lemma:infiniteexpectations}{{10}{15}}
+\newlabel{lemma:Taylor2D}{{11}{16}}
+\newlabel{eqn:d.dn.F}{{50}{16}}
+\newlabel{eqn:Taylor.F}{{51}{16}}
+\newlabel{proof:onestep}{{52}{16}}
+\newlabel{proof:allsteps}{{53}{16}}
+\newlabel{term:Taylor_rdt}{{58}{17}}
+\newlabel{term:Taylor_dtsquare}{{59}{17}}
+\newlabel{term:Taylor_r3}{{60}{17}}
+\newlabel{term:Taylor_r2t}{{61}{17}}
+\newlabel{term:Taylor_rt2}{{62}{17}}
+\newlabel{term:Taylor_t3}{{63}{17}}
+\newlabel{term:coll1}{{65}{18}}
+\newlabel{term:coll2}{{66}{18}}
+\newlabel{term:coll3}{{67}{18}}
+\newlabel{term:coll4}{{68}{18}}
+\newlabel{term:coll5}{{69}{18}}
+\newlabel{term:coll6}{{70}{18}}
+\newlabel{term:coll7}{{71}{18}}
+\newlabel{term:coll8}{{72}{18}}
+\newlabel{term:Taylor_collected_rdt}{{73}{19}}
+\newlabel{term:Taylor_collected_r3}{{73}{19}}
+\newlabel{eqn:Taylor}{{73}{19}}
+\newlabel{eqn:deltatislargeenough}{{74}{19}}
+\newlabel{eqn:contin0}{{76}{19}}
+\newlabel{eqn:contin1}{{77}{19}}
+\newlabel{eqn:contin2}{{78}{19}}
+\newlabel{eqn:contin3}{{79}{19}}
+\newlabel{eqnterm1.1}{{80}{20}}
+\newlabel{eqnterm1.2}{{81}{20}}
+\newlabel{eqn:term2.1}{{82}{20}}
