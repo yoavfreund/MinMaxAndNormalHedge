@@ -411,8 +411,7 @@ $\adversM(1),\adversM(2),\ldots$ such that
 \forall (i,\R)\;\;\lim_{j \to \infty}\lowerpotj(i,\R) = \lim_{j \to
   \infty} \upperpotj(i,\R)
 \end{equation}
-
-Before we attempt this goal, we start by analyzing the integer time game. 
+We  start by analyzing the integer time game. 
 
 
 \section{Strategies for the integer time  game} \label{sec:strat-integer}
@@ -617,59 +616,74 @@ because $\E{\R \sim \R_0 \oplus B(N-i,1)}{\pot(N,\R)} < \E{\R \sim
   \R_0 \oplus B(N-i,2)}{\pot(N,\R)}$. In other words, the
 strategies~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}) are not a
 min/max pair. There might be other (pure) strategies for the integer
-game that are a min/max pair, but we conjecture that is not the case.
+game that are a min/max pair, we conjecture that is not the case, and
+seek a extension of the game that would yield min/max strategies.
 
-In order to close the gap and find min/max strategies we extend the
-game by giving the adversary additional choices,
-we call the extended game the {\em discrete time game}. While
-in the integer time game the loss of each action is in the range $[-1,+1]$,
-in the discrete time game the adversary chooses, on iteration $i$ a
-step size $0<s_i\leq 1$ which restricts the losses to be in the range
+We extend the game by giving the adversary additional choices, we call
+the extended game the {\em discrete time game}. While in the integer
+time game the loss of each action is in the range $[-1,+1]$, in the
+discrete time game the adversary chooses, on iteration $i$ a step size
+$0<s_i\leq 1$ which restricts the losses to be in the range
 $[-s_i,+s_i]$. Note that by always choosing $s_i=1$, the adversary can
 recreate the integer time game.
 
-We give an informal argument for using the total variance instead of
-the number of steps. Suppose we use the adversarial
-strategy~(\label{eqn:adv-strat-p}) for $N$ iterations and that $N$ is
-large. The central limit theorem implies that $B(N,1) \approx {\cal N}(0,N)$
-i.e. the normal distribution with mean 0 and variance $N$. therefor
-the final potential is approximately 
-$$\score(N) \approx \E{\R \sim {\cal N}(0,N)}{\pot(N,\R)}$$
+We now give an informal argument for using the total variance instead of
+the number of steps. We define a generalization of the adversarial
+strategy~(\label{eqn:adv-strat-p}):
+\begin{equation} \label{eqn:adv-strat-s}
+  \adversM^s(i-1,\R) =
+  \begin{cases}
+    +s & \mbox{ w.p. } \frac{1}{2}\\
+    -s & \mbox{ w.p. } \frac{1}{2}\\
+  \end{cases}
+\end{equation}
 
-Suppose we half the step size $s_i=1/2$ for all $0\leq i \leq N-1$. 
-The variance in each step decreases to $1/4$, so the total variance is
-$N/4$. and the final score is
-$$\score(N) \approx \E{\R \sim {\cal N}(0,\frac{N}{4})}{\pot(N,\R)}$$
-To keep the total variance unchanged we need to {\em quadruple} the
-number of iterations from $N$ to $4N$. In general, we need to replace
-the number of iterations $N$ with the total variance. Said
-differently, we replace the iteration counter $i$ with 
-a real values notion of time, which is the cumulative variance: $t_i =
-\sum_{j=1}^i s^i$. As expected, in the integer time game $s_i=1$ which
-implies that $t_i = i$
+We compare iterating $\adversM^s$ for $s=1$ and $N$ iterations to
+iterating $\adversM^s$ for $s=1/2$ and $N$ iterations. It is not hard
+to show that the distribution of the regret $\R$  after $N$ iterations
+is $B(N,1)$ in the first case and $B(N,1/2)$ in the second
+case. Suppose $N$ is large, then the Central Limit Theorem implies
+that $B(N,1) \approx {\cal N}(0,N)$ and $B(N,1/2) \approx {\cal
+  N}(0,N/4)$. The first corresponds to the normal distribution with
+mean $0$ and variance $N$ and the normal distribution with mean $0$
+and variance $N/4$ respectively.
 
+We conclude that it is the total variance, and not the number of
+iterations, that determines the final score. We define the total
+variance at iteration $i$ to be the {\em time} at iteration $i$ which
+we denote by $t_i$. The uprate rule for the time is $t_{i+1}=t_i+s_i^2$. 
+As expected, in the integer time game $s_i=1$ which
+implies that $t_i = i$.
 
-Without further restrictions, this game allows the cumulative loss of
-the algorithm at a fixed time $t_N=1$ to grow infinitely large.
-For example, suppose the conditional distribution of losses at each
-iteration $i$ and regret value $\R$
+Without additional restrictions, this game advantages the
+adversary. We now sketch an adversarial strategy by which the
+adversary can force the final score to be arbitrarily large.
+The adversarial strategy is an uncentered variant of
+to $\adversM^s$ (Equation~(\ref{eqn:adv-strat-s}))
 \begin{equation} \label{eqn:adv-strat-k}
   \adversM^k(i,\R) =
   \begin{cases}
-    +1/k & \mbox{ w.p. } \frac{3}{4}\\
-    -1/k & \mbox{ w.p. } \frac{1}{4}\\
+    0 & \mbox{ w.p. } \frac{1}{2}\\
+    -1/k  & \mbox{ w.p. } \frac{1}{2}\\
   \end{cases}
 \end{equation}
+
+We set the number of iterations $N_k=4k^2$ so that the total variance
+at the end is $N_k V_1= \frac{4k^2}{4k^2}=1$. The loss of the learner
+on each iteration is $1/2k$ and therefor the total loss is $N_k/2k =
+\frac{4k^2}{2k} = 2k$.
+
 
 In this case $s_i=1/k$, we set the number of iterations to $N=k^2$ so
 that the final time (or total variance) is $1$. Note that the expected
 total loss (total learner loss) is $N (3/4-1/4)/k = k/2$. In other words, as $k \to \infty$
 the total loss of the learner also goes to infinity. We avoid this
 case by requiring that the single iteration learner loss is at most
-$s_i^2$.~\footnote{We conjecture that removing this requirements
-  implies the existance of adversarial strategies that guarantee that
-  the final score is arbitrarily high, regardless of the learner's
-  strategy. Demonstrating such a strategy is an open problem.}
+$s_i^2$.
+% ~\footnote{We conjecture that removing this requirements
+%   implies the existance of adversarial strategies that guarantee that
+%   the final score is arbitrarily high, regardless of the learner's
+%   strategy. Demonstrating such a strategy is an open problem.}
 
 Figure~(\ref{fig:discrete-Time-Game}) describes the Discrete-time game.
 
@@ -1646,11 +1660,9 @@ Note that as $k \to \infty$, $\gamma' \to 0$. This observation
 motivates scaling the bound on $\ell(t)$ like $c s_i^2$ (see the
 description of the game below.)
 
-
-
 This leads to the following formulation of a continuous time game.
-The game is a generalization of the integer time game in that it
-reduces to the integer time game if the adversary always chooses $s_i=1$. 
+The game is a generalization of the integer time game in that by
+always choosing $s_i=1$ the adversary forces the integer time game.
 
 In this game we use $i=1,2,3,\ldots$ as the iteration index. We use
 $t_i$ to indicate a sequence of real-valued time points. $t_0=0$ and
