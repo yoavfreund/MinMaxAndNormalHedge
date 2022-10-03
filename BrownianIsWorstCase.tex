@@ -610,80 +610,86 @@ $$\score(T) =\E{\R \sim \state(T)}{\finalPot}$$
 \section{From integer to discrete time}
 \label{sec:discrete}
 
-Theorem~\ref{thm:IntegerGameBounds} gives upper and lower bounds on
-the final score. There is a gap between the upper and lower bounds,
-because $\E{\R \sim \R_0 \oplus B(N-i,1)}{\pot(N,\R)} < \E{\R \sim
-  \R_0 \oplus B(N-i,2)}{\pot(N,\R)}$. In other words, the
+The upper and lower bound on the final score given in
+Theorem~\ref{thm:IntegerGameBounds} do not match. There is a strict
+inequality between the upper and lower
+bonds:$\E{\R \sim \R_0 \oplus B(N-i,1)}{\pot(N,\R)} < \E{\R \sim \R_0
+  \oplus B(N-i,2)}{\pot(N,\R)}$. In other words, the
 strategies~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}) are not a
-min/max pair. There might be other (pure) strategies for the integer
+min/max pair.\footnote{There might be other (pure) strategies for the integer
 game that are a min/max pair, we conjecture that is not the case, and
-seek a extension of the game that would yield min/max strategies.
+seek a extension of the game that would yield min/max strategies.}
 
-We extend the game by giving the adversary additional choices, we call
-the extended game the {\em discrete time game}. While in the integer
-time game the loss of each action is in the range $[-1,+1]$, in the
-discrete time game the adversary chooses, on iteration $i$ a step size
-$0<s_i\leq 1$ which restricts the losses to be in the range
-$[-s_i,+s_i]$. Note that by always choosing $s_i=1$, the adversary can
-recreate the integer time game.
+To close the gap we extend the game, preserving the integer step game
+as a special case. Our extension increases the set of possibilities
+available to the adversary but not to those available to the learner. As a result, any
+learner strategy that bound on the final score in the extended game holds also for the
+integer game. We call the extended game the {\em discrete time
+  game}. And design it around the advesarial strategy
+$\adversM^I(i-1,\R)$ (Equation~\ref{eqn:adv-strat-p}).
 
-We now give an informal argument for using the total variance instead of
-the number of steps. We define a generalization of the adversarial
-strategy~(\label{eqn:adv-strat-p}):
+In the integer time game the loss of each action is in the range
+$[-1,+1]$, in the discrete time game the adversary chooses, on
+iteration $i$ a step size $0<s_i\leq 1$ which restricts the losses to
+be in the range $[-s_i,+s_i]$. Note that by always choosing $s_i=1$,
+the adversary can recreate the integer time game.
+
+We make two additional changes to the integer time game in order to define
+the discrete time game, we first list them and then provide justifications.
+\begin{enumerate}
+\item {\bf real-valued time} In the integer time game we use an
+  integer to indicate the iteration number: $i=1,2,\ldots,N$. In the
+  discrete time game we use an positive real value, which we call
+  ``time'' and use the update rule $t_{i+1} = t_i + s_i^2$, and define
+  the final time, which is used in the regret bound, to be
+  $T=\sum_{i=0}^N s_i^2$
+\item {\bf Bounded average loss} We restrict the average loss to a
+  range much smaller than $[-s_i,+s_i]$, specifically:
+  $|\ell(i)| \leq s_i^2$
+\end{enumerate}
+Note that both of these conditions are nullified when $s_i=1$
+
+To justify these choices we consider variants of the adversarial
+strategy in the integer time game (\label{eqn:adv-strat-p})
 \begin{equation} \label{eqn:adv-strat-s}
-  \adversM^s(i-1,\R) =
+  \adversM^s(\cdot,\cdot,s,p) =
   \begin{cases}
-    +s & \mbox{ w.p. } \frac{1}{2}\\
-    -s & \mbox{ w.p. } \frac{1}{2}\\
+    +s & \mbox{ w.p. } p\\
+    -s & \mbox{ w.p. } 1-p\\
   \end{cases}
 \end{equation}
 
-We compare iterating $\adversM^s$ for $s=1$ and $N$ iterations to
-iterating $\adversM^s$ for $s=1/2$ and $N$ iterations. It is not hard
-to show that the distribution of the regret $\R$  after $N$ iterations
-is $B(N,1)$ in the first case and $B(N,1/2)$ in the second
-case. Suppose $N$ is large, then the Central Limit Theorem implies
-that $B(N,1) \approx {\cal N}(0,N)$ and $B(N,1/2) \approx {\cal
-  N}(0,N/4)$. The first corresponds to the normal distribution with
-mean $0$ and variance $N$ and the normal distribution with mean $0$
-and variance $N/4$ respectively.
+We denote by $\lowerpot(N,s,p)$ the lower potential that is guaranteed
+by the adversarial strateguy $\adversM(\cdot,\cdot,s,p)$ in a game with
+$N$ iterations. Recall that, for this strategy, the state evolution
+does not depend on the strategy of the learner. It is not hard to
+show that the distribution of the regret at the final step is $B(N,1)$
+when $s=1$ and $B(N,1/2)$ when $s=1/2$.
 
-We conclude that it is the total variance, and not the number of
-iterations, that determines the final score. We define the total
-variance at iteration $i$ to be the {\em time} at iteration $i$ which
-we denote by $t_i$. The uprate rule for the time is $t_{i+1}=t_i+s_i^2$. 
-As expected, in the integer time game $s_i=1$ which
-implies that $t_i = i$.
+Suppose $N$ is large enough that the normal approximation for the
+binomial can be used. Let ${\cal N}(\mu,\sigma^2)$ be the normal
+distribution with mean $\mu$ and variance $\sigma^2$. Then the normal
+approximations are:
+$B(N,1) \approx {\cal N}(0,N)$ and $B(N,1/2) \approx {\cal N}(0,N/4)$,
+In other words,
+$$\lowerpot(N,s,1/2) \approx {\cal N}(0,Ns^2) \cdot \pot(N,\cdot)$$
 
-Without additional restrictions, this game advantages the
-adversary. We now sketch an adversarial strategy by which the
-adversary can force the final score to be arbitrarily large.
-The adversarial strategy is an uncentered variant of
-to $\adversM^s$ (Equation~(\ref{eqn:adv-strat-s}))
-\begin{equation} \label{eqn:adv-strat-k}
-  \adversM^k(i,\R) =
-  \begin{cases}
-    0 & \mbox{ w.p. } \frac{1}{2}\\
-    -1/k  & \mbox{ w.p. } \frac{1}{2}\\
-  \end{cases}
-\end{equation}
+In the general case the step size $s_i$ is  different in different
+iterations, and the total variance that we get from using
+$\adversM^s(\cdot,\cdot,s_i,1/2)$ for $i=1,\ldots,N$ is
+$V_N=\sum_{i=1}^{N-1}s_i^2$. Clearly, $V_N$ is a better measure of the
+length of the game than the number of iterations $N$. This motivates
+us to define a real valued time $t_i$ where $t_0=0$ and $t_i = t_{i-1}+s_i^2$.
+This completes our expanation of the real valued time.
 
-We set the number of iterations $N_k=4k^2$ so that the total variance
-at the end is $N_k V_1= \frac{4k^2}{4k^2}=1$. The loss of the learner
-on each iteration is $1/2k$ and therefor the total loss is $N_k/2k =
-\frac{4k^2}{2k} = 2k$.
-
-
-In this case $s_i=1/k$, we set the number of iterations to $N=k^2$ so
-that the final time (or total variance) is $1$. Note that the expected
-total loss (total learner loss) is $N (3/4-1/4)/k = k/2$. In other words, as $k \to \infty$
-the total loss of the learner also goes to infinity. We avoid this
-case by requiring that the single iteration learner loss is at most
-$s_i^2$.
-% ~\footnote{We conjecture that removing this requirements
-%   implies the existance of adversarial strategies that guarantee that
-%   the final score is arbitrarily high, regardless of the learner's
-%   strategy. Demonstrating such a strategy is an open problem.}
+Next, we explain why we bound the average loss. Consider repeating the
+adversarial strategy until the cumulative variance is $T$.  This means
+tht $s^2 N(1/4-\epsilon^2)=T$, or that $N = \frac{c}{\epsilon^2}$.
+As the the cumulative mean is $2sN \epsilon$. We get that $2s
+\frac{c}{s^2} =   \frac{2c}{s}$. This implies that, as $s \to 0$ the
+cumulative mean goes to $\infty$. We correct that by requiring the
+$\epsilon = c s$, or, in orther words, that the magnitude of the
+expected loss $\ell(i)$ is bounded by $c s_i^2$.
 
 Figure~(\ref{fig:discrete-Time-Game}) describes the Discrete-time game.
 
@@ -1792,6 +1798,70 @@ $$
 It is easy to verify that  $B(\langle a_0,\ldots,a_{T-1}\rangle)$ is a
 symmetric distribution with mean zero and variance $\sum_{i=0}^{T-1}
 a_i^2$. 
+
+\section{More on scaling}
+
+-------
+Suppose we set $p=1/2$ and $s=1$ or $s=1/2$.
+Following the proof of
+theorem~(\ref{thm:IntegerGameBounds}) it is not hard to show that
+
+
+For some intuition consider repeating for $N$ iterations either  
+$\adversM^s(i-1,\R,1,1/2)$ and $\adversM^s(i-1,\R,1/2,1/2)$.
+From Theorem~({thm:IntegerGameBounds}) 
+
+
+that these strategies
+guarantee lower potentials 
+
+It is not hard
+to show that the distribution of the regret $\R$  after $N$ iterations
+is $B(N,1)$ in the first case and $B(N,1/2)$ in the second
+case. 
+
+
+
+using the total variance instead of
+the number of steps. We define a generalization of the adversarial
+
+
+We conclude that it is the total variance, and not the number of
+iterations, that determines the final score. We define the total
+variance at iteration $i$ to be the {\em time} at iteration $i$ which
+we denote by $t_i$. The uprate rule for the time is $t_{i+1}=t_i+s_i^2$. 
+As expected, in the integer time game $s_i=1$ which
+implies that $t_i = i$.
+
+Without additional restrictions, this game advantages the
+adversary. We now sketch an adversarial strategy by which the
+adversary can force the final score to be arbitrarily large.
+The adversarial strategy is an uncentered variant of
+to $\adversM^s$ (Equation~(\ref{eqn:adv-strat-s}))
+\begin{equation} \label{eqn:adv-strat-k}
+  \adversM^k(i,\R) =
+  \begin{cases}
+    0 & \mbox{ w.p. } \frac{1}{2}\\
+    -1/k  & \mbox{ w.p. } \frac{1}{2}\\
+  \end{cases}
+\end{equation}
+
+We set the number of iterations $N_k=4k^2$ so that the total variance
+at the end is $N_k V_1= \frac{4k^2}{4k^2}=1$. The loss of the learner
+on each iteration is $1/2k$ and therefor the total loss is $N_k/2k =
+\frac{4k^2}{2k} = 2k$.
+
+
+In this case $s_i=1/k$, we set the number of iterations to $N=k^2$ so
+that the final time (or total variance) is $1$. Note that the expected
+total loss (total learner loss) is $N (3/4-1/4)/k = k/2$. In other words, as $k \to \infty$
+the total loss of the learner also goes to infinity. We avoid this
+case by requiring that the single iteration learner loss is at most
+$s_i^2$.
+% ~\footnote{We conjecture that removing this requirements
+%   implies the existance of adversarial strategies that guarantee that
+%   the final score is arbitrarily high, regardless of the learner's
+%   strategy. Demonstrating such a strategy is an open problem.}
 
 
 \fi
