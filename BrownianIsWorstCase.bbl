@@ -70,6 +70,11 @@ Yoav Freund and Robert~E Schapire.
 \newblock Adaptive game playing using multiplicative weights.
 \newblock {\em Games and Economic Behavior}, 29(1-2):79--103, 1999.
 
+\bibitem{kac1947random}
+Mark Kac.
+\newblock Random walk and the theory of brownian motion.
+\newblock {\em The American Mathematical Monthly}, 54(7P1):369--391, 1947.
+
 \bibitem{littlestone1994weighted}
 Nick Littlestone and Manfred~K Warmuth.
 \newblock The weighted majority algorithm.
