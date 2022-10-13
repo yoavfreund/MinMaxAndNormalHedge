@@ -35,6 +35,23 @@
 \newcommand{\state}{{\bf \Psi}}
 \newcommand{\1}[1]{{\mathbf 1}\left[#1\right]} % point mass at #1
 
+\newcommand{\realT}{\mathcal{T}}  % the final time for the real-time game
+\newcommand{\score}{\Phi}
+\newcommand{\scoreLA}{\score_{\l,\a}}
+\newcommand{\learnerM}{P}
+\newcommand{\learnerMb}{P^*}
+\renewcommand{\l}{\learnerM}
+\newcommand{\legalLearner}{{\cal L}}
+\newcommand{\adversM}{Q}
+\newcommand{\adversMb}{Q^*}
+\newcommand{\evensplit}{\adversM^{1/2}}
+\newcommand{\scaledsplit}{\evensplit_{s_i}}
+\renewcommand{\a}{\adversM}
+\newcommand{\legalAdversary}{{\cal A}}
+\newcommand{\agloss}{v}
+\newcommand{\Bias}{B}
+\newcommand{\deltat}{\Delta t}
+
 \newcommand{\pot}{\phi}
 \newcommand{\potPQ}{\pot_{\learnerM,\adversM}}
 \newcommand{\potLA}{\pot_{\l,\a}}
@@ -49,22 +66,6 @@
 \newcommand{\diffweight}{\l^d}   % learner strategy based on taking a difference
 \newcommand{\upperpotdiff}{\upperpot_{\diffweight}}
 
-\newcommand{\realT}{\mathcal{T}}  % the final time for the real-time game
-\newcommand{\score}{\Phi}
-\newcommand{\scoreLA}{\score_{\l,\a}}
-\newcommand{\learnerM}{P}
-\newcommand{\learnerMb}{P^*}
-\renewcommand{\l}{\learnerM}
-\newcommand{\legalLearner}{{\cal L}}
-\newcommand{\adversM}{Q}
-%\newcommand(\adversMb}{Q^*}
-\newcommand{\evensplit}{\adversM^{1/2}}
-\newcommand{\scaledsplit}{\evensplit_{s_i}}
-\renewcommand{\a}{\adversM}
-\newcommand{\legalAdversary}{{\cal A}}
-\newcommand{\agloss}{v}
-\newcommand{\Bias}{B}
-\newcommand{\deltat}{\Delta t}
 
 \newcommand{\Binom}{\mathbb{B}}
 \newcommand{\radsum}{\Binom(s_1,\ldots,s_T)}

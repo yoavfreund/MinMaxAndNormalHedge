@@ -474,3 +474,44 @@ Wlog assume the first. As $f \in \SP{2}$, we have that $f(x+1) \geq f'(x)$. Ther
  Lemma's assumption.
 \qed
 \fi
+
+\section{NormalHedge yields the fastest increasing potential} \label{sec:NormalHedge}
+
+Up to this point, we considered any continuous value function with
+strictly positive derivatives 1-4. We characterized the min-max
+strategies for any such function. It is time to ask whether value
+functions can be compared and whether there is a ``best'' value
+function. In this section we give an informal argument that
+NormalHedge is the best function. We hope this argument can be
+formalized.
+
+We make two observations. First, the min-max strategy for the
+adversary does not depend on the potential function! (as long as it
+has strictly positive derivatives). That strategy corresponds to the
+brownian process.
+
+Second, the argument used to show that the regret relative to
+$\epsilon$-fraction of the expert is based on two arguments
+\begin{itemize}
+\item The average value function does not increase with time.
+\item The (final) value function increases rapidly as a function of $\R$
+\end{itemize}
+The first item is true by construction. The second argument suggests
+the following partial order on value functions. Let
+$\pot_1(t,\R),\pot_2(t,\R)$ be two value functions such that
+\[
+\lim_{\R \to \infty} \frac{\pot_1(t,\R)}{\pot_2(t,\R)} = \infty  
+\]
+then $\pot_1$ {\em dominates} $\pot_2$, which we denote by, $\pot_1 > \pot_2$.
+
+On the other hand, if the value function increases too quickly, then,
+when playing against brownian motion, the average value will increase
+without bound.  Recall that the distribution of the brownian process
+at time $t$ is the standard normal with mean 0 and variance $t$.
+The question becomes what is the fastest the value
+function can grow, as a function of $\R$ and still have a finite
+expected value with respect to the normal distribution.
+
+The answer seems to be NormalHedge (Eqn.~\ref{eqn:NormalHedge}). More
+precisely, if $\epsilon>0$, the mean value is finite, but if
+$\epsilon=0$ the mean value becomes infinite.

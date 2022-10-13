@@ -6,7 +6,6 @@
 \usepackage{amsthm}
 \usepackage{graphicx}
 
-
 \input{macros}
 
 \title{Potential-based hedging algorithms}
@@ -404,11 +403,11 @@ and lower potentials.
 \end{equation}
 \begin{equation} \label{eqn:lowerPotentials}
   \exists \adversM, \;\;\; \forall \learnerM, \;\; \;\; \forall 1\leq i \leq
-  T,\;\; \forall \R \in \reals,\;\; \lowerpot(i,\R) \leq \potPQ(i,R)
+  T,\;\; \forall \R \in \reals,\;\; \lowerpotb(i,\R) \leq \potPQ(i,R)
 \end{equation}
 
 In words, $\upperpot$ is an upper bound on the potential that is 
-guaranteed by the learner strategy $\learnerM$ while $\lowerpot$
+guaranteed by the learner strategy $\learnerM$ while $\lowerpotb$
 is a lower bound that is guaranteed by the adversarial
 strategy $\adversM$.
 
@@ -481,7 +480,7 @@ Strategies~(\ref{eqn:adv-strat-p}) and~(\ref{eqn:learner-strat-1})
 The last iteration of the game: $i=T$ is the first step of the
 backward induction. The uper and lower bounds are both set equal to
 the first step in the backward induction we define
-$$  \lowerpot(T,\R) = \upperpot(T,\R) = \pot(T,\R) $$
+$$  \lowerpotb(T,\R) = \upperpotb(T,\R) = \pot(T,\R) $$
 
 \begin{lemma} \label{lemma:first-order-bound}
   If $\pot(i,\R) \in \SP{2}$
@@ -489,13 +488,13 @@ $$  \lowerpot(T,\R) = \upperpot(T,\R) = \pot(T,\R) $$
     \item The adversarial strategy
     guarantees the lower potential
  \begin{equation} \label{eqn:backward-iteration-lower}
-   \lowerpot(i-1, \R) = \frac{\lowerpot(i,\R+1) + \lowerpot(i,\R-1)}{2}
+   \lowerpotb(i-1, \R) = \frac{\lowerpotb(i,\R+1) + \lowerpotb(i,\R-1)}{2}
  \end{equation}
    
     \item The learner strategy:
       guarantees the upper potential 
       \begin{equation} \label{eqn:backward-iteration-upper-recursion}
-        \upperpot(i-1, \R) = \frac{\upperpot(i,\R+2) + \upperpot(i,\R-2)}{2}
+        \upperpotb(i-1, \R) = \frac{\upperpotb(i,\R+2) + \upperpotb(i,\R-2)}{2}
       \end{equation}
     \end{enumerate}
     
@@ -514,7 +513,7 @@ $$  \lowerpot(T,\R) = \upperpot(T,\R) = \pot(T,\R) $$
   Which in turn implies that if the adversary plays $\adversM^*$
   and the learner plays an arbitrary strategy $\learnerM$
   \begin{equation} \label{eqn:lower}
-    \lowerpot(i-1,\R) = \frac{\lowerpot(i,\R-1)+\lowerpot(i,\R+1)}{2}
+    \lowerpotb(i-1,\R) = \frac{\lowerpotb(i,\R-1)+\lowerpotb(i,\R+1)}{2}
   \end{equation}
   As this adversarial strategy is oblivious to the learner's strategy, it
   guarantees that the average value at iteration $i$ is {\em equal} to the
@@ -523,7 +522,7 @@ $$  \lowerpot(T,\R) = \upperpot(T,\R) = \pot(T,\R) $$
   Plugging learner's strategy~(\ref{eqn:learner-strat-1})
   into equation~(\ref{eqn:aggregate-loss}) we find that
  \begin{equation} \label{eqn:ell-optimal-learner}
-   \ell(i-1) = \frac{1}{Z_{i-1}} \E{\R \sim \state(i-1)}{\paren{\upperpot(i,\R+2)-\upperpot(i,\R-2)}
+   \ell(i-1) = \frac{1}{Z_{i-1}} \E{\R \sim \state(i-1)}{\paren{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}
    \Bias(i-1,\R)}
 \end{equation}
   Consider the score at iteration $i-1$ when the learner's strategy
@@ -535,15 +534,15 @@ $$  \lowerpot(T,\R) = \upperpot(T,\R) = \pot(T,\R) $$
   \end{equation}
   As $\pot(i,\cdot)$ is convex and as $(y-\ell(i-1)) \in [-2,2]$,
   \begin{equation} \label{eqn:pot-upper}
-    \upperpot(i,\R+y) \leq \frac{\upperpot(i,\R+2)+\upperpot(i,\R-2)}{2} +
-    (y-\ell(i)) \frac{\upperpot(i,\R+2)-\upperpot(i,\R-2)}{2}
+    \upperpotb(i,\R+y) \leq \frac{\upperpotb(i,\R+2)+\upperpotb(i,\R-2)}{2} +
+    (y-\ell(i)) \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}
     \end{equation}
   Combining the equations~(\ref{eqn:ell-optimal-learner}) and~(\ref{eqn:Pot-Update}) we find that
   \begin{eqnarray}
-  \score_{\learnerM^*,\adversM}(i-1,\R)&=&\E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{\upperpot(i,\R+y-\ell(i-1))}}\\
-  &\leq & \E{\R \sim \state(i-1)}{\frac{\upperpot(i,\R+2)+\upperpot(i,\R-2)}{2}}\\
+  \score_{\learnerM^*,\adversM}(i-1,\R)&=&\E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{\upperpotb(i,\R+y-\ell(i-1))}}\\
+  &\leq & \E{\R \sim \state(i-1)}{\frac{\upperpotb(i,\R+2)+\upperpotb(i,\R-2)}{2}}\\
   &+&
-  \E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{(y-\ell(i-1)) \frac{\upperpot(i,\R+2)-\upperpot(i,\R-2)}{2}}} \label{eqn:zero-term}
+  \E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{(y-\ell(i-1)) \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}} \label{eqn:zero-term}
   \end{eqnarray}
   
 The final step is to show that the term~(\ref{eqn:zero-term}) is equal
@@ -551,12 +550,12 @@ to zero. As $\ell(i-1)$ is a constant with respect to $\R$ and $y$ the
 term~(\ref{eqn:zero-term}) can be written as:
 \begin{eqnarray}
 &&\E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{(y-\ell(i-1))
-   \frac{\upperpot(i,\R+2)-\upperpot(i,\R-2)}{2}}}\\
+   \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}}\\
 &=&
 \E{\R \sim \state(i-1)}{\Bias(i-1,\R)
-    \frac{\upperpot(i,\R+2)-\upperpot(i,\R-2)}{2}}\\
+    \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}\\
   &-& \ell(i) \E{\R \sim \state(i-1)}{
-    \frac{\upperpot(i,\R+2)-\upperpot(i,\R-2)}{2}}\\
+    \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}\\
   &=& 0
 \end{eqnarray}
 \end{enumerate}
@@ -597,7 +596,7 @@ On iteration $i=1,2,\ldots$
 \end{enumerate}
 
 Upon termination, the final value is calculated:
-$$\score(T) =\E{\R \sim \state(T)}{\finalPot}$$
+$$\score(\realT) =\E{\R \sim \state(\realT)}{\pot(\realT,\R)}$$
 
 \end{minipage}}
 \caption{The discrete time game  \label{fig:discrete-Time-Game}}
@@ -618,11 +617,15 @@ seek a extension of the game that would yield min/max strategies.}
 
 To close the gap we extend the game, preserving the integer step game
 as a special case. Our extension increases the set of possibilities
-available to the adversary but not to those available to the learner. As a result, any
-learner strategy that bound on the final score in the extended game holds also for the
-integer game. We call the extended game the {\em discrete time
-  game}. And design it around the advesarial strategy
-$\adversM^I(i-1,\R)$ (Equation~\ref{eqn:adv-strat-p}).
+available to the adversary but not to those available to the
+learner. As a result, any learner strategy that bound on the final
+score in the extended game holds also for the integer game. We call
+the extended game the {\em discrete time game}.
+Figure~(\ref{fig:discrete-Time-Game}) describes the Discrete-time
+game.
+
+%And design it around the advesarial strategy
+%$\adversM^I(i-1,\R)$ (Equation~\ref{eqn:adv-strat-p}).
 
 In the integer time game the loss of each action is in the range
 $[-1,+1]$, in the discrete time game the adversary chooses, on
@@ -638,17 +641,17 @@ the discrete time game, we first list them and then provide justifications.
   discrete time game we use an positive real value, which we call
   ``time'' and use the update rule $t_{i+1} = t_i + s_i^2$, and define
   the final time, which is used in the regret bound, to be
-  $T=\sum_{i=0}^T s_i^2$
+  $\realT=\sum_{i=0}^T s_i^2$
 \item {\bf Bounded average loss} We restrict the average loss to a
   range much smaller than $[-s_i,+s_i]$, specifically:
   $|\ell(i)| \leq s_i^2$
 \end{enumerate}
-Note that both of these conditions are nullified when $s_i=1$
+Note that both of these conditions hold trivially when $s_i=1$
 
-To justify these choices we consider variants of the adversarial
-strategy in the integer time game (\label{eqn:adv-strat-p})
+To justify these choices we consider a parametrized version of
+the adversarial strategy in the integer time game (\ref{eqn:adv-strat-p})
 \begin{equation} \label{eqn:adv-strat-s}
-  \adversM^s(\cdot,\cdot,s,p) =
+  \adversM^d(\cdot,\cdot,s,p) =
   \begin{cases}
     +s & \mbox{ w.p. } p\\
     -s & \mbox{ w.p. } 1-p\\
@@ -656,38 +659,41 @@ strategy in the integer time game (\label{eqn:adv-strat-p})
 \end{equation}
 
 We denote by $\lowerpot(T,s,p)$ the lower potential that is guaranteed
-by the adversarial strateguy $\adversM(\cdot,\cdot,s,p)$ in a game with
-$T$ iterations. Recall that, for this strategy, the state evolution
-does not depend on the strategy of the learner. It is not hard to
-show that the distribution of the regret at the final step is $B(T,1)$
-when $s=1$ and $B(T,1/2)$ when $s=1/2$.
+by the adversarial strategy $\adversM^d(\cdot,\cdot,s,p)$ in a game with
+$T$ iterations. Recall that, for $\adversM^d$, the state evolution
+does not depend on the learner's strategy. It is not hard to
+show that the final state is $B(T,1)$ when $s=1$ and $B(T,1/2)$ when $s=1/2$.
 
 Suppose $T$ is large enough that the normal approximation for the
-binomial can be used. Let ${\cal T}(\mu,\sigma^2)$ be the normal
+binomial can be used. Let ${\cal N}(\mu,\sigma^2)$ be the normal
 distribution with mean $\mu$ and variance $\sigma^2$. Then the normal
 approximations are:
-$B(T,1) \approx {\cal T}(0,T)$ and $B(T,1/2) \approx {\cal T}(0,T/4)$,
+$B(T,1) \approx {\cal N}(0,T)$ and $B(T,1/2) \approx {\cal N}(0,T/4)$,
 In other words,
-$$\lowerpot(T,s,1/2) \approx {\cal T}(0,Ts^2) \odot \pot(T,\cdot)$$
+$$\lowerpot(T,s,1/2) \approx {\cal N}(0,Ts^2) \odot \pot(T)$$
 
 In the general case the step size $s_i$ is  different in different
 iterations, and the total variance that we get from using
 $\adversM^s(\cdot,\cdot,s_i,1/2)$ for $i=1,\ldots,T$ is
-$V_T=\sum_{i=1}^{T-1}s_i^2$. Clearly, $V_T$ is a better measure of the
-length of the game than the number of iterations $T$. This motivates
-us to define a real valued time $t_i$ where $t_0=0$ and $t_i = t_{i-1}+s_i^2$.
-This completes our expanation of the real valued time.
+$V_T=\sum_{i=1}^{T-1}s_i^2$. The cumulative variance $V_T$ is a better measure of the
+length of the game than the number of iterations $T$, because it takes
+into account the range $s_i$ of the predictionsl. This motivates
+us to define a real valued time $t_i$ where $t_0=0$ and $t_i =
+t_{i-1}+s_i^2$ and $t_T = {\cal T}$ \
+This completes our justification of the real valued time.
 
 Next, we explain why we bound the average loss. Consider repeating the
-adversarial strategy until the cumulative variance is $T$.  This means
-tht $s^2 T(1/4-\epsilon^2)=T$, or that $T = \frac{c}{\epsilon^2}$.
-As the the cumulative mean is $2sT \epsilon$. We get that $2s
-\frac{c}{s^2} =   \frac{2c}{s}$. This implies that, as $s \to 0$ the
-cumulative mean goes to $\infty$. We correct that by requiring the
+adversarial strategy \linebreak
+$\adversM^d(\cdot,\cdot,s,\frac{1}{2}+\epsilon)$ until the cumulative
+variance is $\realT$.  This means tht $s^2 T(1/4-\epsilon^2)=\realT$,
+or that $T = \frac{c}{\epsilon^2}$ for some constant $c$. As the
+cumulative mean is $2sT \epsilon$, we get that
+$2s \frac{c}{s^2} = \frac{2c}{s}$. This implies that, as $s \to 0$ the
+cumulative mean from $1$ to $T$ increases to $\infty$, which makes the
+regret non-sensical. We correct that by requiring the
 $\epsilon = c s$, or, in orther words, that the magnitude of the
 expected loss $\ell(i)$ is bounded by $c s_i^2$.
 
-Figure~(\ref{fig:discrete-Time-Game}) describes the Discrete-time game.
 
 
 \subsection{Results for the discrete time game}
@@ -701,20 +707,17 @@ arbitrarily large. We will therefor not identify a single adversarial
 strategy but instead consider the supremum over an infinite sequence
 of strategies.
 
-We use $T(0,\sigma)$ to denote the normal distribution with mean 0 and
-std $\sigma$.
-
 \begin{theorem}
   ~\\
 
-   let $A = \E{\R \sim N(0,\sqrt{T})}{\pot(T,\R)}$
+   let $A = \E{\R \sim N(0,\sqrt{\realT})}{\pot(\realT,\R)}$.  For any $\epsilon>0$
    \begin{itemize}
      \item
-    For any $\epsilon>0$ there exists a strategy for the adversary
-    such that for any strategy of the learner $\score(T) \geq A-\epsilon$
+    There exists a strategy for the adversary that guarantees, against
+    any learner, that $\score(T) \geq A-\epsilon$
   \item
     There exists a strategy for the learner that guarantees, against
-    any adversary $\score(T) \leq A$.
+    any adversary, that $\score(T) \leq A+\epsilon$.
   \end{itemize}
 \end{theorem}
 
@@ -902,8 +905,8 @@ It is well known that the limit of random walks where $s \to 0$ and
 $\deltat=s^2$ is the the Brownian or Wiener process
 (see~\cite{kac1947random}).
 
-A direct characterization is that $p(X_{t+\deltat}=x_1 |
-X_t=x_0)=e^{-\frac{(x_1-x_0)^2}{2 \deltat}}$
+An alternative characterization of Brownian Process is
+$$ \P{}{X_{t+\deltat}=x_1 | X_t=x_0}=e^{-\frac{(x_1-x_0)^2}{2 \deltat}}$$
 
 The backwards recursion that
 defines the value function is the celebrated Backwrds Kolmogorov
@@ -916,7 +919,7 @@ Given a final value function with a strictly positive fourth
 derivative we can use Equation~(\ref{eqn:Kolmogorov}) to compute the
 value function for all $0 \leq t \leq T$. We will do so in he next section.
 
-\section{Conjugate potential functions} \label{sec:self-consistent}
+\section{Stable potential functions and anytime strategies} \label{sec:stable}
 
 The potential functions, $\pot(t,\R)$ is a solution of PDE~(\ref
 {eqn:Kolmogorov}):
@@ -1091,46 +1094,6 @@ We can use $V_n$ instead of $T$ giving us a variancee based bound.
 %    \E{\R \sim \state(i-1)}{ \E{y \sim
 %      \adversM(i-1)(\R)}{\pot(i,\R+y-\ell(i-1))}}
 
-\section{NormalHedge yields the fastest increasing potential} \label{sec:NormalHedge}
-
-Up to this point, we considered any continuous value function with
-strictly positive derivatives 1-4. We characterized the min-max
-strategies for any such function. It is time to ask whether value
-functions can be compared and whether there is a ``best'' value
-function. In this section we give an informal argument that
-NormalHedge is the best function. We hope this argument can be
-formalized.
-
-We make two observations. First, the min-max strategy for the
-adversary does not depend on the potential function! (as long as it
-has strictly positive derivatives). That strategy corresponds to the
-brownian process.
-
-Second, the argument used to show that the regret relative to
-$\epsilon$-fraction of the expert is based on two arguments
-\begin{itemize}
-\item The average value function does not increase with time.
-\item The (final) value function increases rapidly as a function of $\R$
-\end{itemize}
-The first item is true by construction. The second argument suggests
-the following partial order on value functions. Let
-$\pot_1(t,\R),\pot_2(t,\R)$ be two value functions such that
-\[
-\lim_{\R \to \infty} \frac{\pot_1(t,\R)}{\pot_2(t,\R)} = \infty  
-\]
-then $\pot_1$ {\em dominates} $\pot_2$, which we denote by, $\pot_1 > \pot_2$.
-
-On the other hand, if the value function increases too quickly, then,
-when playing against brownian motion, the average value will increase
-without bound.  Recall that the distribution of the brownian process
-at time $t$ is the standard normal with mean 0 and variance $t$.
-The question becomes what is the fastest the value
-function can grow, as a function of $\R$ and still have a finite
-expected value with respect to the normal distribution.
-
-The answer seems to be NormalHedge (Eqn.~\ref{eqn:NormalHedge}). More
-precisely, if $\epsilon>0$, the mean value is finite, but if
-$\epsilon=0$ the mean value becomes infinite.
 
 \bibliographystyle{plain}
 \bibliography{ref.bib}
