@@ -14,14 +14,13 @@
 
 \maketitle
 \begin{abstract}
-
   We study regret-minimizing online algorithms based on potential
 functions. First, we show that any algorithm with a regret bound that
 holds for any $\epsilon$ is equivalent to a potential minimizing
 algorithm and vice versa. Second we should a min-max learning
 algorithm for known horizon. We show a regret bound that is close to
-optimal when the horizon is not known. Finally we give bounds on the
-learning algorithm in the context of Ito processes.
+optimal when the horizon is not known. Finally we give an algorithm
+with second order bounds that characterize easy sequences.
 \end{abstract}
 
 \section{Introduction}
@@ -157,7 +156,6 @@ we define potential functions for intermediate steps: $0 \leq t
   variants~\cite{cesa1996line,abernethy2006continuous,abernethy2008optimal}
   as well as drifting games~\cite{schapire2001drifting,freund2002drifting}.}
 
-\section{Main results}
 Zero-order bounds on the regret ~\cite{freund1999adaptive} depend only on $N$
 and $T$ and typically have the form
 \begin{equation} \label{eqn:0-order-bound}
@@ -202,6 +200,21 @@ provides a tighter bound than ~\ref{eqn:0-order-bound}. Intuitively,
 we can say that $\V_T$ replaces $T$ in the regret bound. This paper
 provides additional support for replacing $T$ with $\V_T$ and provides
 lower and upper bounds on the regret involving $\V_T$.
+
+\section{Main Results}
+\begin{enumerate}
+\item {\bf Unifrm regret bound} There exists an online learning
+  algorithm such that for any $\nu>0$ (set in advance) and any
+  $t,\epsilon$ (holds uniformly) the following regret bound holds.
+  \begin{equation}
+\R_\epsilon \leq \sqrt{(t+\nu) \left( \ln (t+\nu) + 2 \ln \frac{1}{\epsilon}\right)}
+\end{equation} 
+\item {\bf Second order bound}
+\item {\bf optimality of Brownian motion} For any potential function
+  in $\SP{4}$ the min/max value of any state $(t,R)$ is attained by
+  Brownian motion on the part of the adversary for any $s\geq t$.
+\end{enumerate}
+
 
 \section{Preliminaries} \label{sec:preliminaries}
 
@@ -365,8 +378,8 @@ $\ell(i)$. We then define
   \potPQ(i,\R) \doteq \E{r \sim [(\R-\ell(i)) \oplus \adversM(i,\R)]}{\potPQ(i+1,r)}
 \end{equation}
 
-For the potentials defined using Equation~(\ref{eqn:induction}) we have the
-following theorem:
+For the potentials defined using Equation~(\ref{eqn:induction}) it is
+easy to prove the following theorem:
 
 \begin{theorem} \label{thm:backward-recursion}
 Assuming $ \learnerM(i,\R), \adversM(i,\R)$ are fixed for all
@@ -377,6 +390,23 @@ $i=1,\ldots,T-1$, then
    \state(1)\odot \potPQ(1)=\potPQ(1,0)
   \]
 \end{theorem}
+
+\renewcommand{\D}{{\cal D}}
+
+\iffalse
+\proof
+Fixing $ \learnerM(i,\R), \adversM(i,\R)$ implies a fixed distribution
+$\D$ over paths in $s \in [-1,+1]^T$. We denote the marginal of $\D$
+over the iterations $i\leq j$ by $\D^{i,j}$
+
+We can re-express each expected
+value as:
+\[
+  \state(i)\odot \potPQ(i) = \E{s_1 \sim \D^{1,i}}{\E{s_2 \sim \D^{i+1,T}}{\pot(T,\R(s_1,s_2))}}
+\]
+
+\qed
+\fi
 
 A few things to note:
 \begin{enumerate}
@@ -423,15 +453,12 @@ We start by analyzing the integer time game.
 
 \subsection{Strategies for the integer time  game} \label{sec:strat-integer}
 
-We go back to the integer time game and show the strategies for both
-sides and the corresponding upper and lower potentials.
-
 We assume that $\pot(T)  \in \SP{2}$, in other words, the final
 potential is positive, increasing and convex.
 
 We define a particular adversarial strategy
 \begin{equation} \label{eqn:adv-strat-p}
-  \adversM^*(i-1,\R) =
+  \adversM^*(i,\R) =
   \begin{cases}
     +1 & \mbox{ w.p. } \frac{1}{2}\\
     -1 & \mbox{ w.p. } \frac{1}{2}\\
@@ -440,7 +467,7 @@ We define a particular adversarial strategy
 
 and a particular learner strategy
 \begin{equation} \label{eqn:learner-strat-1}
-\learnerM^*(i-1,\R) = \frac{1}{Z} \frac{\pot(i,\R+2) - \pot(i,\R-2)}{2}
+\learnerM^*(i,\R) = \frac{1}{Z} \frac{\pot(i,\R+2) - \pot(i,\R-2)}{2}
 \end{equation}
 Where $Z$ is a normalization factor
 $$Z = \E{\R \sim \state(i)}{\frac{\pot(i,\R+2) - \pot(i,\R-2)}{2}}$$
@@ -462,8 +489,7 @@ attain the values $-a,+a$ with equal probabilities.
   \item
     The adversarial strategy~(\ref{eqn:adv-strat-p}) starting from
     $\state(i,\R_0)$. Guarantees a final potential 
-     
-    $$\score(T) \geq \E{\R \sim \R_0 \oplus B(T-i,1)}{\pot(T,\R)}$$
+     $$ \score(T) \geq \E{\R \sim \R_0 \oplus B(T-i,1)}{\pot(T,\R)} $$
   \item
     There learner strategy~(\ref{eqn:learner-strat-1}) guarantees 
     $$\score(T) \leq \E{\R \sim \R_0 \oplus B(T-i,2)}{\pot(T,\R)}$$
@@ -488,18 +514,18 @@ $$  \lowerpotb(T,\R) = \upperpotb(T,\R) = \pot(T,\R) $$
     \item The adversarial strategy
     guarantees the lower potential
  \begin{equation} \label{eqn:backward-iteration-lower}
-   \lowerpotb(i-1, \R) = \frac{\lowerpotb(i,\R+1) + \lowerpotb(i,\R-1)}{2}
+   \lowerpotb(i, \R) = \frac{\lowerpotb(i,\R+1) + \lowerpotb(i,\R-1)}{2}
  \end{equation}
    
     \item The learner strategy:
       guarantees the upper potential 
       \begin{equation} \label{eqn:backward-iteration-upper-recursion}
-        \upperpotb(i-1, \R) = \frac{\upperpotb(i,\R+2) + \upperpotb(i,\R-2)}{2}
+        \upperpotb(i, \R) = \frac{\upperpotb(i,\R+2) + \upperpotb(i,\R-2)}{2}
       \end{equation}
     \end{enumerate}
-    
+    Assuming the adversary uses strategy \ref{} in
+    each iteration we get that 
 \end{lemma}
-
 
 \proof
 \begin{enumerate}
@@ -508,7 +534,7 @@ $$  \lowerpotb(T,\R) = \upperpotb(T,\R) = \pot(T,\R) $$
   the choice of the learner: $\ell(i)=0$.
   Therefor the state update~(\ref{eqn:state-update}) is equivalent to
   the symmetric random walk:
-  $$\state(i) = \frac{1}{2} \paren{(\state(i-1) \oplus 1) + (\state(i-1)
+  $$\state(i) = \frac{1}{2} \paren{(\state(i) \oplus 1) + (\state(i)
     \ominus 1)}$$
   Which in turn implies that if the adversary plays $\adversM^*$
   and the learner plays an arbitrary strategy $\learnerM$
@@ -517,66 +543,62 @@ $$  \lowerpotb(T,\R) = \upperpotb(T,\R) = \pot(T,\R) $$
   \end{equation}
   As this adversarial strategy is oblivious to the learner's strategy, it
   guarantees that the average value at iteration $i$ is {\em equal} to the
-  average of the lower value at iteration $i-1$.
+  average of the lower value at iteration $i$.
 \item
   Plugging learner's strategy~(\ref{eqn:learner-strat-1})
   into equation~(\ref{eqn:aggregate-loss}) we find that
  \begin{equation} \label{eqn:ell-optimal-learner}
-   \ell(i-1) = \frac{1}{Z_{i-1}} \E{\R \sim \state(i-1)}{\paren{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}
-   \Bias(i-1,\R)}
+   \ell(i) = \frac{1}{Z_{i}} \E{\R \sim \state(i)}{\paren{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}
+   \Bias(i,\R)}
 \end{equation}
-  Consider the score at iteration $i-1$ when the learner's strategy
+  Consider the score at iteration $i$ when the learner's strategy
   is $\learnerM^*$ and the adversarial strategy is arbitrary $\adversM$:
   
    \begin{equation} \label{eqn:Pot-Update}
-    \score_{\learnerM^*,\adversM}(i-1,\R) = \E{\R \sim \state(i-1)}{ \E{y \sim
-      \adversM(i-1)(\R)}{\pot(i,\R+y-\ell(i-1))}}
+    \score_{\learnerM^*,\adversM}(i,\R) = \E{\R \sim \state(i)}{ \E{y \sim
+      \adversM(i)(\R)}{\pot(i,\R+y-\ell(i))}}
   \end{equation}
-  As $\pot(i,\cdot)$ is convex and as $(y-\ell(i-1)) \in [-2,2]$,
+  As $\pot(i,\cdot)$ is convex and as $(y-\ell(i)) \in [-2,2]$,
   \begin{equation} \label{eqn:pot-upper}
-    \upperpotb(i,\R+y) \leq \frac{\upperpotb(i,\R+2)+\upperpotb(i,\R-2)}{2} +
+    \upperpotb(i-1,\R+y) \leq \frac{\upperpotb(i,\R+2)+\upperpotb(i,\R-2)}{2} +
     (y-\ell(i)) \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}
     \end{equation}
   Combining the equations~(\ref{eqn:ell-optimal-learner}) and~(\ref{eqn:Pot-Update}) we find that
   \begin{eqnarray}
-  \score_{\learnerM^*,\adversM}(i-1,\R)&=&\E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{\upperpotb(i,\R+y-\ell(i-1))}}\\
-  &\leq & \E{\R \sim \state(i-1)}{\frac{\upperpotb(i,\R+2)+\upperpotb(i,\R-2)}{2}}\\
+  \score_{\learnerM^*,\adversM}(i,\R)&=&\E{\R \sim \state(i)}{\E{y \sim \adversM(i)(\R)}{\upperpotb(i,\R+y-\ell(i))}}\\
+  &\leq & \E{\R \sim \state(i)}{\frac{\upperpotb(i,\R+2)+\upperpotb(i,\R-2)}{2}}\\
   &+&
-  \E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{(y-\ell(i-1)) \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}} \label{eqn:zero-term}
+  \E{\R \sim \state(i)}{\E{y \sim \adversM(i)(\R)}{(y-\ell(i)) \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}} \label{eqn:zero-term}
   \end{eqnarray}
   
 The final step is to show that the term~(\ref{eqn:zero-term}) is equal
-to zero. As $\ell(i-1)$ is a constant with respect to $\R$ and $y$ the
+to zero. As $\ell(i)$ is a constant with respect to $\R$ and $y$ the
 term~(\ref{eqn:zero-term}) can be written as:
 \begin{eqnarray}
-&&\E{\R \sim \state(i-1)}{\E{y \sim \adversM(i-1)(\R)}{(y-\ell(i-1))
+&&\E{\R \sim \state(i)}{\E{y \sim \adversM(i)(\R)}{(y-\ell(i))
    \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}}\\
 &=&
-\E{\R \sim \state(i-1)}{\Bias(i-1,\R)
+\E{\R \sim \state(i)}{\Bias(i,\R)
     \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}\\
-  &-& \ell(i) \E{\R \sim \state(i-1)}{
+  &-& \ell(i) \E{\R \sim \state(i)}{
     \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}\\
   &=& 0
 \end{eqnarray}
 \end{enumerate}
 \qed
 
-\proof {\em of Theorem~\ref{thm:IntegerGameBounds}}
-
-
-\qed
-
+Theorem~\ref{thm:IntegerGameBounds} follows directly from Lemma~\ref{lemma:first-order-bound}
 
 \begin{figure}[ht!]
 \framebox{
 \begin{minipage}[t]{6.4in}
-
+Initialization: $t_0=0$ \newline
+  
 On iteration $i=1,2,\ldots$
 \begin{enumerate}
-\item  If $t_{i-1}= \realT$ the game terminates.
-\item The adversay chooses a {\em step size} $0<s_i\leq 1$, which advances
-  time by $t_i = t_{i-1}+s_i^2$, $t_i >\realT$ is not allowed. In
-  other words $s_i^2 \leq \realT-t_i$.
+\item  If $t_{i}= \realT$ the game terminates.
+\item The adversay chooses a {\em step size} $0<s_i\leq \min(\sqrt{1-t_i})1$, which advances
+  time by $t_i = t_{i-1}+s_i^2$
 \item Given $s_i$, the learner chooses a distribution $\learnerM(i)$ over $\reals$.
 \item The adversary chooses a mapping from $\reals$ to distributions
   over $[-s_i,+s_i]:\;\adversM(t): \reals \to \Delta^{[-s_i,+s_i]}$
@@ -591,7 +613,7 @@ On iteration $i=1,2,\ldots$
   distributions. and the notation $G \oplus \R$ means
   that distribution $G$ over the reals is shifted by the amount
   defined by the scalar $\R$:
-  $$\state(t_i) = \E{\R \sim \state(t_{i-1})}{\adversM(t_i)(\R)\oplus (\R-\ell(t_i))}
+  $$\state(t_i) = \E{\R \sim \state(t_{i})}{\adversM(t_i)(\R)\oplus (\R-\ell(t_i))}
   $$
 \end{enumerate}
 
@@ -625,7 +647,7 @@ Figure~(\ref{fig:discrete-Time-Game}) describes the Discrete-time
 game.
 
 %And design it around the advesarial strategy
-%$\adversM^I(i-1,\R)$ (Equation~\ref{eqn:adv-strat-p}).
+%$\adversM^I(i,\R)$ (Equation~\ref{eqn:adv-strat-p}).
 
 In the integer time game the loss of each action is in the range
 $[-1,+1]$, in the discrete time game the adversary chooses, on
@@ -679,7 +701,7 @@ $V_T=\sum_{i=1}^{T-1}s_i^2$. The cumulative variance $V_T$ is a better measure o
 length of the game than the number of iterations $T$, because it takes
 into account the range $s_i$ of the predictionsl. This motivates
 us to define a real valued time $t_i$ where $t_0=0$ and $t_i =
-t_{i-1}+s_i^2$ and $t_T = {\cal T}$ \
+t_{i}+s_i^2$ and $t_T = {\cal T}$ \
 This completes our justification of the real valued time.
 
 Next, we explain why we bound the average loss. Consider repeating the
@@ -691,12 +713,72 @@ cumulative mean is $2sT \epsilon$, we get that
 $2s \frac{c}{s^2} = \frac{2c}{s}$. This implies that, as $s \to 0$ the
 cumulative mean from $1$ to $T$ increases to $\infty$, which makes the
 regret non-sensical. We correct that by requiring the
-$\epsilon = c s$, or, in orther words, that the magnitude of the
-expected loss $\ell(i)$ is bounded by $c s_i^2$.
+$\epsilon = c s$, or, in other words, that the magnitude of the
+expected loss $\ell(i)$ is bounded by $s_i^2$.
+
+\subsection{Strategies for discrete time game}
+Now that the game is defined, we define a sequence of strategies for
+the adversary and a single strategy for the learner. These strategies
+are scaled versions of the strategies for the integer time
+game~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}).
+
+For adversarial strategy $S_k$ we set the step size to
+$s_k=2^{-k}$ and use the adversarial strategy
+$\adversM^d(\cdot,\cdot,s_k,1/2)$.
+
+Following the same line of argument as the first part of the proof of
+Lemma~\ref{lemma:first-order-bound} we consider the time points:
+$t_i=i s_k^2=i 2^{-2k}\realT$ for $i=0,1,\ldots,2^{2k}$.
+
+  \begin{equation} \label{eqn:lower-discrete}
+    \lowerpotd(t_{i-1},\R) = \frac{\lowerpotd(t_i,\R-s_k)+\lowerpotd(t_i,\R+s_k)}{2}
+  \end{equation}
+
+The learner's strategy depends on $s_k$:
+(Eqn~\ref{eqn:learner-strat-1}). We follow the same line of argument as the second part of the proof of
+Lemma~\ref{lemma:first-order-bound} to give a recursion for the upper
+potential. The citical difference between the integer game is and the
+dicrete game is that in the discrete game $\ell(t_i)\leq s_i^2$ which
+implies that $(y-\ell(t_i)) \in [-s_k(1+s_k),s_k(1+s_k)]$. This yields 
+\begin{eqnarray} \label{eqn:learner-strat-1c}
+  \learnerM^{d}(t_{i},\R) = \frac{1}{Z^{1d}}
+  \frac{\pot(t_i,\R+s_k(1+s_k)) -
+  \pot(t_i,\R-s_k(1+s_k))}{2} \\
+  \mbox{ where } Z^{1d} = \E{\R \sim \state(t_i)}{\frac{\pot(t_i,\R+s_k(1+s_k)) -
+  \pot(t_i,\R-s_k(1+s_k)}{2}} \nonumber
+\end{eqnarray}
+
+Relate back to the corresponding line in the integer game.
+
+  \begin{eqnarray}
+  \score_{\learnerM^d,\adversM}(t_i,\R)&=&\E{\R \sim \state(i)}{\E{y \sim \adversM(t_i,\R)}{\upperpotd(t_i,\R+y-\ell(t_i))}}\\
+  &\leq & \E{\R \sim \state(t_i)}{\frac{\upperpotd(i,\R+s_k(1+s_k))+\upperpotd(i,\R-s_k(1+s_k))}{2}}\\
+  &+&
+      \E{\R \sim \state(i)}{\E{y \sim \adversM(i)(\R)}{(y-\ell(i))
+      \frac{\upperpotd(i,\R+1+s_i^2)+\upperpotd(i,\R-1-s_i^2)}{2}}}
+%      \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}}} \label{eqn:zero-term}
+  \end{eqnarray}
 
 
 
-\subsection{Results for the discrete time game}
+
+
+
+We start with the high-level idea. Consider iteration $i$ of the
+continuous time game. We know that the adversary prefers $s_i$ to be
+as small as possible. On the other hand, the adversary has to choose
+some $s_i>0$. This means that the adversary always plays
+sub-optimally. Based on $s_i$ the learner makes a choice and the
+adversary makes a choice. As a result the current state $\state(t_{i})$
+is transformed to $\state(t_i)$. To choose it's strategy, the learner
+needs to assign value possible states $\state(t_i)$. How can she do
+that? By assuming that in the future the adversary will play
+optimally, i.e. setting $s_i$ arbitrarily small. While the adversary
+cannot be optimal, it can get arbitrarily close to optimal, which is
+brownian motion.
+
+Note that the learner chooses a distribution {\em after} the adversary
+set the value of $s_i$. The discrete time version of $\learnerM^1$
 
 In the discrete time game the adversary has an additional choice, the
 choice of $s_i$. Thus the adversary's strategy includes that choice.
@@ -707,10 +789,11 @@ arbitrarily large. We will therefor not identify a single adversarial
 strategy but instead consider the supremum over an infinite sequence
 of strategies.
 
-\begin{theorem}
+\begin{theorem} \label{thm:seq-of-adv-strategies}
   ~\\
-
-   let $A = \E{\R \sim N(0,\sqrt{\realT})}{\pot(\realT,\R)}$.  For any $\epsilon>0$
+  Assume $\pot(\realT,\R) \in \SP{4}$ and 
+   let $A = N(0,\sqrt{\realT}) \odot \pot(\realT)$. then
+   for any $\epsilon>0$
    \begin{itemize}
      \item
     There exists a strategy for the adversary that guarantees, against
@@ -854,52 +937,27 @@ The theorem follows by forward induction on $k$.
 
 \qed
 
-\subsection{Strategies for the Learner in the discrete time game}
-The strategies we propose for the learner in the discrete time game
-are an adaptation of the strategies $\learnerM^1,\learnerM^2$ from the
-integer time game to the case where $s_i<1$.
 
-We start with the high-level idea. Consider iteration $i$ of the
-continuous time game. We know that the adversary prefers $s_i$ to be
-as small as possible. On the other hand, the adversary has to choose
-some $s_i>0$. This means that the adversary always plays
-sub-optimally. Based on $s_i$ the learner makes a choice and the
-adversary makes a choice. As a result the current state $\state(t_{i-1})$
-is transformed to $\state(t_i)$. To choose it's strategy, the learner
-needs to assign value possible states $\state(t_i)$. How can she do
-that? By assuming that in the future the adversary will play
-optimally, i.e. setting $s_i$ arbitrarily small. While the adversary
-cannot be optimal, it can get arbitrarily close to optimal, which is
-brownian motion.
-
-Solving the backwards Kolmogorov equation with the boundary condition
-$\pot(T,\R)$ yields $\pot(t,\R)$ for any
-$\R \in \reals$ and $t \in [0,T]$. We now explain how using this
-potential function we derive strategies for the the learner. 
-
-Note that the learner chooses a distribution {\em after} the adversary
-set the value of $s_i$. The discrete time version of $\learnerM^1$
-(Eqn~\ref{eqn:learner-strat-1}) is 
-\begin{eqnarray} \label{eqn:learner-strat-1c}
-  \learnerM^{1d}(t_{i-1},\R) = \frac{1}{Z^{1d}}
-  \frac{\pot(t_i,\R+s_{i-1}+cs_{i-1}^2) -
-  \pot(t_i,\R-s_{i-1}-cs_{i-1}^2)}{2} \\
-  \mbox{ where } Z^{1d} = \E{\R \sim \state(t_i)}{\frac{\pot(t_i,\R+s_{i-1}+cs_{i-1}^2) -
-  \pot(t_i,\R-s_{i-1}-cs_{i-1}^2)}{2}} \nonumber
-\end{eqnarray}
-
+\iffalse
 Next, we consider the discrete time version of $\learnerM^2$:
 (Eqn~\ref{eqn:learner-strat-2})
 \begin{eqnarray} \label{eqn:learner-strat-2c}
-  \learnerM^{2d}(t_{i-1},\R) =  \frac{1}{Z^{2d}}
+  \learnerM^{2d}(t_{i},\R) =  \frac{1}{Z^{2d}}
   \left. \frac{\partial}{\partial r} \right|_{r=\R}
-  \pot(t_{i-1}+s_{i-1}^2,r)
+  \pot(t_{i}+s_{i}^2,r)
   \\
   \mbox{ where } Z^{2d} = \E{\R \sim
-  \state(t_i)}{\left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(t_{i-1}+s_{i-1}^2,r)} \nonumber
+  \state(t_i)}{\left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(t_{i}+s_{i}^2,r)} \nonumber
 \end{eqnarray}
+\fi
 
 \section{Brownian motion and min/max strategies}
+
+In the previous section we described a sequence of adversarial
+strategies $S_1,S_2,\ldots$ and a learner strategy such that ....
+
+described a sequence of adversarial
+strategies
 
 It is well known that the limit of random walks where $s \to 0$ and
 $\deltat=s^2$ is the the Brownian or Wiener process
@@ -1023,7 +1081,7 @@ On iteration $i=1,2,\ldots$
 
 \begin{enumerate}
 \item  If $t_i=T$ the game terminates.
-\item Given $t_{i-1}$, the learner chooses a distribution
+\item Given $t_{i}$, the learner chooses a distribution
   $\learnerM(i)$ over $\reals$:
   \begin{equation} \label{eqn:learner-strat-cc}
   \learnerM^{cc}(t,\R) =  \frac{1}{Z^{cc}}
@@ -1069,14 +1127,16 @@ while $t_n$ depends on the variance. $t_n = T$
 is the dominant term in the regret bound, while $\tau$ controls the
 error term.
 
+\newpage
+
 \begin{theorem} \label{thm:variancebound} Let $\pot \in \SP{\infty}$
   be a potential function that satisfies the Kolmogorov backward
   equation~(\ref{eqn:Kolmogorov}).
-  Assume a sequence of $(n_i,s_i,\tau)$-bounded games where $\tau$ is
-  a constant $n \to \infty$ and $s = \sqrt{\frac{\tau}{n}}$
+  Fix the total time $\tau$ and let $G_n$ be an $(n,
+  \sqrt{\frac{\tau}{n}},\tau)$-bounded game. Let $n \to \infty$.
 
 Then 
-$$\score(\state(t_{i+1})) \leq \score(\state(t_i))+O(s \tau)$$
+$$\score(\state(\tau)) \leq \score(\state(0))+O\paren{\frac{1}{\sqrt{n}}}$$
 \end{theorem}
 
 The proof is given in appendix~\ref{appendix:ProofOfVarianceBound}
@@ -1091,8 +1151,8 @@ If we define
 We can use $V_n$ instead of $T$ giving us a variancee based bound.
 
   
-%    \E{\R \sim \state(i-1)}{ \E{y \sim
-%      \adversM(i-1)(\R)}{\pot(i,\R+y-\ell(i-1))}}
+%    \E{\R \sim \state(i)}{ \E{y \sim
+%      \adversM(i)(\R)}{\pot(i,\R+y-\ell(i))}}
 
 
 \bibliographystyle{plain}
