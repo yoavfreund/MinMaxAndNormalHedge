@@ -252,7 +252,7 @@ of cumulative regrets corresponding to action $\omega$ is the {\em
   S_{\omega}=(\R_\omega^1,\R_\omega^2,\ldots,\R_\omega^N)
 \end{equation}
 
-{\bf Expectated salue shorthand:} Suppose $P$ is a distribution over the reals, and $f:\reals
+{\bf Expected value shorthand:} Suppose $P$ is a distribution over the reals, and $f:\reals
 \to \reals$, we use the following short-hand notation for the expected
 value of $f$ under the distribution $P$:
 \[ P \odot f \doteq \E{x \sim P}{f(x)}  \]
@@ -270,8 +270,10 @@ $a$. For convenience we define $A \ominus B = A \oplus (-B)$
 
 \section{Integer time game}
 
-The integer time game is a variation on DTOL with the following
-differences:
+The integer time game is described in
+Figure~\ref{fig:integerTimeGame}.  The integer time game generalizes
+the decision theoretic online learning problem~\cite{FreundSc97} in
+the following ways:
 \begin{enumerate}
 \item The goal of the learner in DTOL is to guarantee an upper bounds
   on the regret. The learner's goal in the integer time game is to
@@ -285,8 +287,7 @@ it is enough to assume that any action can be split into two equal
 weight parts.
 \end{enumerate}
 
-{\bf Figure~\ref{fig:integerTimeGame}} describes the integer time
-game.
+
 
 The key to the potential based analysis is that usiing the predefined
 final potential we can define potential functions and scores for all
@@ -341,74 +342,62 @@ of the adversary is to maximize it.
 \caption{The integer time game \label{fig:integerTimeGame}}
 \end{figure}
 
-\subsection{Potential Functions and backward induction \label{sec:potentials}}
+\subsection{Defining potential Functions for all iterations\label{sec:potentials}}
 
- The potential game defines the {\em final} potential
- function $\pot(T)$, at the end of the game. However, as we will now
- show, there is a natural way to extend the definition of a potential
- function to all iterations of the game.
+The potential game defines the {\em final} potential function
+$\pot(T)$, at the end of the game. We will now show, that we can
+extend the definition of a potential function to all iterations of the game.
 
- An single action defines a path $S_\omega$ (\ref{eqn:path}). Fixing
- the strategies of the learner and the adversary implies a fixed
- distribution over paths.
+ A single action defines a path $S_\omega$ (as defined in (\ref{eqn:path})). Fixing
+ the strategies of the learner and the adversary determines
+ a distribution $\D$ over paths.
+We describe two equivalent ways to define $\potPQ(i,\R)$ for $i<T$
+ \begin{enumerate}
+ \item{\bf Using conditional expectation} We can define the potential
+   on iteration $i$ based on the fixed potential at iteration $T$.
+Using the definition of prefix sum given
+in Equation~(\ref{eqn:prefix-sum}, we can write this conditional
+expectation as 
+\begin{equation}
+  \forall i=1,\ldots,T, \R \;\;\;
+  \potPQ(i,\R)=\E{\omega\sim \D|\R_\omega^i=\R}{\pot(T,\R_{\omega}^T)}
+\end{equation}
+ \item{\bf Using backward induction} It is sometimes convenient to
+   compute the the potential for time $i$ from the potential at time
+   $i+1$:
+   \begin{equation} \label{eqn:back-induction}
+     \forall i=1,\ldots,T-1, \R\;\;\;
+     \potPQ(i,\R)=\E{\omega\sim \D|M_\omega^i=\R}{\potPQ(i+1,\R_{\omega}^{i+1})}
+   \end{equation}
+by using backwards induction: $i=T-1,T-2,\ldots,1$ we can compute the
+potential for all iterations.
 
-We define the potential for $\potPQ(i,\R)$ to be the expected value of
-the final potential conditioned on the path passing through cumulative
-regret $\R$ on iteration $i$. Recall that $\state(i)$ is the
-probability distribution of $\R$ on iteration $i$. We can therefor
-calculate the final expected potential by computing the expectation of
-the conditional expectation with respect to $\phi(t)$. Which is
-summarized by the following theorem.
 
-Fix the strategies for both the learner $\learnerM(\cdot,\cdot)$ and
-the adversary $\adversM(\cdot,\cdot)$. We denote the potential
-function for the fixed strategies by $\potPQ(i,R)$.
-
-Fixing the strategies defines a distribution over paths:
-distribution over paths. The potentials $i,\R$ corresponds to the
-expected final potentail given that the paths 
-
-The base case is  $\potPQ(N,\R) = \pot(N,\R)$.
-In the induction we assume that  $\potPQ(i+1,\R)$ is known and compute  $\potPQ(i,\R)$.
-We use our knowledge of $\learnerM(i,\R)$ and
-Equations~(\ref{eqn:Bias},\ref{eqn:aggregate-loss}) to calculate
-$\ell(i)$. We then define 
+We use Equations~(\ref{eqn:Bias},\ref{eqn:aggregate-loss}) and
+marginalizing over $\R$ to express Equation~(\ref{eqn:back-induction})
+in terms of the single step strategies:
 \begin{equation} \label{eqn:induction}
-  \forall \R\;\;
+  \forall i=1,\ldots,T-1, \R\;\;\;
   \potPQ(i,\R) \doteq \E{r \sim [(\R-\ell(i)) \oplus \adversM(i,\R)]}{\potPQ(i+1,r)}
 \end{equation}
 
-For the potentials defined using Equation~(\ref{eqn:induction}) it is
-easy to prove the following theorem:
+\end{enumerate}
+
+The score at iteration $i$ is defined as
+$\score(i)=\state(i)\odot \pot(i)$. The scores are all different
+expressions for calculating the expected final potential for the fixed strategies
+$\adversM, \learnerM$. Therefor the scores are all equal, as expressed
+in the following theorem:
 
 \begin{theorem} \label{thm:backward-recursion}
 Assuming $ \learnerM(i,\R), \adversM(i,\R)$ are fixed for all
 $i=1,\ldots,T-1$, then
 \[
-   \state(T)\odot \pot(T)=
-   \state(T-1)\odot \potPQ(T-1)= \cdots =
-   \state(1)\odot \potPQ(1)=\potPQ(1,0)
+  \state(T)\odot \pot(T)=\score(T)=\score(T-1)=\cdots=\score(1)=\potPQ(1,0)
   \]
 \end{theorem}
 
-\renewcommand{\D}{{\cal D}}
-
-\iffalse
-\proof
-Fixing $ \learnerM(i,\R), \adversM(i,\R)$ implies a fixed distribution
-$\D$ over paths in $s \in [-1,+1]^T$. We denote the marginal of $\D$
-over the iterations $i\leq j$ by $\D^{i,j}$
-
-We can re-express each expected
-value as:
-\[
-  \state(i)\odot \potPQ(i) = \E{s_1 \sim \D^{1,i}}{\E{s_2 \sim \D^{i+1,T}}{\pot(T,\R(s_1,s_2))}}
-\]
-
-\qed
-\fi
-
-A few things to note:
+A few things worth noting:
 \begin{enumerate}
 \item $\potPQ(i,\R)$ is the the final expected potential
   given that the paths starts at $(i,\R)$ and that
@@ -418,13 +407,10 @@ A few things to note:
   state $\state(i)$.
 \item
   The final expected potential is equal to $\pot(1,0)$ which is the
-  potential at the common starting point: $i=0$, $\R=0$.
-\item
-  Theorem~(\ref{thm:backward-recursion}) justifies calling the
-  distribution $\state(i)$ the {\em state} of the game, $\state(i)$
-  determines the score on iteration $i$
+  potential at the common starting point: $i=1$, $\R=0$.
 \end{enumerate}
 
+\subsection{Upper and Lower potentials}
 Next,we vary the strategies of one side or the other to define upper
 and lower potentials.
 \begin{equation} \label{eqn:upperPotentials}
@@ -441,13 +427,12 @@ guaranteed by the learner strategy $\learnerM$ while $\lowerpotb$
 is a lower bound that is guaranteed by the adversarial
 strategy $\adversM$.
 
-Our goal is to find sequences of strategies $\learnerM(1),\learnerM(2),\ldots$ and
-$\adversM(1),\adversM(2),\ldots$ such that
+Our ultimate goal is to find strategies $\learnerM$ and
+$\adversM$ such that
 \begin{equation} \label{eqn:limitPotential}
-\forall (i,\R)\;\;\lim_{j \to \infty}\lowerpotj(i,\R) = \lim_{j \to
-  \infty} \upperpotj(i,\R)
+\forall i,\R,\;\;\; \lowerpot(i,\R) = \upperpotj(i,\R)
 \end{equation}
-However, this will have to wait for the discrete time game.
+However, this will have expand the game in several ways.
 We start by analyzing the integer time game. 
 
 
@@ -589,6 +574,38 @@ term~(\ref{eqn:zero-term}) can be written as:
 
 Theorem~\ref{thm:IntegerGameBounds} follows directly from Lemma~\ref{lemma:first-order-bound}
 
+
+\section{From integer to discrete time}
+\label{sec:discrete}
+
+The upper and lower bound on the final score given in
+Theorem~\ref{thm:IntegerGameBounds} do not match. There is a strict
+inequality between the upper and lower
+bonds:$\E{\R \sim \R_0 \oplus B(T-i,1)}{\pot(T,\R)} < \E{\R \sim \R_0
+  \oplus B(T-i,2)}{\pot(T,\R)}$. In other words, the
+strategies~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}) are not a
+min/max pair.\footnote{There might be other (pure) strategies for the integer
+game that are a min/max pair, we conjecture that is not the case, and
+seek a extension of the game that would yield min/max strategies.}
+
+To close the gap we extend the game, preserving the integer step game
+as a special case. Our extension increases the set of possibilities
+available to the adversary but not to those available to the
+learner. As a result, any learner strategy that bound on the final
+score in the extended game holds also for the integer game. We call
+the extended game the {\em discrete time game}.
+Figure~(\ref{fig:discrete-Time-Game}) describes the Discrete-time
+game.
+
+%And design it around the advesarial strategy
+%$\adversM^I(i,\R)$ (Equation~\ref{eqn:adv-strat-p}).
+
+In the integer time game the loss of each action is in the range
+$[-1,+1]$, in the discrete time game the adversary chooses, on
+iteration $i$ a step size $0<s_i\leq 1$ which restricts the losses to
+be in the range $[-s_i,+s_i]$. Note that by always choosing $s_i=1$,
+the adversary can recreate the integer time game.
+
 \begin{figure}[ht!]
 \framebox{
 \begin{minipage}[t]{6.4in}
@@ -623,37 +640,6 @@ $$\score(\realT) =\E{\R \sim \state(\realT)}{\pot(\realT,\R)}$$
 \end{minipage}}
 \caption{The discrete time game  \label{fig:discrete-Time-Game}}
 \end{figure}
-
-\section{From integer to discrete time}
-\label{sec:discrete}
-
-The upper and lower bound on the final score given in
-Theorem~\ref{thm:IntegerGameBounds} do not match. There is a strict
-inequality between the upper and lower
-bonds:$\E{\R \sim \R_0 \oplus B(T-i,1)}{\pot(T,\R)} < \E{\R \sim \R_0
-  \oplus B(T-i,2)}{\pot(T,\R)}$. In other words, the
-strategies~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}) are not a
-min/max pair.\footnote{There might be other (pure) strategies for the integer
-game that are a min/max pair, we conjecture that is not the case, and
-seek a extension of the game that would yield min/max strategies.}
-
-To close the gap we extend the game, preserving the integer step game
-as a special case. Our extension increases the set of possibilities
-available to the adversary but not to those available to the
-learner. As a result, any learner strategy that bound on the final
-score in the extended game holds also for the integer game. We call
-the extended game the {\em discrete time game}.
-Figure~(\ref{fig:discrete-Time-Game}) describes the Discrete-time
-game.
-
-%And design it around the advesarial strategy
-%$\adversM^I(i,\R)$ (Equation~\ref{eqn:adv-strat-p}).
-
-In the integer time game the loss of each action is in the range
-$[-1,+1]$, in the discrete time game the adversary chooses, on
-iteration $i$ a step size $0<s_i\leq 1$ which restricts the losses to
-be in the range $[-s_i,+s_i]$. Note that by always choosing $s_i=1$,
-the adversary can recreate the integer time game.
 
 We make two additional changes to the integer time game in order to define
 the discrete time game, we first list them and then provide justifications.
@@ -1156,7 +1142,7 @@ We can use $V_n$ instead of $T$ giving us a variancee based bound.
 
 
 \bibliographystyle{plain}
-\bibliography{ref.bib}
+\bibliography{ref.bib,bib.bib}
 
 \appendix
 \section{Proof of Theorem~\ref{thm:simulBoundAveragePot} \label{proof:simulBoundAveragePot}}

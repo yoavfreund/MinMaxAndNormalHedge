@@ -65,6 +65,13 @@ Yoav Freund and Robert~E Schapire.
   application to boosting.
 \newblock {\em Journal of computer and system sciences}, 55(1):119--139, 1997.
 
+\bibitem{FreundSc97}
+Yoav Freund and Robert~E. Schapire.
+\newblock A decision-theoretic generalization of on-line learning and an
+  application to boosting.
+\newblock {\em Journal of Computer and System Sciences}, 55(1):119--139, August
+  1997.
+
 \bibitem{freund1999adaptive}
 Yoav Freund and Robert~E Schapire.
 \newblock Adaptive game playing using multiplicative weights.

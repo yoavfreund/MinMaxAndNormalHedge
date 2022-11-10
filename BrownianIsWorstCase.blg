@@ -3,44 +3,45 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: BrownianIsWorstCase.aux
 The style file: plain.bst
 Database file #1: ref.bib
-You've used 19 entries,
+Database file #2: bib.bib
+You've used 20 entries,
             2118 wiz_defined-function locations,
-            623 strings with 6867 characters,
-and the built_in function-call counts, 6637 in all, are:
-= -- 684
-> -- 277
+            832 strings with 14238 characters,
+and the built_in function-call counts, 6964 in all, are:
+= -- 716
+> -- 290
 < -- 3
-+ -- 112
-- -- 90
-* -- 475
-:= -- 1090
-add.period$ -- 60
-call.type$ -- 19
-change.case$ -- 101
++ -- 118
+- -- 94
+* -- 502
+:= -- 1144
+add.period$ -- 63
+call.type$ -- 20
+change.case$ -- 106
 chr.to.int$ -- 0
-cite$ -- 19
-duplicate$ -- 245
-empty$ -- 525
-format.name$ -- 90
-if$ -- 1386
+cite$ -- 20
+duplicate$ -- 256
+empty$ -- 552
+format.name$ -- 94
+if$ -- 1454
 int.to.chr$ -- 0
-int.to.str$ -- 19
-missing$ -- 20
-newline$ -- 98
-num.names$ -- 38
-pop$ -- 89
+int.to.str$ -- 20
+missing$ -- 21
+newline$ -- 103
+num.names$ -- 40
+pop$ -- 92
 preamble$ -- 1
-purify$ -- 83
+purify$ -- 87
 quote$ -- 0
-skip$ -- 174
+skip$ -- 182
 stack$ -- 0
-substring$ -- 508
-swap$ -- 51
+substring$ -- 535
+swap$ -- 52
 text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 74
+type$ -- 78
 warning$ -- 0
-while$ -- 71
-width$ -- 21
-write$ -- 211
+while$ -- 74
+width$ -- 22
+write$ -- 222
