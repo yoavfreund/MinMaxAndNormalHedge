@@ -37,25 +37,6 @@
 \newcommand{\state}{{\bf \Psi}}
 \newcommand{\1}[1]{{\mathbf 1}\left[#1\right]} % point mass at #1
 
-\newcommand{\realT}{\mathcal{T}}  % the final time for the real-time game
-\newcommand{\score}{\Phi}
-\newcommand{\scoreLA}{\score_{\l,\a}}
-\newcommand{\learnerM}{P}
-\newcommand{\learnerMb}{P^*}
-\newcommand{\learnerMd}{P^d}
-\renewcommand{\l}{\learnerM}
-\newcommand{\legalLearner}{{\cal L}}
-\newcommand{\adversM}{Q}
-\newcommand{\adversMb}{Q^*}
-\newcommand{\adversMd}{Q^d}
-\newcommand{\evensplit}{\adversM^{1/2}}
-\newcommand{\scaledsplit}{\evensplit_{s_i}}
-\renewcommand{\a}{\adversM}
-\newcommand{\legalAdversary}{{\cal A}}
-\newcommand{\agloss}{v}
-\newcommand{\Bias}{B}
-\newcommand{\deltat}{\Delta t}
-
 \newcommand{\pot}{\phi}
 \newcommand{\potPQ}{\pot_{\learnerM,\adversM}}
 \newcommand{\potLA}{\pot_{\l,\a}}
@@ -69,6 +50,35 @@
 \newcommand{\lowerpotd}{\pot_{\adversMd}^{\uparrow}}
 \newcommand{\lowerpotj}{\pot_{\adversM(j)}^{\uparrow}}
 \newcommand{\lowerpoteven}{\lowerpot_{\evensplit}}
+
+\newcommand{\realT}{\mathcal{T}}  % the final time for the real-time game
+\newcommand{\score}{\Phi}
+\newcommand{\upperscore}[1]{\score_{#1}^{\downarrow}}
+\newcommand{\lowerscore}[1]{\score_{#1}^{\uparrow}}
+\newcommand{\upperscoreM}{\upperscore{\learnerM}}
+\newcommand{\upperscoreMd}{\upperscore{\learnerMd}}
+
+\newcommand{\lowerscoreM}{\lowerscore{\adversM}}
+\newcommand{\lowerscoreMd}{\lowerscore{\adversMd}}
+\newcommand{\learnerM}{P}
+\newcommand{\learnerMb}{P^I}
+\newcommand{\learnerMd}{P^d}
+\renewcommand{\l}{\learnerM}
+\newcommand{\legalLearner}{{\cal L}}
+
+\newcommand{\adversM}{Q}
+\newcommand{\adversMb}{Q_I}  %Integer time game
+\newcommand{\adversMd}{Q_D}  % Discrete time game
+\newcommand{\adversMdk}{Q_{D(k)}}  %Discrete time game with step of
+                                %size 2^{-k}
+
+
+% \renewcommand{\a}{\adversM}
+%\newcommand{\legalAdversary}{{\cal A}}
+\newcommand{\agloss}{v}
+\newcommand{\Bias}{B}
+\newcommand{\deltat}{\Delta t}
+
 \newcommand{\diffweight}{\l^d}   % learner strategy based on taking a difference
 \newcommand{\upperpotdiff}{\upperpot_{\diffweight}}
 
@@ -100,5 +110,6 @@ f(x,y) \right\}}
 
 
 \newmcommandi{\paren}{\left({#1}\right)}
+\newmcommandi{\brac}{\left[{#1}\right]}
 
 
