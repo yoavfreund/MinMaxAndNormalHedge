@@ -1,4 +1,6 @@
 %\theoremstyle{plain}
+\usepackage{amsmath,bm}
+
 \newtheorem{lemma}{Lemma}
 \newtheorem{claim}[lemma]{Claim}
 \newtheorem{theorem}[lemma]{Theorem}
@@ -40,30 +42,41 @@
 \newcommand{\pot}{\phi}
 \newcommand{\potPQ}{\pot_{\learnerM,\adversM}}
 \newcommand{\potLA}{\pot_{\l,\a}}
-\newcommand{\finalPot}{\pot(T,\R)}
+\newcommand{\finalPot}[1]{\pmb{\phi}_{#1}}
+\newcommand{\finalPotT}{\finalPot{T}}
+\newcommand{\finalPotR}{\finalPot{\realT}}
 \newcommand{\upperpot}{\pot_{\learnerM}^{\downarrow}}
 \newcommand{\upperpotb}{\pot_{\learnerMb}^{\downarrow}}
 \newcommand{\upperpotd}{\pot_{\learnerMd}^{\downarrow}}
 \newcommand{\upperpotj}{\pot_{\learnerM(j)}^{\downarrow}}
+\newcommand{\upperpotMdk}{\pot_{\learnerMdk}^{\downarrow}}
+
+
 \newcommand{\lowerpot}{\pot_{\adversM}^{\uparrow}}
 \newcommand{\lowerpotb}{\pot_{\adversMb}^{\uparrow}}
 \newcommand{\lowerpotd}{\pot_{\adversMd}^{\uparrow}}
 \newcommand{\lowerpotj}{\pot_{\adversM(j)}^{\uparrow}}
+\newcommand{\lowerpotMdk}{\pot_{\adversMdk}^{\uparrow}}
 \newcommand{\lowerpoteven}{\lowerpot_{\evensplit}}
 
 \newcommand{\realT}{\mathcal{T}}  % the final time for the real-time game
 \newcommand{\score}{\Phi}
 \newcommand{\upperscore}[1]{\score_{#1}^{\downarrow}}
 \newcommand{\lowerscore}[1]{\score_{#1}^{\uparrow}}
+
 \newcommand{\upperscoreM}{\upperscore{\learnerM}}
 \newcommand{\upperscoreMd}{\upperscore{\learnerMd}}
+\newcommand{\upperscoreMdk}{\upperscore{\learnerMdk}}
 
 \newcommand{\lowerscoreM}{\lowerscore{\adversM}}
 \newcommand{\lowerscoreMd}{\lowerscore{\adversMd}}
 \newcommand{\learnerM}{P}
-\newcommand{\learnerMb}{P^I}
-\newcommand{\learnerMd}{P^d}
+\newcommand{\learnerMb}{P_I}
+\newcommand{\learnerMd}{P_D}
 \renewcommand{\l}{\learnerM}
+\newcommand{\learnerMdk}{P_{D(k)}}
+
+
 \newcommand{\legalLearner}{{\cal L}}
 
 \newcommand{\adversM}{Q}
