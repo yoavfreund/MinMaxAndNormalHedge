@@ -434,11 +434,11 @@ Following the same argument as the one leading to
 Theorem~\ref{thm:backward-recursion}. We define upper and lower scores
 $\upperscoreM(i),\lowerscoreM(i)$ such that
 \begin{equation} \label{eqn:upper-recursion}
-  \state_{\learnerM}(T)\odot \pot(T)=\upperscoreM(T)=\upperscoreM(T-1)=\cdots=\upperscoreM(0)=\upperpot(0,0)
+  \state_{\learnerM}(T)\odot \finalPotT=\upperscoreM(T)=\upperscoreM(T-1)=\cdots=\upperscoreM(0)=\upperpot(0,0)
 \end{equation}
 and
 \begin{equation} \label{eqn:lower-recursion}
-  \state_{\adversM}(T)\odot \pot(T)=\lowerscoreM(T)=\lowerscoreM(T-1)=\cdots=\lowerscoreM(0)=\lowerpot(0,0)
+  \state_{\adversM}(T)\odot \finalPotT=\lowerscoreM(T)=\lowerscoreM(T-1)=\cdots=\lowerscoreM(0)=\lowerpot(0,0)
 \end{equation}
 
 Our ultimate goal is to find strategies $\learnerM$ and
@@ -458,18 +458,20 @@ continuous time game (\ref{sec:continuous}).
 
 \subsection{Strategies for the integer time  game} \label{sec:strat-integer}
 We assume that $\finalPotT  \in \SP{2}$, in other words, the final
-potential is positive, increasing and convex.
-
-We define a lower potential recursion
+potential is positive, increasing and convex. $\finalPotT$ defines the
+upper and lower potentials at time $T$:
+$$\lowerpotb(T,\R) = \upperpotb(T,\R) = \finalPotT(\R) $$
+We define a backwards recursion for the lower potential:
 \begin{equation} \label{eqn:backward-iteration-lower}
-  \lowerpotb(i, \R) = \frac{\lowerpotb(i,\R+1) + \lowerpotb(i,\R-1)}{2}
+  \lowerpotb(i-1, \R) = \frac{\lowerpotb(i,\R+1) + \lowerpotb(i,\R-1)}{2}
 \end{equation}
-and an upper potential recursion
+and a backwards recursion for the upper potential:
 \begin{equation} \label{eqn:backward-iteration-upper-recursion}
-  \upperpotb(i, \R) = \frac{\upperpotb(i,\R+2) + \upperpotb(i,\R-2)}{2}
+  \upperpotb(i-1, \R) = \frac{\upperpotb(i,\R+2) + \upperpotb(i,\R-2)}{2}
 \end{equation}
 
-Correspondingly we define an adversarial strategy
+We define strategies that correspond to these potentials. A strategy
+for the adversay:
 \begin{equation} \label{eqn:adv-strat-p}
   \adversMb(i,\R) =
   \begin{cases}
@@ -477,7 +479,7 @@ Correspondingly we define an adversarial strategy
     -1 & \mbox{ w.p. } \frac{1}{2}\\
   \end{cases}
 \end{equation}
-and a learner strategy
+and a strategy for the learner:
 \begin{equation} \label{eqn:learner-strat-1}
 \learnerMb(i,\R) = \frac{1}{Z} \frac{\pot(i,\R+2) - \pot(i,\R-2)}{2}
 \end{equation}
@@ -488,18 +490,32 @@ $$Z = \E{\R \sim \state(i)}{\frac{\pot(i,\R+2) - \pot(i,\R-2)}{2}}$$
 The following lemma states that these strategies guarantee the
 corresponding potentials.
 \begin{lemma} \label{lemma:first-order-bound}
-  If $\pot(i,\R) \in \SP{2}$
-  \begin{enumerate}
-    \item The adversarial strategy~(\ref{eqn:adv-strat-p})
-    guarantees the lower potential~(\ref{eqn:backward-iteration-lower})
-    \item The learner strategy~(\ref{eqn:learner-strat-1})
-      guarantees the upper potential~(\ref{eqn:backward-iteration-upper-recursion})
-    \end{enumerate}
+~\\
+Let $i$ be an integer between $1$ and $T$
+
+If $\lowerpotb(i,\R) \in \SP{2}$
+\begin{enumerate}
+\item  $\lowerpotb(i-1,\R) \in \SP{2}$
+\item The adversarial strategy~(\ref{eqn:adv-strat-p})
+  guarantees the recursion given in Eqn.~(\ref{eqn:backward-iteration-lower})
+\end{enumerate}
+
+If $\upperpotb(i,\R) \in \SP{2}$
+\begin{enumerate}
+\item $\upperpotb(i-1,\R) \in \SP{2}$
+\item The learner strategy~(\ref{eqn:learner-strat-1})
+  guarantees the recursion given in Eqn.~(\ref{eqn:backward-iteration-upper-recursion})
+\end{enumerate}
+
 \end{lemma}
 
-\proof
+\proof~\\
 \begin{enumerate}
-\item By symmetry adversarial strategy~(\ref{eqn:adv-strat-p}) guarantees that
+  \item{\bf Convexity:} If $\lowerpotb(i-1,\R)$ is a convex combination
+    of $\lowerpotb(i,\R)$. Therefor $\lowerpotb(i,\R) \in \SP{2}$
+    implies $\lowerpotb(i-1,\R) \in \SP{2}$. A similar argument holds
+    for $\upperpotb$.
+\item{\bf Adversary:} By symmetry adversarial strategy~(\ref{eqn:adv-strat-p}) guarantees that
   the aggregate loss~(\ref{eqn:aggregate-loss}) is zero regardless of
   the choice of the learner: $\ell(i)=0$.
   Therefor the state update~(\ref{eqn:state-update}) is equivalent to
@@ -514,7 +530,7 @@ corresponding potentials.
   As this adversarial strategy is oblivious to the learner's strategy, it
   guarantees that the average value at iteration $i$ is {\em equal} to the
   average of the lower value at iteration $i$.
-\item
+\item {\bf Learner:}
   Plugging learner's strategy~(\ref{eqn:learner-strat-1})
   into equation~(\ref{eqn:aggregate-loss}) we find that
  \begin{equation} \label{eqn:ell-optimal-learner}
@@ -527,7 +543,7 @@ corresponding potentials.
     \score_{\learnerM^*,\adversM}(i,\R) = \E{\R \sim \state(i)}{ \E{y \sim
       \adversM(i)(\R)}{\pot(i,\R+y-\ell(i))}}
   \end{equation}
-  As $\pot(i,\cdot)$ is convex and as $(y-\ell(i)) \in [-2,2]$,
+  As $\pot(i,\cdot)$ is convex and as $y-\ell(i) \in [-2,2]$,
   \begin{equation} \label{eqn:pot-upper}
     \upperpotb(i-1,\R+y) \leq \frac{\upperpotb(i,\R+2)+\upperpotb(i,\R-2)}{2} +
     (y-\ell(i)) \frac{\upperpotb(i,\R+2)-\upperpotb(i,\R-2)}{2}
@@ -556,58 +572,48 @@ term~(\ref{eqn:zero-term}) can be written as:
 \end{enumerate}
 \qed
 
-
-
-We next give upper and lower bounds on the final average potential
-based on these strategies.
-
+Repeating the induction steps of Lemma~\ref{lemma:first-order-bound}
+from $i=T$ to $i=1$ yields the following theorem.
 \begin{theorem} \label{thm:IntegerGameBounds}
-  Let $\pot_T \in \SP{2}$, for any iteration $0 \leq i \leq T$ and
-  initial regret $\R_0 \in \reals$ we define $\state(i,\R_0)$ to
-  contain all paths that are equal to $\R_0$ on iteration $i$. We
-  consider the final score $\score(T)$ starting from state
-  $\state(i,\R_0)$ and using a particular strategy
+  Let $\finalPotT \in \SP{2}$, for any iteration $0 \leq i \leq T$ and
+  regret $\R_0 \in \reals$ 
   \begin{itemize}
   \item
-    The adversarial strategy~(\ref{eqn:adv-strat-p}) starting from
-    $\state(i,\R_0)$. Guarantees a final potential 
-     $$ \score(T) \geq \E{\R \sim \R_0 \oplus \Binom(T-i,1)}{\pot(T,\R)} $$
+    The lower potential gearenteed by $\adversMb$ is
+     $$\lowerpotb(i,R_0) = \E{\R \sim \R_0 \oplus \Binom(T-i,1)}{\finalPotT(\R)} $$
   \item
-    There learner strategy~(\ref{eqn:learner-strat-1}) guarantees 
-    $$\score(T) \leq \E{\R \sim \R_0 \oplus \Binom(T-i,2)}{\pot(T,\R)}$$
+    The upper potential guaranteed by $\learnerMb$ is
+    $$\upperpotb(i,R_0) = \E{\R \sim \R_0 \oplus \Binom(T-i,2)}{\finalPotT(\R)}$$
   \end{itemize}
 \end{theorem}
 
+Plugging in $i=0$,$\R=0$ we ge the following corrolary:
+\begin{corollary}
+  if the learner plays $\learnerMb$ on every iteration
+  it guarantees that the final score satisfies
+  $$\state(T) \odot \finalPotT \leq \Binom(T,2) \odot \finalPotT $$
 
-The next Lemma is the main part of the proof ot
-Theorem~(\ref{thm:IntegerGameBounds}). We use the backward induction
-from Theorem~(\ref{thm:backward-recursion}) To compute upper and lower
-potentials (Equations~(\ref{eqn:upperPotentials},\ref{eqn:lowerPotentials})) for
-Strategies~(\ref{eqn:adv-strat-p}) and~(\ref{eqn:learner-strat-1})
-
-The last iteration of the game: $i=T$ is the first step of the
-backward induction. The uper and lower bounds are both set equal to
-the first step in the backward induction we define
-$$  \lowerpotb(T,\R) = \upperpotb(T,\R) = \pot(T,\R) $$
-
-
-Theorem~\ref{thm:IntegerGameBounds} follows directly from Lemma~\ref{lemma:first-order-bound}
-
+  If the Adversary plays $\adversMb$ on every iteration it guarantees
+  that:
+  $$\state(T) \odot \finalPotT = \Binom(T,1) \odot \finalPotT $$
+\end{corollary}
 \section{From integer to discrete time}
 \label{sec:discrete}
 
 The upper and lower bound on the final score given in
-Theorem~\ref{thm:IntegerGameBounds} do not match.
-$\E{\R \sim \R_0 \oplus \Binom(T-i,1)}{\pot(T,\R)} < \E{\R \sim \R_0
-  \oplus \Binom(T-i,2)}{\pot(T,\R)}$. In other words, the
+Theorem~\ref{thm:IntegerGameBounds} do not match. If
+$\finalPotT \in \SP{2}$ then \linebreak
+$\Binom(T,1) \odot \finalPotT <\Binom(T,2) \odot \finalPotT$ In other
+words, the
 strategies~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}) are not a
-min/max pair.\footnote{There might be other (pure) strategies for the integer
-game that are a min/max pair, we conjecture that is not the case, and
-seek a extension of the game that would yield min/max strategies.}
+min/max pair.\footnote{There might be other (pure) strategies for the
+  integer game that are a min/max pair, we conjecture that is not the
+  case, and seek a extension of the game that would yield min/max
+  strategies.}
 
 To close this gap we extend the integer time game into a new game we
 call the discrete time game (Fig.~\ref{fig:discrete-Time-Game}). The
-descrete time game increases the options available to the adversary,
+discrete time game increases the options available to the adversary,
 but not to the learner.  As the integer step game is a special case of
 the new game, any upper potential that can be guaranteed by the
 learner in the discrete time game is also an upper potnetial for the
@@ -689,9 +695,10 @@ On the other hand, we know that  $\state_{\adversMd}(T) =
 \Binom(T,s)$. Suppose $T$ is large enough that the normal approximation for the
 binomial can be used. Let ${\cal N}(\mu,\sigma^2)$ be the normal
 distribution with mean $\mu$ and variance $\sigma^2$.
-\[
+\begin{equation}   \label{eqn:largeTlimit}
   \lim_{T \to \infty} \lowerscoreMd(0) =  {\cal N}(0,Ts^2) \odot \pot(T)
-\]
+\end{equation}
+
 Recall that $\pot(T)$ is a fixed strictly convex function. It is not
 hard to see that if $Ts^2 \to 0$ minimizes  $\lowerscoreMd(0)$ and
 makes it equal to to $\pot(T,0)$, which means that the learner wins,
@@ -726,16 +733,17 @@ game.
 We define a sequence of adversarial strategies $\adversMdk$ for
 $k=1,2,\ldots$. The $k$'th strategy uses step size $s_k=2^{-k}$ and
 time increments $\Delta t_k=s_k^2=2^{-2k}$.
-
-we set the time points  $t_i =i s_k^2$ for $i=0,1,\ldots,T-1$ where $T=\realT/s_k^2$
+We set the time points $t_i =i s_k^2$ for $i=0,1,\ldots,T-1$ where $T=\realT/s_k^2$
 
 For a given $k$ we define upper and lower potentials for each
 $t_i$. This is done by induction starting the fixed final potential
 function  $\finalPotT(\R)=\lowerpotMdk(\realT, \R)=\upperpotMdk(\realT, \R)$ and iterating
-backwards for $i=T,T-1,T-2,\ldots$
+backwards for $t_i = i \Delta t$,  $i=T,T-1,\ldots,0$
  \begin{equation} \label{eqn:backward-iteration-lower-discrete}
    \lowerpotMdk(t_{i-1}, \R) = \frac{\lowerpotMdk(t_i,\R+s_k) + \lowerpotMdk(t_i,\R-s_k)}{2}
  \end{equation}
+
+
  \begin{equation} \label{eqn:backward-iteration-upper-recursion-discrete}
    \upperpotMdk(t_{i-1}, \R) = \frac{\upperpotMdk(t_i,\R+s_k(1+s_k)) + \upperpotMdk(t_i,\R-s_k(1+s_k))}{2}
  \end{equation}
@@ -764,118 +772,64 @@ integer time potential recursions defined in
 Equations~(\ref{eqn:backward-iteration-lower},\ref{eqn:backward-iteration-upper-recursion})
 and the strategies defined in
 Equations~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}).  They are
-identical when $s=1$. As we show below, when $s_k \to 0$ both the
-upper and lower potential converge to the same limit.
+identical when $s=1$.
 
+The following Lemma parallels Lemma~\ref{lemma:first-order-bound}
+\begin{lemma} \label{lemma:discrete-step-bound}
+~\\
+Let $i$ be an integer between $1$ and $T$
+
+If $\lowerpotMdk(t_i,\R) \in \SP{2}$
+\begin{enumerate}
+\item  $\lowerpotMdk(t_{i-1},\R) \in \SP{2}$
+\item The adversarial strategy~(\ref{eqn:adv-strat-dk})
+  guarantees the recursion given in Eqn.~(\ref{eqn:backward-iteration-lower-discrete})
+\end{enumerate}
+
+If $\upperpotMdk(t_i,\R) \in \SP{2}$
+\begin{enumerate}
+\item $\upperpotMdk(t_{i-1},\R) \in \SP{2}$
+\item The learner strategy~(\ref{eqn:learner-strat-1c})
+  guarantees the recursion given in Eqn.~(\ref{eqn:backward-iteration-upper-recursion-discrete})
+\end{enumerate}
+
+\end{lemma}
+\proof
+The statement of the Lemma and the proof are scaled versions of
+Lemma~\ref{lemma:first-order-bound} and its proof. The iteration step
+is $s_k^2$ instead of $1$ while the loss/gain of an expert in a single
+step is $[-s_k,s_k]$ instead of $[-1,+1]$.
+
+One change worth noting is at the step from
+Equation~(\ref{eqn:Pot-Update}) and Equation~(\ref{eqn:pot-upper}),
+where the bound  $y-\ell(i) \in [-2,2]$ is replace by  $y-\ell(i) \in
+[-s_k-s_k^2,s_k+s_k^2]$. This follows from the bound $|\ell(i)| \leq
+s_k^2$ which is discussed in Section~\ref{sec:discrete}.
+\qed
 
 \begin{theorem} \label{thm:IntegerGameBounds}
-  Let $\pot_T \in \SP{2}$, fix the step size $s_k=2^{-k}$, let
-  $\realT$ be an integer multiple of $s_k$ define
-  $T=\frac{\realT}{s_k^2}$ and let $t_i=i s_k^2$.
-  For any iteration $0 \leq i < T$ and
-  initial regret $\R_0 \in \reals$ we define $\state(t_i,\R_0)$ to
-  contain all paths that are equal to $\R_0$ on iteration $i$. We
-  consider the final score $\score(\realT)$ starting from state
-  $\state(t_i,\R_0)$ and using a particular strategy
+  Let $\finalPotR \in \SP{2}$ be the final potential in the discrete
+  time game. Fix the step size $s_k=2^{-k}$, let
+  $\realT$ be an integer and define 
+  $T=\frac{\realT}{s_k^2}$. Let $t_i=i s_k^2$ for $i=0,1,\ldots,T$ and
+  let $R_0$ be some regret value, then
+
   \begin{itemize}
   \item
-    The adversarial strategy~(Eqn~(\ref{eqn:adv-strat-dk})) starting from
-    $\state(t_i,\R_0)$. Guarantees a final potential 
-     $$ \score(\realT) \geq \E{\R \sim \R_0 \oplus \Binom(T-i,s_k)}{\finalPotT(\R)} $$
+    The lower potential gearenteed by $\adversMdk$ is
+     $$\lowerpotMdk(t_i,R_0) = \E{\R \sim \R_0 \oplus \Binom(\realT-t_i,s_k)}{\finalPotT(\R)} $$
   \item
-    There learner strategy~(\ref{eqn:learner-strat-1c}) guarantees 
-    $$\score(\realT) \leq \E{\R \sim \R_0 \oplus \Binom(T-i,s_k(1+s_k))}{\finalPotT(\R)}$$
+    The upper potential guaranteed by $\learnerMdk$ is
+    $$\upperpotMdk(t_ii,R_0) =  \E{\R \sim \R_0 \oplus \Binom(\realT-t_i,s_k(1+s_k))}{\finalPotT(\R)} $$
   \end{itemize}
+
 \end{theorem}
 
 
-The next Lemma is the main part of the proof ot
-Theorem~(\ref{thm:IntegerGameBounds}). We use the backward induction
-from Theorem~(\ref{thm:backward-recursion}) To compute upper and lower
-potentials (Equations~(\ref{eqn:upperPotentials},\ref{eqn:lowerPotentials})) for
-Strategies~(\ref{eqn:adv-strat-p}) and~(\ref{eqn:learner-strat-1})
+{\bf ToDo:}  Go back to the large T limit in \ref{eqn:largeTlimit} and
+show that in that limit the upper and lower potentials converge to
+each other.  It remains to show that the adversary will prefer smaller steps.
 
-The last iteration of the game: $i=T$ is the first step of the
-backward induction. The uper and lower bounds are both set equal to
-the first step in the backward induction we define
-$$  \lowerpotb(T,\R) = \upperpotb(T,\R) = \pot(T,\R) $$
-
-\iffalse
-\begin{lemma} \label{lemma:first-order-bound}
-  If $\pot(i,\R) \in \SP{2}$
-  \begin{enumerate}
-    \item The adversarial strategy~(Eqn~(\ref{eqn:adv-strat-p}))
-    guarantees the lower potential
- \begin{equation} \label{eqn:backward-iteration-lower}
-   \lowerpotb(i, \R) = \frac{\lowerpotb(i,\R+1) + \lowerpotb(i,\R-1)}{2}
- \end{equation}
-   
-    \item The learner strategy~(Eqn~(\ref{eqn:learner-strat-1}))
-      guarantees the upper potential 
-      \begin{equation} \label{eqn:backward-iteration-upper-recursion}
-        \upperpotb(i, \R) = \frac{\upperpotb(i,\R+2) + \upperpotb(i,\R-2)}{2}
-      \end{equation}
-    \end{enumerate}
-\end{lemma}
-\fi
-
-
-  \begin{eqnarray}
-  \upperpotd(t_i,\R)&=&\E{\R \sim \state(i)}{\E{y \sim \adversM(t_i,\R)}{\upperpotd(t_i,\R+y-\ell(t_i))}}\\
-  &\leq & \E{\R \sim \state(t_i)}{\frac{\upperpotd(i,\R+s_k(1+s_k))+\upperpotd(i,\R-s_k(1+s_k))}{2}}\\
-  &+&
-      \E{\R \sim \state(i)}{\E{y \sim \adversM(i)(\R)}{(y-\ell(i))
-      \frac{\upperpotd(i,\R+s_k+s_k^2)+\upperpotd(i,\R-s_k-s_k^2)}{2}}}
-  \end{eqnarray}
-
-
-(Eqn~\ref{eqn:learner-strat-1}). We follow the same line of argument as the second part of the proof of
-Lemma~\ref{lemma:first-order-bound} to give a recursion for the upper
-potential. The citical difference between the integer game is and the
-dicrete game is that in the discrete game $\ell(t_i)\leq s_i^2$ which
-implies that $(y-\ell(t_i)) \in [-s_k(1+s_k),s_k(1+s_k)]$. This yields 
-
-
-  Following the same line of argument as the first part of the proof of
-Lemma~\ref{lemma:first-order-bound} we consider the time points:
-$t_i=i s_k^2=i 2^{-2k}\realT$ for $i=0,1,\ldots,2^{2k}$.
-
-  \begin{equation} \label{eqn:lower-discrete}
-    \lowerpotd(t_{i-1},\R) = \frac{\lowerpotd(t_i,\R-s_k)+\lowerpotd(t_i,\R+s_k)}{2}
-  \end{equation}
-
-  {\bf ToDo:} Follow the proof of
-  Lemma~\ref{lemma:first-order-bound}.Derive upper and lower scores
-  for the two strategies. Show that they converge to the same thing as
-  $k \to \infty$.
-
-
-
-
-We start with the high-level idea. Consider iteration $i$ of the
-continuous time game. We know that the adversary prefers $s_i$ to be
-as small as possible. On the other hand, the adversary has to choose
-some $s_i>0$. This means that the adversary always plays
-sub-optimally. Based on $s_i$ the learner makes a choice and the
-adversary makes a choice. As a result the current state $\state(t_{i})$
-is transformed to $\state(t_i)$. To choose it's strategy, the learner
-needs to assign value possible states $\state(t_i)$. How can she do
-that? By assuming that in the future the adversary will play
-optimally, i.e. setting $s_i$ arbitrarily small. While the adversary
-cannot be optimal, it can get arbitrarily close to optimal, which is
-brownian motion.
-
-Note that the learner chooses a distribution {\em after} the adversary
-set the value of $s_i$. The discrete time version of $\learnerM^1$
-
-In the discrete time game the adversary has an additional choice, the
-choice of $s_i$. Thus the adversary's strategy includes that choice.
-There are two constraints on this choice: $s_i \geq 0$ and
-$\sum_{i=1}^n s_i^2 = T$. Note that even that by setting $s_i$
-arbitrarily small, the adversary can make the number of steps - $n$ -
-arbitrarily large. We will therefor not identify a single adversarial
-strategy but instead consider the supremum over an infinite sequence
-of strategies.
 
 \begin{theorem} \label{thm:seq-of-adv-strategies}
   ~\\
@@ -1624,3 +1578,97 @@ as $s \to 0$.
 
 \end{document}
 
+%% deleted stuff
+
+
+The next Lemma is the main part of the proof ot
+Theorem~(\ref{thm:IntegerGameBounds}). We use the backward induction
+from Theorem~(\ref{thm:backward-recursion}) To compute upper and lower
+potentials (Equations~(\ref{eqn:upperPotentials},\ref{eqn:lowerPotentials})) for
+Strategies~(\ref{eqn:adv-strat-p}) and~(\ref{eqn:learner-strat-1})
+
+The last iteration of the game: $i=T$ is the first step of the
+backward induction. The uper and lower bounds are both set equal to
+the first step in the backward induction we define
+$$  \lowerpotb(T,\R) = \upperpotb(T,\R) = \pot(T,\R) $$
+
+\iffalse
+\begin{lemma} \label{lemma:first-order-bound}
+  If $\pot(i,\R) \in \SP{2}$
+  \begin{enumerate}
+    \item The adversarial strategy~(Eqn~(\ref{eqn:adv-strat-p}))
+    guarantees the lower potential
+ \begin{equation} \label{eqn:backward-iteration-lower}
+   \lowerpotb(i, \R) = \frac{\lowerpotb(i,\R+1) + \lowerpotb(i,\R-1)}{2}
+ \end{equation}
+   
+    \item The learner strategy~(Eqn~(\ref{eqn:learner-strat-1}))
+      guarantees the upper potential 
+      \begin{equation} \label{eqn:backward-iteration-upper-recursion}
+        \upperpotb(i, \R) = \frac{\upperpotb(i,\R+2) + \upperpotb(i,\R-2)}{2}
+      \end{equation}
+    \end{enumerate}
+\end{lemma}
+\fi
+
+
+  \begin{eqnarray}
+  \upperpotd(t_i,\R)&=&\E{\R \sim \state(i)}{\E{y \sim \adversM(t_i,\R)}{\upperpotd(t_i,\R+y-\ell(t_i))}}\\
+  &\leq & \E{\R \sim \state(t_i)}{\frac{\upperpotd(i,\R+s_k(1+s_k))+\upperpotd(i,\R-s_k(1+s_k))}{2}}\\
+  &+&
+      \E{\R \sim \state(i)}{\E{y \sim \adversM(i)(\R)}{(y-\ell(i))
+      \frac{\upperpotd(i,\R+s_k+s_k^2)+\upperpotd(i,\R-s_k-s_k^2)}{2}}}
+  \end{eqnarray}
+
+
+(Eqn~\ref{eqn:learner-strat-1}). We follow the same line of argument as the second part of the proof of
+Lemma~\ref{lemma:first-order-bound} to give a recursion for the upper
+potential. The citical difference between the integer game is and the
+dicrete game is that in the discrete game $\ell(t_i)\leq s_i^2$ which
+implies that $(y-\ell(t_i)) \in [-s_k(1+s_k),s_k(1+s_k)]$. This yields 
+
+
+  Following the same line of argument as the first part of the proof of
+Lemma~\ref{lemma:first-order-bound} we consider the time points:
+$t_i=i s_k^2=i 2^{-2k}\realT$ for $i=0,1,\ldots,2^{2k}$.
+
+  \begin{equation} \label{eqn:lower-discrete}
+    \lowerpotd(t_{i-1},\R) = \frac{\lowerpotd(t_i,\R-s_k)+\lowerpotd(t_i,\R+s_k)}{2}
+  \end{equation}
+
+
+  %%%%%
+
+  
+Follow the proof of
+  Lemma~\ref{lemma:first-order-bound}.Derive upper and lower scores
+  for the two strategies. Show that they converge to the same thing as
+  $k \to \infty$.
+
+
+
+
+We start with the high-level idea. Consider iteration $i$ of the
+continuous time game. We know that the adversary prefers $s_i$ to be
+as small as possible. On the other hand, the adversary has to choose
+some $s_i>0$. This means that the adversary always plays
+sub-optimally. Based on $s_i$ the learner makes a choice and the
+adversary makes a choice. As a result the current state $\state(t_{i})$
+is transformed to $\state(t_i)$. To choose it's strategy, the learner
+needs to assign value possible states $\state(t_i)$. How can she do
+that? By assuming that in the future the adversary will play
+optimally, i.e. setting $s_i$ arbitrarily small. While the adversary
+cannot be optimal, it can get arbitrarily close to optimal, which is
+brownian motion.
+
+Note that the learner chooses a distribution {\em after} the adversary
+set the value of $s_i$. The discrete time version of $\learnerM^1$
+
+In the discrete time game the adversary has an additional choice, the
+choice of $s_i$. Thus the adversary's strategy includes that choice.
+There are two constraints on this choice: $s_i \geq 0$ and
+$\sum_{i=1}^n s_i^2 = T$. Note that even that by setting $s_i$
+arbitrarily small, the adversary can make the number of steps - $n$ -
+arbitrarily large. We will therefor not identify a single adversarial
+strategy but instead consider the supremum over an infinite sequence
+of strategies.

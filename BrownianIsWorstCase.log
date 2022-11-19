@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.4.7)  17 NOV 2022 17:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.4.7)  18 NOV 2022 17:36
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -232,197 +232,202 @@ Underfull \hbox (badness 10000) in paragraph at lines 448--458
 
  []
 
-[6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 651--651
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 512--513
+
+ []
+
+[7] [8]
+Underfull \hbox (badness 10000) in paragraph at lines 657--657
 
  []
 
 
-Overfull \hbox (2.90585pt too wide) in paragraph at lines 651--652
+Overfull \hbox (2.90585pt too wide) in paragraph at lines 657--658
 [][] 
  []
 
-[8] [9] [10] [11]
+[9] [10] [11]
 
-LaTeX Warning: Reference `' on page 12 undefined on input line 937.
+LaTeX Warning: Reference `' on page 12 undefined on input line 891.
 
 [12] [13]
 
 LaTeX Warning: Reference `sec:discrete-Time-Game' on page 14 undefined on input
- line 1135.
+ line 1089.
 
 [14]
 
 LaTeX Warning: Reference `sec:discrete-Time-Game' on page 15 undefined on input
- line 1159.
+ line 1113.
 
 
-Overfull \hbox (2.90585pt too wide) in paragraph at lines 1204--1205
+Overfull \hbox (2.90585pt too wide) in paragraph at lines 1158--1159
 [][] 
  []
 
 [15] (./BrownianIsWorstCase.bbl [16])
 
 LaTeX Warning: Reference `eqn:4thOrderConvex' on page 17 undefined on input lin
-e 1289.
+e 1243.
 
 [17]
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1400.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1354.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1401.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1355.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1402.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1356.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1403.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1357.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1404.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1358.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1405.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1359.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1406.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1360.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1407.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1361.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1408.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1362.
 
 [18]
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 1422.
+(amsmath)                 on input line 1376.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1460.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1414.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1461.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1415.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1462.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1416.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1463.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1417.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1464.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1418.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1465.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1419.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1466.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1420.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1467.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1421.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1468.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1422.
 
 [19]
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1489.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1443.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1490.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1444.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1491.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1445.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1492.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1446.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1493.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1447.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1494.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1448.
 
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1449.
+
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1450.
+
+[20]
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1483.
+
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1484.
+
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1486.
+
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1487.
+
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1488.
+
+[21]
 
 LaTeX Font Warning: Command \tiny invalid in math mode on input line 1495.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1496.
-
-[20]
-
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1529.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1497.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1530.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1515.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1532.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1518.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1533.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1537.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1534.
-
-[21]
-
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1541.
-
-
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1543.
-
-
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1561.
-
-
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1564.
-
-
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1583.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1577--1585
+Underfull \hbox (badness 10000) in paragraph at lines 1531--1539
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1577--1585
+Underfull \hbox (badness 10000) in paragraph at lines 1531--1539
 
  []
 
 [22]
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1587.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1541.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1588.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1542.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1597.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1551.
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1599.
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1553.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1608--1612
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1608--1612
+Underfull \hbox (badness 10000) in paragraph at lines 1562--1566
 
  []
 
 
-LaTeX Font Warning: Command \tiny invalid in math mode on input line 1615.
+Underfull \hbox (badness 10000) in paragraph at lines 1562--1566
+
+ []
+
+
+LaTeX Font Warning: Command \tiny invalid in math mode on input line 1569.
 
 
 LaTeX Warning: Reference `eqn:SecondOrderDerivative' on page 23 undefined on in
-put line 1618.
+put line 1572.
 
 [23] (./BrownianIsWorstCase.aux)
 
@@ -434,13 +439,13 @@ LaTeX Warning: There were multiply-defined labels.
  )
 (\end occurred inside a group at level 1)
 
-### simple group (level 1) entered at line 1324 ({)
+### simple group (level 1) entered at line 1278 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 2310 strings out of 480608
- 31271 string characters out of 5903631
- 288596 words of memory out of 5000000
- 18165 multiletter control sequences out of 15000+600000
+ 2311 strings out of 480608
+ 31295 string characters out of 5903631
+ 287608 words of memory out of 5000000
+ 18166 multiletter control sequences out of 15000+600000
  548608 words of font info for 83 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  30i,16n,27p,234b,296s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -470,7 +475,7 @@ e/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/
 0/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive
 /2020/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texl
 ive/2020/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on BrownianIsWorstCase.pdf (23 pages, 371535 bytes).
+Output written on BrownianIsWorstCase.pdf (23 pages, 369480 bytes).
 PDF statistics:
  180 PDF objects out of 1000 (max. 8388607)
  128 compressed objects within 2 object streams
