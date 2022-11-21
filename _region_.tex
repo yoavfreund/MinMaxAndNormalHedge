@@ -1,0 +1,120 @@
+\message{ !name(BrownianIsWorstCase.tex)}\documentclass{article}[12pt]
+\usepackage{fullpage}
+% Packages
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{graphicx}
+
+\input{macros}
+
+\title{Potential-based hedging algorithms}
+\author{Yoav Freund}
+\begin{document}
+
+\message{ !name(BrownianIsWorstCase.tex) !offset(881) }
+. The set $\bigcup_{k=0}^\infty \Klat{k,\realT}$
+On the other hand, 
+\message{ !name(BrownianIsWorstCase.tex) !offset(1624) }
+
+\end{document}
+
+%% deleted stuff
+
+
+The next Lemma is the main part of the proof ot
+Theorem~(\ref{thm:IntegerGameBounds}). We use the backward induction
+from Theorem~(\ref{thm:backward-recursion}) To compute upper and lower
+potentials (Equations~(\ref{eqn:upperPotentials},\ref{eqn:lowerPotentials})) for
+Strategies~(\ref{eqn:adv-strat-p}) and~(\ref{eqn:learner-strat-1})
+
+The last iteration of the game: $i=T$ is the first step of the
+backward induction. The uper and lower bounds are both set equal to
+the first step in the backward induction we define
+$$  \lowerpotb(T,\R) = \upperpotb(T,\R) = \pot(T,\R) $$
+
+\iffalse
+\begin{lemma} \label{lemma:first-order-bound}
+  If $\pot(i,\R) \in \SP{2}$
+  \begin{enumerate}
+    \item The adversarial strategy~(Eqn~(\ref{eqn:adv-strat-p}))
+    guarantees the lower potential
+ \begin{equation} \label{eqn:backward-iteration-lower}
+   \lowerpotb(i, \R) = \frac{\lowerpotb(i,\R+1) + \lowerpotb(i,\R-1)}{2}
+ \end{equation}
+   
+    \item The learner strategy~(Eqn~(\ref{eqn:learner-strat-1}))
+      guarantees the upper potential 
+      \begin{equation} \label{eqn:backward-iteration-upper-recursion}
+        \upperpotb(i, \R) = \frac{\upperpotb(i,\R+2) + \upperpotb(i,\R-2)}{2}
+      \end{equation}
+    \end{enumerate}
+\end{lemma}
+\fi
+
+
+  \begin{eqnarray}
+  \upperpotd(t_i,\R)&=&\E{\R \sim \state(i)}{\E{y \sim \adversM(t_i,\R)}{\upperpotd(t_i,\R+y-\ell(t_i))}}\\
+  &\leq & \E{\R \sim \state(t_i)}{\frac{\upperpotd(i,\R+s_k(1+s_k))+\upperpotd(i,\R-s_k(1+s_k))}{2}}\\
+  &+&
+      \E{\R \sim \state(i)}{\E{y \sim \adversM(i)(\R)}{(y-\ell(i))
+      \frac{\upperpotd(i,\R+s_k+s_k^2)+\upperpotd(i,\R-s_k-s_k^2)}{2}}}
+  \end{eqnarray}
+
+
+(Eqn~\ref{eqn:learner-strat-1}). We follow the same line of argument as the second part of the proof of
+Lemma~\ref{lemma:first-order-bound} to give a recursion for the upper
+potential. The citical difference between the integer game is and the
+dicrete game is that in the discrete game $\ell(t_i)\leq s_i^2$ which
+implies that $(y-\ell(t_i)) \in [-s_k(1+s_k),s_k(1+s_k)]$. This yields 
+
+
+  Following the same line of argument as the first part of the proof of
+Lemma~\ref{lemma:first-order-bound} we consider the time points:
+$t_i=i s_k^2=i 2^{-2k}\realT$ for $i=0,1,\ldots,2^{2k}$.
+
+  \begin{equation} \label{eqn:lower-discrete}
+    \lowerpotd(t_{i-1},\R) = \frac{\lowerpotd(t_i,\R-s_k)+\lowerpotd(t_i,\R+s_k)}{2}
+  \end{equation}
+
+
+  %%%%%
+
+  
+Follow the proof of
+  Lemma~\ref{lemma:first-order-bound}.Derive upper and lower scores
+  for the two strategies. Show that they converge to the same thing as
+  $k \to \infty$.
+
+
+
+
+We start with the high-level idea. Consider iteration $i$ of the
+continuous time game. We know that the adversary prefers $s_i$ to be
+as small as possible. On the other hand, the adversary has to choose
+some $s_i>0$. This means that the adversary always plays
+sub-optimally. Based on $s_i$ the learner makes a choice and the
+adversary makes a choice. As a result the current state $\state(t_{i})$
+is transformed to $\state(t_i)$. To choose it's strategy, the learner
+needs to assign value possible states $\state(t_i)$. How can she do
+that? By assuming that in the future the adversary will play
+optimally, i.e. setting $s_i$ arbitrarily small. While the adversary
+cannot be optimal, it can get arbitrarily close to optimal, which is
+brownian motion.
+
+Note that the learner chooses a distribution {\em after} the adversary
+set the value of $s_i$. The discrete time version of $\learnerM^1$
+
+In the discrete time game the adversary has an additional choice, the
+choice of $s_i$. Thus the adversary's strategy includes that choice.
+There are two constraints on this choice: $s_i \geq 0$ and
+$\sum_{i=1}^n s_i^2 = T$. Note that even that by setting $s_i$
+arbitrarily small, the adversary can make the number of steps - $n$ -
+arbitrarily large. We will therefor not identify a single adversarial
+strategy but instead consider the supremum over an infinite sequence
+of strategies.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -727,22 +727,26 @@ the real-valued discrete time as $t_j = \sum_{i=0}^{j-1} s_i^2$.
 \end{enumerate}
 
 \subsection{Strategies for discrete time game}
-We fix an integer number $\realT$ as the ``real'' length of the
-game.
 
-We define a sequence of adversarial strategies $\adversMdk$ for
-$k=1,2,\ldots$. The $k$'th strategy uses step size $s_k=2^{-k}$ and
-time increments $\Delta t_k=s_k^2=2^{-2k}$.
-We set the time points $t_i =i s_k^2$ for $i=0,1,\ldots,T-1$ where $T=\realT/s_k^2$
+We fix a real number $\realT$ as the real length of the game.
+
+We define a sequence of adversarial strategies, indexed by $k$, where the step size of $\adversMdk$ is $s_k = 2^{-2k} \sqrt{\realT}$.
+
+We define a sequence of adversarial strategies $\adversMdk$ and
+matching learner strategies $\learnerMdk$ for $k=0,1,2,\ldots$. The
+adversarial strategies are designed so that the upper and lower
+potentials converge to a limit as $k \to \infty$.
+
+We set the time points $t_i =i s_k^2$ for $i=0,1,\ldots,2^{2k}$. We
+call the resulting games $k$-discrete and denote them as $D(k)$.
 
 For a given $k$ we define upper and lower potentials for each
-$t_i$. This is done by induction starting the fixed final potential
-function  $\finalPotT(\R)=\lowerpotMdk(\realT, \R)=\upperpotMdk(\realT, \R)$ and iterating
-backwards for $t_i = i \Delta t$,  $i=T,T-1,\ldots,0$
+$t_i$. This is done by induction starting with the final potential
+function  $\finalPotR(\R)=\lowerpotMdk(\realT, \R)=\upperpotMdk(\realT, \R)$ and iterating
+backwards for  $i=T,T-1,\ldots,0$, $t_i = i s_k^2$ 
  \begin{equation} \label{eqn:backward-iteration-lower-discrete}
    \lowerpotMdk(t_{i-1}, \R) = \frac{\lowerpotMdk(t_i,\R+s_k) + \lowerpotMdk(t_i,\R-s_k)}{2}
  \end{equation}
-
 
  \begin{equation} \label{eqn:backward-iteration-upper-recursion-discrete}
    \upperpotMdk(t_{i-1}, \R) = \frac{\upperpotMdk(t_i,\R+s_k(1+s_k)) + \upperpotMdk(t_i,\R-s_k(1+s_k))}{2}
@@ -770,9 +774,19 @@ The learner's strategy is:
 The potentials and strategies defined above are scaled versions of the
 integer time potential recursions defined in
 Equations~(\ref{eqn:backward-iteration-lower},\ref{eqn:backward-iteration-upper-recursion})
-and the strategies defined in
-Equations~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}).  They are
-identical when $s=1$.
+and the strategies defined in Equations~(\ref{eqn:adv-strat-p},\ref{eqn:learner-strat-1}). Specifically, the games operate on lattices that we will now describe.
+
+The adversarial strategy $\adversMb$ defines the following lattice over $i$ and $R$:
+$$\Ilat{T}=\left\{ (i,2j-i) \left| 0 \leq i \leq T, 0 \leq j \leq i\right. \right\}$$
+
+The $k$'th adversarial strategy $\adversMdk$ uses step size $s_k=\sqrt{\realT} 2^{-k}$ and time
+increments $s_k^2=\realT 2^{-2k}$. We define the {\em game lattice}
+for $k$ as the set of $(t,R)$ pairs that are reached by $\adversMdk$.
+$$\Klat{{\realT,k}}=\left\{ (t,\R) \left| t=i s_k^2, 0 \leq i \leq 2^{2k}, \R=(2j-i)s_k, 0 \leq j \leq i\right. \right\}$$
+$\Ilat{T}$ is a special case of $\Klat{\realT,k}$ because setting
+$\realT=T=2^{2k}$ we get that $s_k=s_k^2=1$ and  $\Klat{\realT,k} = \Ilat{T}$.
+
+It is not hard to show that the lattices get finer with $k$, i.e. if  $k\geq j$,  $\Klat{\realT,j} \subseteq \Klat{\realT,k}$.
 
 The following Lemma parallels Lemma~\ref{lemma:first-order-bound}
 \begin{lemma} \label{lemma:discrete-step-bound}
@@ -807,44 +821,95 @@ where the bound  $y-\ell(i) \in [-2,2]$ is replace by  $y-\ell(i) \in
 s_k^2$ which is discussed in Section~\ref{sec:discrete}.
 \qed
 
-\begin{theorem} \label{thm:IntegerGameBounds}
+\begin{theorem} \label{thm:DescreteGameExactValues}
   Let $\finalPotR \in \SP{2}$ be the final potential in the discrete
-  time game. Fix the step size $s_k=2^{-k}$, let
-  $\realT$ be an integer and define 
-  $T=\frac{\realT}{s_k^2}$. Let $t_i=i s_k^2$ for $i=0,1,\ldots,T$ and
-  let $R_0$ be some regret value, then
-
+  time game. Fix $k$ and the step size $s_k=\sqrt{\realT} 2^{-k}$, and let $t_i=i s_k^2$ for $i=0,1,\ldots,2^{2k}$ and
+  let $\R_0$ be a real value, then 
   \begin{itemize}
   \item
     The lower potential gearenteed by $\adversMdk$ is
-     $$\lowerpotMdk(t_i,R_0) = \E{\R \sim \R_0 \oplus \Binom(\realT-t_i,s_k)}{\finalPotT(\R)} $$
+    \begin{equation} \label{eqn:lower-potential-exact}
+      \lowerpotMdk(t_i,\R_0) = \E{\R \sim \R_0 \oplus
+        \Binom\paren{2^{2k}-i,s_k}}{\finalPotR(\R)}
+      \end{equation}
   \item
     The upper potential guaranteed by $\learnerMdk$ is
-    $$\upperpotMdk(t_ii,R_0) =  \E{\R \sim \R_0 \oplus \Binom(\realT-t_i,s_k(1+s_k))}{\finalPotT(\R)} $$
+    \begin{equation} \label{eqn:upper-potential-exact}
+    \upperpotMdk(t_i,\R_0) =  \E{\R \sim \R_0 \oplus
+      \Binom\paren{2^{2k}-i,s_k(1+s_k)}}{\finalPotR(\R)}
+    \end{equation}
   \end{itemize}
-
 \end{theorem}
 
-
-{\bf ToDo:}  Go back to the large T limit in \ref{eqn:largeTlimit} and
-show that in that limit the upper and lower potentials converge to
-each other.  It remains to show that the adversary will prefer smaller steps.
-
+Using Theorem~\ref{thm:DescreteGameExactValues} we can show that, as
+$k \to \infty$, the upper lower potential converge to the same limit.
 
 \begin{theorem} \label{thm:seq-of-adv-strategies}
   ~\\
-  Assume $\pot(\realT,\R) \in \SP{4}$ and 
-   let $A = N(0,\sqrt{\realT}) \odot \pot(\realT)$. then
-   for any $\epsilon>0$
-   \begin{itemize}
-     \item
-    There exists a strategy for the adversary that guarantees, against
-    any learner, that $\score(T) \geq A-\epsilon$
-  \item
-    There exists a strategy for the learner that guarantees, against
-    any adversary, that $\score(T) \leq A+\epsilon$.
-  \end{itemize}
+  Fix $\realT$ and assume $\finalPotR \in \SP{2}$. Consider the sequence of upper
+  and lower potentials  $\upperpotMdk,\lowerpotMdk$ for
+  $k=0,1,2,\ldots$.
+
+  Then for any  $0 < t \leq \realT$ and any $\R_0$:
+  \begin{equation} \label{eqn:k-limit}
+    \lim_{k \to \infty} \upperpotMdk(t,\R_0) =
+    \lim_{k \to \infty}\lowerpotMdk(t,\R_0)=
+    {\cal N}(\R_0,\realT-t) \odot \finalPotR
+  \end{equation}
 \end{theorem}
+
+\proof
+
+We first assume that $(t,\R_0) \in \Klat{j,\realT}$ and that $k\geq j$. We later expand to any $0 < t \leq \realT$ and any $\R_0 \in \reals$.
+Consider Equation~\ref{eqn:upper-potential-exact} for $\learnerMdk$ and $\learnerMdj$,
+keeping $t$ and $j$ constant and letting $k \to \infty$.
+
+\begin{equation} \label{eqn:upper-potential-exact-j}
+  \upperpotMdj(t,\R_0) =  \E{\R \sim \R_0 \oplus
+    \Binom\paren{2^{2j}-i_j,s_j(1+s_j)}}{\finalPotR(\R)}
+\end{equation}
+
+\begin{equation} \label{eqn:upper-potential-exact-k}
+  \upperpotMdk(t,\R_0) =  \E{\R \sim \R_0 \oplus
+    \Binom\paren{2^{2k}-i_k,s_k(1+s_k)}}{\finalPotR(\R)}
+\end{equation}
+We rewrite the binomial factor in
+Eqn~(\ref{eqn:upper-potential-exact-k})
+$$
+ \Binom\paren{2^{2k}-i_k,s_k(1+s_k)} =
+ \Binom\paren{2^{2(k-j)}\paren{2^{2j}-i_j},2^{j-k} s_j(1+2^{j-k} s_j)}
+ $$
+As $j$ is constant, $s_j$ is constant and so is $a_j \doteq
+2^{2j}-i_j$. Mutiplying the number of steps by the variance per step
+we get
+$$Var(\Binom_k) = 2^{2(k-j)}a_j\paren{2^{j-k} s_j(1+(2^{j-k} s_j)}^2
+= a_j s_j^2 (1+(2^{j-k} s_j))^2 
+$$
+
+As $s_j,a_j$ are constants we get that $\lim_{k \to \infty}
+Var(\Binom_k) = a_j s_j$.  From the central limit theorem we get that
+for any $(t,\R_0) \in \Klat{j,\realT}$
+\begin{equation} \label{eqn:conergence-for-k}
+  \lim_{k \to \infty} \upperpotMdk(t,\R_0) \odot \finalPotR = {\cal
+    N}(\R_0,\realT-t) \odot \finalPotR
+\end{equation}
+
+Our argument hold for all $(t,\R_0) \in \bigcup_{k=0}^\infty \Klat{k,\realT}$ which is dense in the set $0<t\leq \realT, \R_0 \in \reals$.
+On the other hand, $\upperpotMdk(t,\R) \odot \finalPotR$ is continuous in both
+$t$ and $R$, therefor Equation~(\ref{eqn:conergence-for-k})  holds for all $t$ and $\R$.
+
+As similar (slightly simpler) argument holds for the lower potential limit
+$\lim_{k \to \infty} \lowerpotMdk(t,\R_0)$
+
+\qed
+
+We have shown that in the limit $s \to 0$ the learner and the
+adversary converge to the same potential function. However, to show
+that this limit is indeed min/max we need to show that the adversary,
+which controls the step size, would always prefer using smaller
+steps. As we in the next section, adversarial preference does
+not necessarily hold for all $\finalPotR \in \SP{2}$, but it does hold
+if $\finalPotR \in \SP{4}$.
 
 
 \subsection{The adversary prefers smaller steps} \label{sec:smallsteps}
@@ -1672,3 +1737,8 @@ arbitrarily small, the adversary can make the number of steps - $n$ -
 arbitrarily large. We will therefor not identify a single adversarial
 strategy but instead consider the supremum over an infinite sequence
 of strategies.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
