@@ -9,11 +9,13 @@
     '("atI" 1)
     '("att" 1)
     '("at" 1)
+    '("adversMdkpar" 1)
     '("lowerscore" 1)
     '("upperscore" 1)
     '("Klat" 1)
     '("Ilat" 1)
     '("Tset" 1)
+    '("lowerpotMdkpar" 1)
     '("finalPot" 1)
     '("SP" 1)
     '("P" 2)
@@ -47,6 +49,7 @@
     "lowerpotd"
     "lowerpotj"
     "lowerpotMdk"
+    "lowerpotMdkp"
     "lowerpoteven"
     "realT"
     "score"
@@ -65,6 +68,7 @@
     "adversMb"
     "adversMd"
     "adversMdk"
+    "adversMdkp"
     "agloss"
     "Bias"
     "deltat"

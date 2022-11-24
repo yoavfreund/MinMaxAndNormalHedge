@@ -52,12 +52,13 @@
 \newcommand{\upperpotMdk}{\pot_{\learnerMdk}^{\downarrow}}
 \newcommand{\upperpotMdj}{\pot_{\learnerMdj}^{\downarrow}}
 
-
 \newcommand{\lowerpot}{\pot_{\adversM}^{\uparrow}}
 \newcommand{\lowerpotb}{\pot_{\adversMb}^{\uparrow}}
 \newcommand{\lowerpotd}{\pot_{\adversMd}^{\uparrow}}
 \newcommand{\lowerpotj}{\pot_{\adversM(j)}^{\uparrow}}
 \newcommand{\lowerpotMdk}{\pot_{\adversMdk}^{\uparrow}}
+\newcommand{\lowerpotMdkp}{\pot_{\adversMdkp}^{\uparrow}}
+\newcommand{\lowerpotMdkpar}[1]{\pot_{\adversMdkpar{#1}}^{\uparrow}}
 \newcommand{\lowerpoteven}{\lowerpot_{\evensplit}}
 
 \newcommand{\realT}{\mathcal{T}}  % the final time for the real-time
@@ -81,16 +82,16 @@
 \renewcommand{\l}{\learnerM}
 \newcommand{\learnerMdk}{P_{D(k)}}
 \newcommand{\learnerMdj}{P_{D(j)}}
-
-
 \newcommand{\legalLearner}{{\cal L}}
 
 \newcommand{\adversM}{Q}
 \newcommand{\adversMb}{Q_I}  %Integer time game
 \newcommand{\adversMd}{Q_D}  % Discrete time game
-\newcommand{\adversMdk}{Q_{D(k)}}  %Discrete time game with step of
-                                %size 2^{-k}
+\newcommand{\adversMdkpar}[1]{Q_{D(#1)}}
+\newcommand{\adversMdk}{\adversMdkpar{k}}  %Discrete time game with step of
+% size 2^{-k}
 
+\newcommand{\adversMdkp}{\adversMdkpar{k+1}}  %\adversMdk with k+1
 
 % \renewcommand{\a}{\adversM}
 %\newcommand{\legalAdversary}{{\cal A}}
@@ -132,3 +133,8 @@ f(x,y) \right\}}
 \newmcommandi{\brac}{\left[{#1}\right]}
 
 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "BrownianIsWorstCase"
+%%% End:
