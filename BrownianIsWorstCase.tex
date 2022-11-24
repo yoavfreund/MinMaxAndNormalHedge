@@ -59,7 +59,7 @@ For $i=1,\ldots,T$
       $\R_j^i = L_\ell^i -L_j^i $.
 \end{enumerate}
 \end{minipage}}
-\caption{Decision theoretic online learning \label{fig:DTOL}}
+%\caption{Decision theoretic online learning \label{fig:DTOL}}
 \end{figure}
 
 The goal of the learner (in the percentile version of the game) is to
@@ -927,7 +927,7 @@ Section~\ref{sec:disc-game-strategies}.
 \begin{theorem}\label{thm:smallerSteps}
   If $ \finalPotR \in \SP4$, and $\realT>0$ then 
   then for any integer $k>0$
-  $$\lowerpotMdkpar{k+1} >  \lowerpotMdk{k}$$
+  $$\lowerpotMdkpar{k+1} >  \lowerpotMdkpar{k}$$
 \end{theorem}
 
 The proof of the theorem relies on reduction to a simpler case: dividing a single time step into two equal parts.
@@ -937,32 +937,63 @@ The proof of the theorem relies on reduction to a simpler case: dividing a singl
   $$\lowerpotMdkpar{1} >  \lowerpotMdkpar{0}$$
 \end{lemma}
   
-\proof
-The step size $s_k=2^{-k}$, therefor $s_0=1, s_1=\frac{1}{2}$. The time step $\Delta t_k = s_k^2$, therefor
-$\Delta t_0=1, \delta t_1=\frac{1}{4}$. In other words, $k=0$ corresponds to a single step of size 1, while $k=1$ corresponds to four steps of size one half.
+\proof The step size $s_k=2^{-k}\sqrt{\realT}$, therefor
+$s_0=\sqrt{\realT}, s_1=\frac{\realT}{2}$. The time step
+$\Delta t_k = s_k^2$, therefor
+$\Delta t_0=\realT, \Delta t_1=\frac{\realT}{4}$. In other words,
+$k=0$ corresponds to a single step of size , while $k=1$ corresponds
+to four steps of size $\frac{1}{2}$.
 
-notations $\deltat = 2^{-2k}$ $t' = t+\deltat$ and $s=2^{-k}$.
-We can write out explicit expressions for the two values:
-\begin{itemize}
-\item For strategy $S_0$ the value is
-  $$\pot_k(t, \R) = \frac{\pot(t',\R+s)+ \pot(t',\R-s)}{2} $$.
-\item For strategy $S_1$ the value is
-  $$\pot_{k+1}(t, \R) = \frac{1}{16}
-  \paren{\pot(t',\R+2s)+ 4\pot(t',\R+s)+ 6\pot(t',\R)+  4\pot(t',\R-s)+ \pot(t',\R-2s)}
-  $$.
-\item the difference between the values is
+By definition $\forall k,\; \finalPotR(R)=\lowerpotMdkpar{k}(\realT,\R)$
+
+For $k=0$ we we get the recursion
+\begin{equation}
+  \lowerpotMdkpar{0}(0, \R) =
+  \frac{\lowerpotMdkpar{0}(\realT,\R-\sqrt{\realT})+
+    \lowerpotMdkpar{0}(\realT,\R+\sqrt{\realT})}{2}
+  =   \frac{\finalPotR(\R-\sqrt{\realT})+
+    \finalPotR(\R+\sqrt{\realT})}{2}
+\end{equation}
+
+For $k=1$ we we have for $i=0,1,2,3$:
+\begin{equation}   \label{eqn:lowerpotquarterstep}
+   \lowerpotMdkpar{0}\paren{\frac{i}{4}\realT,\R}=
+ \frac{\lowerpotMdkpar{0}\paren{\frac{i+1}{4}\realT,\R-\frac{1}{2}\sqrt{\realT}}+
+   \lowerpotMdkpar{0}\paren{\frac{i+1}{4}\realT,\R+\frac{1}{2}\sqrt{\realT}}}{2}
+ \end{equation}
+
+\newcommand{\iter}[1]{\lowerpotMdkpar{1}\paren{\realT,\R {#1} \sqrt{\realT}}}
+\newcommand{\iterzero}{\lowerpotMdkpar{1}\paren{\realT,\R}}
+
+Combining Equation~(\ref{eqn:lowerpotquarterstep}) fr $k=0,1,2,3$ we get
+
+\small
+\begin{eqnarray} 
+  \lowerpotMdkpar{1}(0, \R) = 
+  \frac{1}{16}
+  &&\left[\iter{-2}+4\iter{-}+6\iterzero \right.\\
+        && + \left. 4\iter{+}+\iter{+2}\right]
+\end{eqnarray}
+\normalsize
+
+% \paren{\pot(t',\R+2s)+ 4\pot(t',\R+s)+ 6\pot(t',\R)+  4\pot(t',\R-s)+ \pot(t',\R-2s)}  \\
+%  &=& 
+% \paren{\pot(t',\R+2s)+ 4\pot(t',\R+s)+ 6\pot(t',\R)+  4\pot(t',\R-s)+ \pot(t',\R-2s)}
+
+  the difference between the values is
  $$ \pot_{k+1}(t, \R)-\pot_{k}(t, \R) = \frac{1}{16}
   \paren{\pot(t',\R+2s)- 4\pot(t',\R+s)+ 6\pot(t',\R)-
     4\pot(t',\R-s)+ \pot(t',\R-2s)}
   $$
-\item Our goal is to show that the RHS is positive. Therefor we can
+
+
+  Our goal is to show that the RHS is positive. Therefor we can
   divide it by the positive constant  $\frac{2}{3} s^4$, and call the
   resulting function $f$:
   \begin{equation} \label{eqn:divdiff}
   g(\R)=\frac{1}{24s^4} \paren{\pot(t,\R+2s)- 4\pot(t,\R+s)+ 6\pot(t,\R)-
     4\pot(t,\R-s)+ \pot(t,\R-2s)}
   \end{equation}
-\end{itemize}
 
 The function $g(\R)$ has a special form called ``divided difference''
 that has been extensively studied ~\cite{popoviciu1965certaines,butt2016generalization, de2005divided}.
@@ -1162,7 +1193,7 @@ On iteration $i=1,2,\ldots$
 \item The adversary chooses a {\em step size} $0<s_i\leq s$ and a mapping from $\reals$ to distributions
   over $[-s_i,+s_i]$: $\adversM(t): \reals \to \Delta^{[-s_i,+s_i]}$
 \item The aggregate loss is calculated:
-  \begin{equation} \label{eqn:ell-discrete}
+  \begin{equation} %\label{eqn:ell-discrete}
     \ell(t_i)=\E{\R \sim \state(t_i)}{\learnerM^{cc}(t_i,\R)
       \Bias(t_i,\R)},\;\mbox{ where } \Bias(t_i,\R) \doteq \E{y \sim \adversM(t_i,\R)}{y}
   \end{equation}
@@ -1310,9 +1341,6 @@ Using this notation we can rewrite $g(\R)$ in the form
   h(x_0,x_1,x_2,x_3,x_4) =  \frac{1}{24s^4} \paren{f(x_4)- 4f(x_3)+ 6f(x_2)-
     4f(x_1)+ f(x_0)}
 \end{equation}
-  
-k
-
 Is the 4-th order divided difference of $\pot(t,\cdot)$
 
 

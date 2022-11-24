@@ -12,10 +12,11 @@
     "amsthm"
     "graphicx")
    (TeX-add-symbols
+    '("iter" 1)
+    "iterzero"
     "Dx"
     "Dy")
    (LaTeX-add-labels
-    "fig:DTOL"
     "def:unif-regret-bound"
     "def:aver-potential-bound"
     "thm:simulBoundAveragePot"
@@ -71,6 +72,7 @@
     "sec:smallsteps"
     "thm:smallerSteps"
     "lemma:half-step"
+    "eqn:lowerpotquarterstep"
     "eqn:divdiff"
     "lemma:divdiff"
     "eqn:learner-strat-2c"
