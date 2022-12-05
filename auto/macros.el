@@ -39,6 +39,7 @@
     "potLA"
     "finalPotT"
     "finalPotR"
+    "finalPotTau"
     "upperpot"
     "upperpotb"
     "upperpotd"
@@ -78,7 +79,7 @@
     "radsum"
     "var"
     "V")
-   (LaTeX-add-environments
+   (LaTeX-add-amsthm-newtheorems
     "lemma"
     "claim"
     "theorem"

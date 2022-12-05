@@ -8,7 +8,7 @@
 
 \input{macros}
 
-\title{Potential-based hedging algorithms}
+\title{Optimal online Learning using potential functions}
 \author{Yoav Freund}
 \begin{document}
 
@@ -31,10 +31,8 @@ e.g.~\cite{vovk1990aggregating, feder1992universal,
 
 Here we focus on a simple variant of online prediction with expert
 advice called {\em the decision-theoretic online learning game}
-(DTOL)~\cite{freund1997decision}, we  consider the 
-  signed version of this game.
-
-DTOL (Figure~\ref{fig:DTOL}) is a repeated zero sum game between a {\em learner} and an {\em
+(DTOL)~\cite{freund1997decision}. DTOL (Figure~\ref{fig:DTOL}) is a
+repeated zero sum game between a {\em learner} and an {\em
   adversary}. The adversary controls the losses of $N$ actions, while
 the learner controls a distribution over the actions.
 
@@ -43,15 +41,16 @@ the learner controls a distribution over the actions.
 \begin{minipage}[t]{6.4in}
 For $i=1,\ldots,T$
 \begin{enumerate}
-    \item The learner chooses a weight function $w_j^i$ over the
-      actions $j \in \{1,\ldots,N\}$. 
+    \item The learner chooses a weight function $\l(i,j)$ over the
+      actions $j \in \{1,\ldots,N\}$ \\
+      such that $\sum_{j=1}^N \l(i,j)=1$  
     \item The adversary chooses an {\em instantaneous loss} for each
       of the $N$ actions: \\
       $l_j^i \in [-1,+1]$ for $j \in \{1,\ldots,N\}$.
     \item The {\em cumulative loss of action $j$} 
     is  $L^i_j = \sum_{s=1}^i l_j^s$. 
     \item The learner incurs an {\em instantaneous average loss} defined as
-      $\ell^i = \frac{\sum_{j=1}^N w_j^i l_j^i}{\sum_{j=1}^N w_j^i}$
+      $\ell^i = \sum_{j=1}^N \l(i,j) l_j^i$
     \item The {\em cumulative loss of the learner} is
       $L_\ell^i = \sum_{s=1}^i \ell^s$
     \item The {\em cumulative regret} of the learner with respect to
@@ -59,7 +58,7 @@ For $i=1,\ldots,T$
       $\R_j^i = L_\ell^i -L_j^i $.
 \end{enumerate}
 \end{minipage}}
-%\caption{Decision theoretic online learning \label{fig:DTOL}}
+\caption{Decision theoretic online learning \label{fig:DTOL}}
 \end{figure}
 
 The goal of the learner (in the percentile version of the game) is to
@@ -73,65 +72,139 @@ have the form $c \sqrt{T \ln {1/\epsilon}}$, but the algorithm has to
 be tuned based on prior knowledge of $\epsilon$. We seek algorithms
 with regret bounds that hold {\em simultaneously} for all values of
 $\epsilon$. In other words algorithms that do not need to know
-$\epsilon$ or $t$ ahead of time. The following definition formalizes
+$\epsilon$ ahead of time. The following definition formalizes
 the concept of simultaneous bounds:
 \begin{definition}[Simultaneous regret
-  bound] \label{def:unif-regret-bound} Let $G: \reals \to [0,1]$ be a
+  bound (SRB)] \label{def:unif-regret-bound} Let $G: \reals \to [0,1]$ be a
   non-increasing function which maps regret bounds to probabilities.
   A distribution over regrets $\state$ is simultaneously bound by $G$ if
   \[
-    \forall r \in \reals \;\; \P{\rho \sim \state(T)}{\rho \geq r} \leq G(r)
+    \forall \R \in \reals \;\; \P{\rho \sim \state}{\rho \geq \R} \leq G(\R)
   \]
 \end{definition}
 
 
 A potential function is an increasing function
-$\pot:\reals \to \reals$. Potential based learning algorithm are
-designed to bound the the average potential
-$\E{\R \sim \state}{\pot(\R)}$. Potential functions have long been
-used to design and analyze online learning algorithms. The novelty 
-here is that we consider minimizing the average potential as a goal in itself.
-\begin{definition}[Average potential bound] \label{def:aver-potential-bound}
+$\pot:\reals \to \reals$. Online learning algorithms based on
+potential functions control the regret by upper bounding the average
+potential $\E{\R \sim \state}{\pot(\R)}$. 
+
+\begin{definition}[Average potential bound (APB)] \label{def:aver-potential-bound}
   A distribution over he reals $\state$ satisfies the average
   potential function $\pot$ if
-  $$\E{\R \sim \state}{\pot(\R)} \leq 1$$
-  Where $\pot: \reals \to \reals^+$ is a non decreasing function. 
+  $$\score \doteq \E{\R \sim \state}{\pot(\R)} \leq 1$$
+  Where $\pot: \reals \to \reals^+$ is a non decreasing function. The score $\score$ is as defined.
 \end{definition}
 
-The next theorem identifies a one to one relationship between
-simultaneous bounds and average potential bounds. 
+Potential functions have long been used to design and analyze online
+learning algorithms. However, the choice of the potential function has
+been somewhat ad hoc.  Here we show a strong one to one relationship
+between SBR functions and potential functions:
 \begin{theorem}\label{thm:simulBoundAveragePot}
  A distribution $\state$ is simultaneously bounded by $B$ if and only
  if it satisfies the average potential bound with $\phi(\R) = B(\R)^{-1}$
 \end{theorem}
 The proof of the theorem is in Appendix~\ref{proof:simulBoundAveragePot}.
 
-Simultaneous regret bounds are more intuitive than potential
-functions. On the other hand potent, but average potential
-bounds lend themselves to analysis and optimization. In 
+Theorem~\ref{thm:simulBoundAveragePot} justifies our focus on
+potential functions and our quest to find the ``best'' potential
+function. 
 
-
-
-given the potential function at the end of the game $\pot(T,\R)$ and
-the strategies used by the learner and the adversary, we can define a
-potential $\pot(T-1,\R)$ such that the average potentials are equal:
+We start with the bounded horizon case. Fixing a potential function at
+the end of the game $\pot(T,\R)$ and the strategies used by the
+learner and the adversary, we define potential functions $\pot(i,\R)$
+for iterations $i = T-1,T-2,\ldots,0$ such that the score $\score(t)$ is guaranteed to 
+be equal for all of the iterations.
 \[
-  \E{\R \sim \state(T-1)}{\pot(T-1,\R)} = \E{\R \sim \state(T)}{\pot(T,\R)}
+  \score(T) = \score(T-1)=\cdots=\score(0)
 \]
-In Section~\ref{sec:potentials} we that this equation can be
-used to create a potential function of all iterations, and how it can
-be used to find the optimal strategies for both learner and adversary.
+This allows us to analyze the game one iteration at a time and
+construct good strategies for both sides. We name this potential based
+game the {\em Integer Time Game}, the analysis of this game is given
+in Section~\ref{sec:int-time-game}. The analysis assumes only that the
+final potential $\pot(T,\R)$ is strictly positive and has strictly positive
+first and second derivatives (We denote the set
+of functions that have $0,\ldots,k$ strictly positive derivatives by $\SP{k}$,
+the formal definition is given in Section~\ref{sec:preliminaries})
 
-  Our ultimate result are min-max optimal bounds. However, there seem
-  to be no matching min-max strategies for the original DTOL. To
-  achieve min-max optimality we extend the game by enlarging the set of
-  choices available to the adversary.  As the learner does not get
-  additional choices, the min/max bound for the extended game is an
-  upper bound on the average potential in the original game.
+The strategies yielded by the analysis guarantee bounds on the final
+score. The adversarial strategy guarantees
+$\lowerscore{} \leq \score(T)$, while the learner's strategy
+guarantees $\score(T) \leq \upperscore{}$. Unfortunately, these bounds
+don't match, i.e. $\lowerscore{}<\upperscore{}$. In other words our
+proposed strategies are not min-max optimal. The question of whether
+there exist min/max strategies for the integer time game is open.
 
-The rest of the paper is organizes as follows.
+To find min/max strategies we expand the game. We call the expanded
+game the {\em discrete time game}. The expansion involves giving the
+more options to the adversary, but not to the learner. As a result,
+any upper bound $\upperscore{}$ that holds for a learner strategy in
+the discrete time game also holds in the integer time game.
 
-TBD
+The added option for the adversary is to declare, at the beginning of
+each iteration, the range of values of the instantanous losses. In the
+integer time game this range is set to $[-1,+1]$. In the discrete time
+game the range is chosen by the adversary on iteration $i$ to be
+$[-s_i,+s_i]$ for $1\geq s_i >0$. To keep the game balanced between
+the adversary and the learner we replace the iteration number $i$ with
+real valued {\em time} parameter and let $t_{i+1}=t_i+s_i^2$. this and
+another necessary adjustment are described in
+Section~\ref{sec:discrete}. Section~\ref{sec:disc-game-strategies}
+describes strategies used for the discrete game which are scaled
+versions of the strategies for the integer time game.
+
+We fix the potential at the end of the game $\finalPotR \in \SP{4}$
+and consider a sequence of adversarial and learner strategies indexed
+by $k$: $\adversMdk,\learnerMdk$, where
+$\forall i,\; s^k_i = \frac{\sqrt{\realT}}{2^k}$ for some constant
+$\realT$. We prove two facts regarding the limit $k \to \infty$.  The
+first (Thm.~\ref{thm:seq-of-adv-strategies}) is that
+$\lim_{k \to \infty}\upperpotMdk - \lowerpotMdk \to 0$.  The second
+(Thm.~\ref{thm:smallerSteps}) is that, if $\pot(T,\R)$
+$$\forall k, \forall 0\leq i \leq 2^{2k},t_i=i 2^{-2k} \realT,\; \forall\R,\;\;\;
+,\lowerpotMdkpar{k+1}\left(t_i,R\right) >
+\lowerpotMdk\left(t_i,R\right)$$ Taken together these facts imply
+that, if the fixed potential function for the end of the game
+$\finalPotR$ is in $\SP{4}$, then there exists a potential function
+$\pot(t,\R)$. The adversarial strategy corresponding to this potential
+function corresponds to Brownian motion.  The backwards recursion used
+to computer the potential for $t \leq \realT$ is a partial
+differential equation known as the Kolmogorov Backward equation.
+
+The main result of this paper is that a {\em single} adversarial
+strategy, i.e. Brownian motion, is optimal for any
+sufficiently convex potential functions.
+
+The discrete time game presents the adversary with a dilemma.  On the
+one hand, The adversary has to declare, on each iteration, an upper bound on the
+range of the losses $[-s_i,s_i]$ where $s_i>0$. On the other hand, it
+wants to set $s_i$ as small as possible.~\footnote{The situation is
+  similar to a folklore game in which each player writes down a number
+  on a piece of paper and the player with the largest number wins.}
+
+We introduce a variant of the game called the {\em continuous time
+  game} to alleviate this dilemma. In this came the adversary does not
+announce the step size and the learner behaves as if
+the step size is infinitesimally small. In this case time is advanced according
+to the variance of the actual losses. This much more natural algorithm yields
+a regret bound that depends on the cumulative variance and is smaller
+for easy, low variance sequences.
+
+Until this point our theory holds for any final potential function in $\SP{4}$. We conclude by analyzing two specific potentials.
+\begin{enumerate}
+\item We derive a potential function and a corresponding learning algorithm
+  that is min/max optimal for a given time horizon $\realT$.
+  The optimality is in the sense that the
+  simultanous regret bound for time $\realT$ has a matching
+  simultanous lower bound.
+\item By finding solutions to the Kolmogorov Backward equation that
+  hold for all $t>0$ we eliminate the need to define a final
+  potential. As a result we get an ``anytime'' learning algorithm that
+  can be stopped at any time. The specific potential we analyze is
+  Normal-Hedge~\cite{}. NormalHedge is not min/max otimal for any
+  time, but it is almost optimal for all times.
+\end{enumerate}
+
 
 \section{related work}
 Most of the papers on potential based online algorithms consider
@@ -162,9 +235,9 @@ and $T$ and typically have the form
   \max_j \R_j^T < C E \sqrt{T \ln N}
 \end{equation}
 for some small constant $C$ (typically smaller than 2).
-These bounds can be extended to infinite sets of experts by defining
+These bounds can be extended to infinite sets of actions by defining
 the $\epsilon$-regret of the algorithm as the regret with respect to
-the best (smallest-loss) $\epsilon$-percentile of the set of experts.
+the best (smallest-loss) $\epsilon$-percentile of the set of actions.
 
 this replaces the bound~(\ref{eqn:0-order-bound}) with 
 \begin{equation} \label{eqn:0-epsilon-order-bound}
@@ -218,7 +291,7 @@ lower and upper bounds on the regret involving $\V_T$.
 
 \section{Preliminaries} \label{sec:preliminaries}
 
-We define some notation that will be used in the rest of the paper.
+We define some terms and notationthat will be used in the rest of the paper.
 
 {\bf Positivity}
 We require that potential functions have positive derivatives for a
@@ -228,9 +301,12 @@ A function $f:\reals \to \reals$ is strictly positive of degree $k$,
 denoted $f \in \SP{k}$ if the derivatives of orders 0 to $k$:  
 $f(x), \frac{d}{dx}f(x), \ldots, \frac{d^k}{dx^k}f(x)$ exist and are strictly positive.
 \end{definition}
-For the integer time game we assume that $\pot(\cdot) \in
-\SP{2}$. Later on, in section~\ref{sec:smallsteps}, we will further
-restrict our potential functions to be in $\SP{4}$.
+The following useful lemma states that $\SP{k}$ is closed under positive conbinations.
+\begin{lemma}  \label{lemma:SP-pos-comb}
+  Suppose that for $i =1,\ldots,n$, $f_i \in \SP{k}$ and $\alpha_i>0$,
+  Then $\sum_{i=1}^k \alpha_i f_i \in \SP{k}$
+\end{lemma}
+
 
 {\bf Divisibility:} To reach optimality we need the set of actions to
 be arbitrarily divisible. Intuitively, We replace the finite set of
@@ -274,7 +350,7 @@ $a$. For convenience we define $A \ominus B = A \oplus (-B)$
 
 
 \section{Integer time game}
-
+\label{sec:int-time-game}
 The integer time game is described in
 Figure~\ref{fig:integerTimeGame}.  The integer time game generalizes
 the decision theoretic online learning problem~\cite{FreundSc97} in
@@ -331,7 +407,7 @@ For $i=1,2,\ldots,T$:\\
     \state(i+1) = \E{\R \sim \state(i)}{\R \oplus  \adversM(i,\R)}
     \oplus -\ell(i)
     \end{equation}
-  Where $\adversM(i,\R)$ is the distribution of the losses of experts
+  Where $\adversM(i,\R)$ is the distribution of the losses of actions
   with respect to which the regret is $\R$ after iteration
   $i-1$. $\oplus$ denotes the convolution as defined above.
 \end{enumerate}
@@ -358,11 +434,11 @@ We describe two equivalent ways to define $\potPQ(i,\R)$ for $i<T$
  \begin{enumerate}
  \item{\bf Using conditional expectation} We can define the potential
    on iteration $i$ based on the fixed potential at iteration $T$.
-Using the definition of prefix sum given
-in Equation~(\ref{eqn:prefix-sum}, we can write this conditional
-expectation as 
+% Using the definition of prefix sum given
+% in Equation~(\ref{eqn:prefix-sum}, we can write this conditional
+% expectation as 
 \begin{equation}
-  \forall i=1,\ldots,T, \R \;\;\;
+  \forall i=1,\ldots,T,\; \forall \R \;\;\;
   \potPQ(i,\R)=\E{\omega\sim \D|\R_\omega^i=\R}{\pot(T,\R_{\omega}^T)}
 \end{equation}
  \item{\bf Using backward induction} It is sometimes convenient to
@@ -495,26 +571,23 @@ Let $i$ be an integer between $1$ and $T$
 
 If $\lowerpotb(i,\R) \in \SP{2}$
 \begin{enumerate}
-\item  $\lowerpotb(i-1,\R) \in \SP{2}$
-\item The adversarial strategy~(\ref{eqn:adv-strat-p})
+\item {\bf Positivity:} $\lowerpotb(i-1,\R) \in \SP{2}$
+\item {\bf Adversary:} The adversarial strategy~(\ref{eqn:adv-strat-p})
   guarantees the recursion given in Eq.~(\ref{eqn:backward-iteration-lower})
 \end{enumerate}
 
 If $\upperpotb(i,\R) \in \SP{2}$
 \begin{enumerate}
-\item $\upperpotb(i-1,\R) \in \SP{2}$
-\item The learner strategy~(\ref{eqn:learner-strat-1})
+\item {\bf Positivity:} $\upperpotb(i-1,\R) \in \SP{2}$
+\item {\bf Learner:} The learner strategy~(\ref{eqn:learner-strat-1})
   guarantees the recursion given in Eq.~(\ref{eqn:backward-iteration-upper-recursion})
 \end{enumerate}
 
 \end{lemma}
 
-\proof~\\
+\proof We prove each claim in turn
 \begin{enumerate}
-  \item{\bf Convexity:} If $\lowerpotb(i-1,\R)$ is a convex combination
-    of $\lowerpotb(i,\R)$. Therefor $\lowerpotb(i,\R) \in \SP{2}$
-    implies $\lowerpotb(i-1,\R) \in \SP{2}$. A similar argument holds
-    for $\upperpotb$.
+\item {\bf Positivity:} Follows from Lemma~\ref{lemma:SP-pos-comb}.
 \item{\bf Adversary:} By symmetry adversarial strategy~(\ref{eqn:adv-strat-p}) guarantees that
   the aggregate loss~(\ref{eqn:aggregate-loss}) is zero regardless of
   the choice of the learner: $\ell(i)=0$.
@@ -726,7 +799,7 @@ the real-valued discrete time as $t_j = \sum_{i=0}^{j-1} s_i^2$.
     $|\ell(i)| \leq s_i^2$
 \end{enumerate}
 
-\subsection{Strategies for discrete time game}
+\subsection{Strategies for discrete time}
 \label{sec:disc-game-strategies}
 
 We fix a real number $\realT$ as the real length of the game.
@@ -787,9 +860,9 @@ $$\Klat{{\realT,k}}=\left\{ (t,\R) \left| t=i s_k^2, 0 \leq i \leq 2^{2k}, \R=(2
 $\Ilat{T}$ is a special case of $\Klat{\realT,k}$ because setting
 $\realT=T=2^{2k}$ we get that $s_k=s_k^2=1$ and  $\Klat{\realT,k} = \Ilat{T}$.
 
-It is not hard to show that the lattices get finer with $k$, i.e. if  $k\geq j$,  $\Klat{\realT,j} \subseteq \Klat{\realT,k}$.
+It is not hard to show that the lattices get finer with $k$, i.e. if  $j \leq k$,  $\Klat{\realT,j} \subseteq \Klat{\realT,k}$.
 
-The following Lemma parallels Lemma~\ref{lemma:first-order-bound}
+The following Lemma parallels Lemma~\ref{lemma:first-order-bound} for the integer time game.
 \begin{lemma} \label{lemma:discrete-step-bound}
 ~\\
 Let $i$ be an integer between $1$ and $T$
@@ -812,7 +885,7 @@ If $\upperpotMdk(t_i,\R) \in \SP{2}$
 \proof
 The statement of the Lemma and the proof are scaled versions of
 Lemma~\ref{lemma:first-order-bound} and its proof. The iteration step
-is $s_k^2$ instead of $1$ while the loss/gain of an expert in a single
+is $s_k^2$ instead of $1$ while the loss/gain of an action in a single
 step is $[-s_k,s_k]$ instead of $[-1,+1]$.
 
 One change worth noting is at the step from
@@ -925,107 +998,100 @@ $\adversMdk, k=1,2,\ldots$ defined in
 Section~\ref{sec:disc-game-strategies}.
 
 \begin{theorem}\label{thm:smallerSteps}
-  If $ \finalPotR \in \SP4$, and $\realT>0$ then 
-  then for any integer $k>0$
-  $$\lowerpotMdkpar{k+1} >  \lowerpotMdkpar{k}$$
+  If $ \finalPotR \in \SP{4}$, and $\realT>0$  
+  then for any $k>0$, any $t \in [0,\realT]$ and any $\R$
+  $$\lowerpotMdkpar{k+1}(t,\R) >  \lowerpotMdkpar{k}(t,\R)$$
 \end{theorem}
 
-The proof of the theorem relies on reduction to a simpler case: dividing a single time step into two equal parts.
+The proof of the theorem relies on a reduction to a simpler case:
+dividing a single time step of duration $\tau$ into four time steps of duration  $\tau/4$
 
 \begin{lemma} \label{lemma:half-step}
-  If $ \finalPotR \in \SP4$, and $\realT>0$ then 
-  $$\lowerpotMdkpar{1} >  \lowerpotMdkpar{0}$$
+  If $ \finalPotTau \in \SP4$, and $\tau>0$ then for any $\R$
+  $$\lowerpotMdkpar{1}(0,\R) >  \lowerpotMdkpar{0}(0,\R)$$
 \end{lemma}
   
-\proof The step size $s_k=2^{-k}\sqrt{\realT}$, therefor
-$s_0=\sqrt{\realT}, s_1=\frac{\realT}{2}$. The time step
+\proof The step size is $s_k=2^{-k}\sqrt{\tau}$, therefor
+$s_0=\sqrt{\tau}, s_1=\frac{\sqrt{\tau}}{2}$. The time icrement is
 $\Delta t_k = s_k^2$, therefor
-$\Delta t_0=\realT, \Delta t_1=\frac{\realT}{4}$. In other words,
+$\Delta t_0=\tau, \Delta t_1=\frac{\tau}{4}$. In other words,
 $k=0$ corresponds to a single step of size , while $k=1$ corresponds
 to four steps of size $\frac{1}{2}$.
 
-By definition $\forall k,\; \finalPotR(R)=\lowerpotMdkpar{k}(\realT,\R)$
+By definition $\finalPotTau(R)=\lowerpotMdkpar{0}(\tau,\R)=\lowerpotMdkpar{1}(\tau,\R)$
 
 For $k=0$ we we get the recursion
-\begin{equation}
+\begin{equation}  \label{eqn:pot-recursion-0}
   \lowerpotMdkpar{0}(0, \R) =
-  \frac{\lowerpotMdkpar{0}(\realT,\R-\sqrt{\realT})+
-    \lowerpotMdkpar{0}(\realT,\R+\sqrt{\realT})}{2}
-  =   \frac{\finalPotR(\R-\sqrt{\realT})+
-    \finalPotR(\R+\sqrt{\realT})}{2}
+  \frac{\lowerpotMdkpar{0}(\tau,\R-\sqrt{\tau})+
+    \lowerpotMdkpar{0}(\tau,\R+\sqrt{\tau})}{2}
+  =   \frac{\finalPotTau(\R-\sqrt{\tau})+
+    \finalPotTau(\R+\sqrt{\tau})}{2}
 \end{equation}
 
 For $k=1$ we we have for $i=0,1,2,3$:
 \begin{equation}   \label{eqn:lowerpotquarterstep}
-   \lowerpotMdkpar{0}\paren{\frac{i}{4}\realT,\R}=
- \frac{\lowerpotMdkpar{0}\paren{\frac{i+1}{4}\realT,\R-\frac{1}{2}\sqrt{\realT}}+
-   \lowerpotMdkpar{0}\paren{\frac{i+1}{4}\realT,\R+\frac{1}{2}\sqrt{\realT}}}{2}
+   \lowerpotMdkpar{0}\paren{\frac{i}{4}\tau,\R}=
+ \frac{\lowerpotMdkpar{0}\paren{\frac{i+1}{4}\tau,\R-\frac{1}{2}\sqrt{\tau}}+
+   \lowerpotMdkpar{0}\paren{\frac{i+1}{4}\tau,\R+\frac{1}{2}\sqrt{\tau}}}{2}
  \end{equation}
 
-\newcommand{\iter}[1]{\lowerpotMdkpar{1}\paren{\realT,\R {#1} \sqrt{\realT}}}
-\newcommand{\iterzero}{\lowerpotMdkpar{1}\paren{\realT,\R}}
+\newcommand{\iter}[1]{\lowerpotMdkpar{1}\paren{\tau,\R {#1} \sqrt{\tau}}}
+\newcommand{\iterzero}{\lowerpotMdkpar{1}\paren{\tau,\R}}
 
-Combining Equation~(\ref{eqn:lowerpotquarterstep}) fr $k=0,1,2,3$ we get
+\newcommand{\fIter}[1]{\finalPotTau \paren{R {#1} \sqrt{\tau}}}
+\newcommand{\fIterzero}{\finalPotTau \paren{R}}
 
+\newcommand{\gIter}[1]{\finalPotTau \paren{R {#1} a}}
+\newcommand{\gIterzero}{\finalPotTau \paren{R}}
+
+Combining Equation~(\ref{eqn:lowerpotquarterstep}) for $k=0,1,2,3$ we get
 \small
-\begin{eqnarray} 
-  \lowerpotMdkpar{1}(0, \R) = 
-  \frac{1}{16}
-  &&\left[\iter{-2}+4\iter{-}+6\iterzero \right.\\
-        && + \left. 4\iter{+}+\iter{+2}\right]
+\begin{eqnarray} \label{eqn:pot-recursion-1}
+  \lowerpotMdkpar{1}(0, \R)
+  &=& \frac{1}{16}
+      \left[\iter{-2}+4\iter{-} \right. \\
+  &&+ \left. 6\iterzero +4\iter{+}+\iter{+2}\right] \nonumber\\
+  &=& \frac{1}{16}
+      \left[\fIter{-2}+4\fIter{-}+6\fIterzero +4\fIter{+}+\fIter{+2}\right] \nonumber
 \end{eqnarray}
-\normalsize
+\normalsize the difference between
+Equations~(\ref{eqn:pot-recursion-1}) and~(\ref{eqn:pot-recursion-0})
+is \small
+\begin{eqnarray} \label{eqn:pot-recursion-diff}
+  \lefteqn{\lowerpotMdkpar{1}(0, \R) - \lowerpotMdkpar{0}(0, \R)}\\
+&=&  \frac{1}{16}
+\left[\fIter{-2}-4\fIter{-}+6\fIterzero -4\fIter{+}+\fIter{+2}\right] \nonumber
+\end{eqnarray}
+\normalsize Our goal is to show that the LHS of
+Eqn.~\ref{eqn:pot-recursion-diff} is positive. This is equivalent to
+proving positivity of
+\begin{eqnarray}
+g_a(\R) &=& \frac{2}{3a^2}\paren{\lowerpotMdkpar{1}(0, \R) -
+  \lowerpotMdkpar{0}(0, \R)}\nonumber \\
+& = &
+\frac{1}{24 a^4}
+      \left[\gIter{-2}-4\gIter{-}+6\gIterzero -4\gIter{+}+\gIter{+2}\right]
+       \label{eqn:recursion-as-difference}
+\end{eqnarray}
+where $a=2 s_1=\sqrt{\tau}$
 
-% \paren{\pot(t',\R+2s)+ 4\pot(t',\R+s)+ 6\pot(t',\R)+  4\pot(t',\R-s)+ \pot(t',\R-2s)}  \\
-%  &=& 
-% \paren{\pot(t',\R+2s)+ 4\pot(t',\R+s)+ 6\pot(t',\R)+  4\pot(t',\R-s)+ \pot(t',\R-2s)}
-
-  the difference between the values is
- $$ \pot_{k+1}(t, \R)-\pot_{k}(t, \R) = \frac{1}{16}
-  \paren{\pot(t',\R+2s)- 4\pot(t',\R+s)+ 6\pot(t',\R)-
-    4\pot(t',\R-s)+ \pot(t',\R-2s)}
-  $$
-
-
-  Our goal is to show that the RHS is positive. Therefor we can
-  divide it by the positive constant  $\frac{2}{3} s^4$, and call the
-  resulting function $f$:
-  \begin{equation} \label{eqn:divdiff}
-  g(\R)=\frac{1}{24s^4} \paren{\pot(t,\R+2s)- 4\pot(t,\R+s)+ 6\pot(t,\R)-
-    4\pot(t,\R-s)+ \pot(t,\R-2s)}
-  \end{equation}
-
-The function $g(\R)$ has a special form called ``divided difference''
-that has been extensively studied ~\cite{popoviciu1965certaines,butt2016generalization, de2005divided}.
-and is closely related to to derivatives of different orders. Using
-this connection and the fact that $\pot(\cdot,\R) \in \SP{4}$ we prove
-the following lemma:
-
-The following lemma states that $g(\R)>0$ for all $\R$.
+The function $g_a(\R)$ has a special form called ``divided
+differences''. The proof of the following lemma uses this fact to show that 
+Eqn~(\ref{eqn:recursion-as-difference}) is strictly postive.
 \begin{lemma} \label{lemma:divdiff}
-Fix $t>0$ and $s>0$, let $\pot(t,\R) \in \SP{4}$ as a function of $\R$,
-and let 
-\begin{equation}
-g(\R)\doteq\frac{1}{24s^2} \paren{\pot(t,\R+2s)- 4\pot(t,\R+s)+ 6\pot(t,\R)-
-    4\pot(t,\R-s)+ \pot(t,\R-2s)}
-\end{equation}
-then $\forall \R,\; g(\R)>0$ 
+If $\finalPotTau \in \SP{4}$ and $\tau>0$, then $\forall \R, g_s(\R)>0$
 \end{lemma}
-The proof is given in appendix~\ref{sec:divdiff}
-
-We conclude that if $\pot(t',\R)$ has a strictly positive fourth
-derivative then $\pot_{k+1}(t,\R) > \pot_{k}(t,\R)$ for all $\R$, proving
-the first part of the lemma.
-
-The second part of the lemma follows from the fact that
-both $\pot_{k+1}(t,\R)$ and $\pot_{k}(t,\R)$ are convex combinations of
-$\pot(t,\R)$ and therefor retain their continuity and convexity properties.
-
-\qed
+The proof of Lemma~\ref{lemma:divdiff} is given in appendix~\ref{sec:divdiff}
 
 \proof  of Theorem~\ref{thm:smallerSteps} \\
-The proof is by double induction over $k$ and over $t$.
-For a fixed $k$ we take a finite backward induction over
+The proof is by double induction over $k$ and over $t_i$.
+For $k=1,2,\ldots$ we consider the the loss step $s=2^{-k-1}\sqrt{\realT}$ and the time step 
+$\Delta t = s^2=2^{-2k-2} \realT$. For each game iteration $i=0,\ldots,2^{2k}-1$
+we fix the potential at time $t_1=(i+1) 2^{-2k}\realT$ and 
+We consider the difference between the potential at $t_0=(i+1) 2^{-2k}\realT$
+
+we take a finite backward induction over
 $t=T-2^{-2k},T-2 \times 2^{-2k},T-3 \times 2^{-2k},\cdots,0$.
 Our inductive claims are that $\pot_{k+1}(t,\R) > \pot_{k}(t,\R)$ and
 $\pot_{k+1}(t,\R)$,$\pot_{k}(t,\R)$ are continuous, strongly convex and
@@ -1051,14 +1117,35 @@ Next, we consider the discrete time version of $\learnerM^2$:
 \end{eqnarray}
 \fi
 
-\section{Brownian motion and min/max strategies}
+Theorem~\ref{thm:seq-of-adv-strategies} characterizes the limit
+%for any  $0 < t \leq \realT$ and any $\R_0$:
+\begin{equation} \label{eqn:k-limit}
+  \lim_{k \to \infty} \upperpotMdk(t,\R_0) =
+  \lim_{k \to \infty}\lowerpotMdk(t,\R_0)=
+  {\cal N}(\R_0,\realT-t) \odot \finalPotR
+\end{equation}
+
+Theorem~\ref{thm:smallerSteps} states that increasing $k$ is always advantageous to the adversary.
+
+Together these theorems show that the the min/max optimal potential function is $ {\cal N}(\R_0,\realT-t) \odot \finalPotR$.
+
+\section{Brownian motion}
 \label{sec:continuous}
 
-In the previous section we described a sequence of adversarial
-strategies $S_1,S_2,\ldots$ and a learner strategy such that ....
+There seems to be a paradox: the adversary prefers to set $s_i>0$ as
+small as possible. On the other hand, there is no minimal strictly
+positive number, so whatever the adversary chooses has to be
+suboptimal. In other words, time is not continuous, it increases in
+discrete steps. As that is the case, why is brownian motion still
+the correct way to compute the potential?
 
-described a sequence of adversarial
-strategies
+One can use the following argument: the learner knows the range
+$[-s_i,+s_i]$ for the next instantanous losses before it has to choose
+the weights he places on the actions. On the other hand, it does not
+know the range of the following losses, but he knows that the
+adversary always prefers small ranges. The safe thing for the learner
+to do is to assume that the following steps will be infinitesmaly
+small, i.e. that the future losses form a brownian process
 
 It is well known that the limit of random walks where $s \to 0$ and
 $\deltat=s^2$ is the the Brownian or Wiener process
@@ -1078,70 +1165,13 @@ Given a final value function with a strictly positive fourth
 derivative we can use Equation~(\ref{eqn:Kolmogorov}) to compute the
 value function for all $0 \leq t \leq T$. We will do so in he next section.
 
-\section{Stable potential functions and anytime strategies} \label{sec:stable}
+\section{The continuous time game and bounds for easy
+  sequences} \label{sec:easy}
 
-The potential functions, $\pot(t,\R)$ is a solution of PDE~(\ref
-{eqn:Kolmogorov}):
-\begin{equation} 
-  \frac{\partial}{\partial t} \pot(t,\R)
-  + \frac{1}{2} \frac{\partial^2}{\partial r^2} \pot(t,\R)=0
-\end{equation}
-under a boundary condition $\pot(T,\R)=\finalPotR(\R)$, which we assume
-is in $\SP{4}$
-
-So far, we assumed that the game horizon $T$ is known in advance. We
-now show two value functions where knowledge of the horizon is not
-required. Specifically, we call a value function $\pot(t,\R)$
-{\em self consistent} if it is defined for all $t>0$ and if for any
-$0<t<T$, setting $\phi(T,\R)$ as the final potential and solving for
-the Kolmogorov Backward Equation yields $\phi(t,\R)$ regardless of the
-time horizon $T$. 
-
-We consider two solutions to the PDE, the exponential potential and
-the NormalHedge potential. We give the form of the potential function
-that satisfies Kolmogorov Equation~\ref{eqn:Kolmogorov}, and derive
-the regret bound corresponding to it.
-
-{\bf The exponential potential function} which corresponds to exponential
-  weights algorithm corresponds to the following equation
-\[
-    \pot_{\mbox{\tiny exp}}(\R,t) = e^{\sqrt{2} \eta \R - \eta^2 t}
-  \]
-  Where $\eta>0$ is the learning rate parameter.
-  
-Given $\epsilon$ we choose $\eta = \sqrt{\frac{\ln (1/\epsilon)}{t}}$
-we get the regret bound that holds for any $t>0$
-  \begin{equation}
-    \R_\epsilon \leq \sqrt{2 t \ln \frac{1}{\epsilon}}
-  \end{equation}
-Note that the algorithm depends on the choice of $\epsilon$, in other
-words, the bound does {\em not} hold for all values of $\epsilon$ at
-the same time.
-
-{\bf The NormalHedge value} is
-\begin{equation} \label{eqn:NormalHedge}
-  \pot_{\mbox{\tiny NH}}(\R,t) = \begin{cases}
-    \frac{1}{\sqrt{t+\nu}}\exp\left(\frac{\R^2}{2(t+\nu)}\right)
-    & \mbox{if } \R \geq 0  \\
-  \frac{1}{\sqrt{t+\nu}} & \mbox{if } \R <0
-  \end{cases}
-\end{equation}
-Where $\nu>0$ is a small constant. The function $\pot_{\mbox{NH}}(\R,t)$,
-restricted to $\R\geq 0$ is in $\SP{4}$ and is a constant for $\R \leq 0$.
-
-The regret bound we get is:
-\begin{equation}
-\R_\epsilon \leq \sqrt{(t+\nu) \left( \ln (t+\nu) + 2 \ln \frac{1}{\epsilon}\right)}
-\end{equation}
-This bound is slightly larger than the bound for exponential weights,
-however, the NormalHedge bound holds simultaneously for all
-$\epsilon>0$ and the algorithm requires no tuning.
-
-\section{The continuous time game and bounds for easy sequences} \label{sec:easy}
 In Section~\ref{sec:discrete} we have shown that the integer time game
 has a natural extension to a setting where $\deltat_i = s_i^2$. We
-also demonstrated sequences of adversarial strategies
-$S_1,S_2,\ldots$ such that $\sup_{k \to \infty} {\lowerpot}_k(0,\R) = $
+also demonstrated sequences of adversarial strategies $S_1,S_2,\ldots$
+such that $\sup_{k \to \infty} {\lowerpot}_k(0,\R) = $
 
 We characterized the optimal adversarial strategy for the discrete
 time game (Section~\ref{sec:discrete-Time-Game}), which corresponds
@@ -1151,7 +1181,7 @@ regret when the adversary is not optimal, or the sequences are ``easy''.
 
 To see that such an improvement is possible, consider the following
 {\em constant} adversary. This adversary associates the same loss to
-all experts on iteration $i$, formally, $\adversM(i,\R) = l$. In this
+all actions on iteration $i$, formally, $\adversM(i,\R) = l$. In this
 case the average loss is also equal to $l$, $\ell(i)=l$ which means
 that all of the instantaneous regrets are $r=l-\ell(t_i) = 0$, which,
 in turn, implies that $\state(i) = \state(i+1)$. As the state did not
@@ -1160,7 +1190,7 @@ $t_{i+1}=t_i+s_i^2$.
 
 We observe two extremes for the adversarial behavior. The constant
 adversary described above for which $t_{i+1} = t_i$, and the random walk adversary described
-earlier, in which each expert is split into two, one half with loss
+earlier, in which each action is split into two, one half with loss
 $-s_i$ and the other with loss $+s_i$. In which case $t_{i+1} =
 t_i+s_i^2$ which is the maximal increase in $t$ that the adversary can
 guarantee. The analysis below shows that these are two extremes on a
@@ -1255,6 +1285,97 @@ We can use $V_n$ instead of $T$ giving us a variance based bound.
 %    \E{\R \sim \state(i)}{ \E{y \sim
 %      \adversM(i)(\R)}{\pot(i,\R+y-\ell(i))}}
 
+\section{Specific potential functions}
+
+The results up to this point hold for any potential function in
+$\SP{4}$. Given a final potential function $\finalPotR \in \SP{4}$ we
+can compute the potential for any $0 \leq t \leq \realT$ and any $R$ using the equation 
+\[
+\pot(t,\R)={\cal N}(\R_0,\realT-t) \odot \finalPotR
+\]
+By using uses the $\R$-derivative of this potential function to define the weights the
+learner guarantees that the final average score is at most  $\pot(0,0)$.
+
+We study two particular potential functions which achieve good simultanous regret bounds.
+
+\subsection{Min/Max solution}
+
+Theorem~\label{thm:simulBoundAveragePot} shows a one-to-one relationship between a simultanous regret bound
+$B(\R)$ and the average potential function $\phi(\R)=B(\R)^{-1}$. We therefor ask what is the smallest possible $B(\R)$. Recall that the brownian motion adversary forces a cumulative loss of zero on any learner. The SBR for Brownian motion is the tail of the normal distribution:
+\newcommand{\erf}{\mbox{erf}}
+\begin{equation}
+  B^*(\R) = \frac{1}{\sqrt{2 \pi}}  \int_{\R}^\infty e^{-\frac{x^2}{2}}dx
+  = \frac{1}{2} \paren{1-\erf\paren{\frac{R}{\sqrt{2}}}}
+\end{equation}
+The final potential function that correspond to
+\begin{equation}
+  \finalPotR^*(\R) = (B^*(\R))^{-1} = \frac{2}{1-\erf\paren{\frac{\R}{\sqrt{2}}}}
+\end{equation}
+One can check that $\finalPotR^* \in \SP{4}$ and therefor Brownian motion is the optimal strategy and
+$$\pot^*(t,\R)= \E{\rho \sim {\cal N}(\R,\realT-t)}{\frac{2}{1-\erf\paren{\frac{\rho}{\sqrt{2}}}}}$$
+The bound on the final potential is:
+\[
+  \pot^*(0,0) =  \E{\rho \sim {\cal N}(0,\realT)}{\frac{2}{1-\erf\paren{\frac{\rho}{\sqrt{2}}}}}
+\]
+
+\subsection{Anytime Potentials} \label{sec:stable}
+
+The potential functions, $\pot(t,\R)$ is a solution of PDE~(\ref
+{eqn:Kolmogorov}):
+\begin{equation} 
+  \frac{\partial}{\partial t} \pot(t,\R)
+  + \frac{1}{2} \frac{\partial^2}{\partial r^2} \pot(t,\R)=0
+\end{equation}
+under a boundary condition $\pot(T,\R)=\finalPotR(\R)$, which we assume
+is in $\SP{4}$
+
+So far, we assumed that the game horizon $T$ is known in advance. We
+now show two value functions where knowledge of the horizon is not
+required. Specifically, we call a value function $\pot(t,\R)$
+{\em self consistent} if it is defined for all $t>0$ and if for any
+$0<t<T$, setting $\phi(T,\R)$ as the final potential and solving for
+the Kolmogorov Backward Equation yields $\phi(t,\R)$ regardless of the
+time horizon $T$. 
+
+We consider two solutions to the PDE, the exponential potential and
+the NormalHedge potential. We give the form of the potential function
+that satisfies Kolmogorov Equation~\ref{eqn:Kolmogorov}, and derive
+the regret bound corresponding to it.
+
+{\bf The exponential potential function} which corresponds to exponential
+  weights algorithm corresponds to the following equation
+\[
+    \pot_{\mbox{\tiny exp}}(\R,t) = e^{\sqrt{2} \eta \R - \eta^2 t}
+  \]
+  Where $\eta>0$ is the learning rate parameter.
+  
+Given $\epsilon$ we choose $\eta = \sqrt{\frac{\ln (1/\epsilon)}{t}}$
+we get the regret bound that holds for any $t>0$
+  \begin{equation}
+    \R_\epsilon \leq \sqrt{2 t \ln \frac{1}{\epsilon}}
+  \end{equation}
+Note that the algorithm depends on the choice of $\epsilon$, in other
+words, the bound does {\em not} hold for all values of $\epsilon$ at
+the same time.
+
+{\bf The NormalHedge value} is
+\begin{equation} \label{eqn:NormalHedge}
+  \pot_{\mbox{\tiny NH}}(\R,t) = \begin{cases}
+    \frac{1}{\sqrt{t+\nu}}\exp\left(\frac{\R^2}{2(t+\nu)}\right)
+    & \mbox{if } \R \geq 0  \\
+  \frac{1}{\sqrt{t+\nu}} & \mbox{if } \R <0
+  \end{cases}
+\end{equation}
+Where $\nu>0$ is a small constant. The function $\pot_{\mbox{NH}}(\R,t)$,
+restricted to $\R\geq 0$ is in $\SP{4}$ and is a constant for $\R \leq 0$.
+
+The regret bound we get is:
+\begin{equation}
+\R_\epsilon \leq \sqrt{(t+\nu) \left( \ln (t+\nu) + 2 \ln \frac{1}{\epsilon}\right)}
+\end{equation}
+This bound is slightly larger than the bound for exponential weights,
+however, the NormalHedge bound holds simultaneously for all
+$\epsilon>0$ and the algorithm requires no tuning.
 
 \bibliographystyle{plain}
 \bibliography{ref.bib,bib.bib}
@@ -1294,6 +1415,21 @@ independently at random according to $\state$:
 \qed
 
 \section{Divided differences of a function} \label{sec:divdiff}
+
+The function $g_s(\R)$ has a special form called ``divided difference''
+that has been extensively studied ~\cite{popoviciu1965certaines,butt2016generalization, de2005divided}.
+and is closely related to to derivatives of different orders. Using
+this connection and the fact that $\pot(\cdot,\R) \in \SP{4}$ we prove
+the following lemma:
+
+
+We conclude that if $\pot(t',\R)$ has a strictly positive fourth
+derivative then $\pot_{k+1}(t,\R) > \pot_{k}(t,\R)$ for all $\R$, proving
+the first part of the lemma.
+
+The second part of the lemma follows from the fact that
+both $\pot_{k+1}(t,\R)$ and $\pot_{k}(t,\R)$ are convex combinations of
+$\pot(t,\R)$ and therefor retain their continuity and convexity properties.
 
 A function $\finalPot{}$ that satisfies
 inequality~\ref{eqn:4thOrderConvex} is said to be {\em 4'th order convex}
@@ -1628,6 +1764,7 @@ We find that (\ref{eqn:contin2}) is zero.
 Finally (\ref{eqn:contin3}) is negligible relative to the other terms
 as $s \to 0$.
 \qed 
+
 
 \end{document}
 
