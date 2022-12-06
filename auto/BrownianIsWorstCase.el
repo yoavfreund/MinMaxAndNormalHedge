@@ -18,9 +18,9 @@
     "iterzero"
     "fIterzero"
     "gIterzero"
-    "erf"
     "Dx"
-    "Dy")
+    "Dy"
+    "erf")
    (LaTeX-add-labels
     "fig:DTOL"
     "def:unif-regret-bound"
@@ -95,7 +95,7 @@
     "sec:contin-Time-Game"
     "thm:variancebound"
     "eqn:Vn"
-    "sec:stable"
+    "eqn:convol-with-normal"
     "eqn:NormalHedge"
     "proof:simulBoundAveragePot"
     "sec:divdiff"
@@ -132,7 +132,8 @@
     "eqnterm1.1"
     "eqnterm1.2"
     "eqn:term2.1"
-    "eqn:lower-discrete")
+    "eqn:lower-discrete"
+    "sec:stable")
    (LaTeX-add-bibliographies
     "ref.bib"
     "bib.bib"))

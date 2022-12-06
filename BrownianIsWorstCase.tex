@@ -1285,57 +1285,34 @@ We can use $V_n$ instead of $T$ giving us a variance based bound.
 %    \E{\R \sim \state(i)}{ \E{y \sim
 %      \adversM(i)(\R)}{\pot(i,\R+y-\ell(i))}}
 
-\section{Specific potential functions}
+\section{Anytime potential functions}
 
 The results up to this point hold for any potential function in
 $\SP{4}$. Given a final potential function $\finalPotR \in \SP{4}$ we
 can compute the potential for any $0 \leq t \leq \realT$ and any $R$ using the equation 
-\[
+\begin{equation} \label{eqn:convol-with-normal}
 \pot(t,\R)={\cal N}(\R_0,\realT-t) \odot \finalPotR
-\]
-By using uses the $\R$-derivative of this potential function to define the weights the
-learner guarantees that the final average score is at most  $\pot(0,0)$.
-
-We study two particular potential functions which achieve good simultanous regret bounds.
-
-\subsection{Min/Max solution}
-
-Theorem~\label{thm:simulBoundAveragePot} shows a one-to-one relationship between a simultanous regret bound
-$B(\R)$ and the average potential function $\phi(\R)=B(\R)^{-1}$. We therefor ask what is the smallest possible $B(\R)$. Recall that the brownian motion adversary forces a cumulative loss of zero on any learner. The SBR for Brownian motion is the tail of the normal distribution:
-\newcommand{\erf}{\mbox{erf}}
-\begin{equation}
-  B^*(\R) = \frac{1}{\sqrt{2 \pi}}  \int_{\R}^\infty e^{-\frac{x^2}{2}}dx
-  = \frac{1}{2} \paren{1-\erf\paren{\frac{R}{\sqrt{2}}}}
 \end{equation}
-The final potential function that correspond to
-\begin{equation}
-  \finalPotR^*(\R) = (B^*(\R))^{-1} = \frac{2}{1-\erf\paren{\frac{\R}{\sqrt{2}}}}
-\end{equation}
-One can check that $\finalPotR^* \in \SP{4}$ and therefor Brownian motion is the optimal strategy and
-$$\pot^*(t,\R)= \E{\rho \sim {\cal N}(\R,\realT-t)}{\frac{2}{1-\erf\paren{\frac{\rho}{\sqrt{2}}}}}$$
-The bound on the final potential is:
-\[
-  \pot^*(0,0) =  \E{\rho \sim {\cal N}(0,\realT)}{\frac{2}{1-\erf\paren{\frac{\rho}{\sqrt{2}}}}}
-\]
+By using uses the $\R$-derivative of this potential function to define
+the weights the learner guarantees that the final average score is at
+most $\pot(0,0)$.
 
-\subsection{Anytime Potentials} \label{sec:stable}
+A major limition of this result is that the horizon $\realT$ is set in
+advance.  It is desirable that the potential is defined without
+knowledge of the horizon.  In what follows we show that Hedge and
+NormalHedge can both be used in such ``anytime'' algorithms.
 
-The potential functions, $\pot(t,\R)$ is a solution of PDE~(\ref
-{eqn:Kolmogorov}):
+Our solution is based on the observation that a potential function satisfies Eqn~(\ref{eqn:convol-with-normal}) if and only if it satisfies 
+the Kolmogorov backwards PDE~(\ref{eqn:Kolmogorov}):
 \begin{equation} 
   \frac{\partial}{\partial t} \pot(t,\R)
   + \frac{1}{2} \frac{\partial^2}{\partial r^2} \pot(t,\R)=0
 \end{equation}
-under a boundary condition $\pot(T,\R)=\finalPotR(\R)$, which we assume
-is in $\SP{4}$
+The potential $\finalPotR \in \SP{4}$ defines a boundary condition of the PDE.
 
-So far, we assumed that the game horizon $T$ is known in advance. We
-now show two value functions where knowledge of the horizon is not
-required. Specifically, we call a value function $\pot(t,\R)$
-{\em self consistent} if it is defined for all $t>0$ and if for any
-$0<t<T$, setting $\phi(T,\R)$ as the final potential and solving for
-the Kolmogorov Backward Equation yields $\phi(t,\R)$ regardless of the
-time horizon $T$. 
+We derive our anytime algorithm by finding solutions to the Kolmogorov
+PDE that are not restricted in time, and that have a fixed parametric form.
+In other words, the evolution of the potential with time is defined by changing the parameter values, without changing the form.
 
 We consider two solutions to the PDE, the exponential potential and
 the NormalHedge potential. We give the form of the potential function
@@ -1371,7 +1348,8 @@ restricted to $\R\geq 0$ is in $\SP{4}$ and is a constant for $\R \leq 0$.
 
 The regret bound we get is:
 \begin{equation}
-\R_\epsilon \leq \sqrt{(t+\nu) \left( \ln (t+\nu) + 2 \ln \frac{1}{\epsilon}\right)}
+  \R_\epsilon \leq \sqrt{(t+\nu) \left(2 \ln \frac{1}{\epsilon}-
+      \frac{1}{2}\ln (t+\nu)\right)}
 \end{equation}
 This bound is slightly larger than the bound for exponential weights,
 however, the NormalHedge bound holds simultaneously for all
@@ -1867,3 +1845,30 @@ of strategies.
 %%% mode: latex
 %%% TeX-master: t
 %%% End:
+
+\iffalse
+  We study two particular potential functions which achieve good simultanous regret bounds.
+
+\subsection{Min/Max solution}
+
+Theorem~\label{thm:simulBoundAveragePot} shows a one-to-one relationship between a simultanous regret bound
+$B(\R)$ and the average potential function $\phi(\R)=B(\R)^{-1}$. We therefor ask what is the smallest possible $B(\R)$. Recall that the brownian motion adversary forces a cumulative loss of zero on any learner. The SBR for Brownian motion is the tail of the normal distribution:
+\newcommand{\erf}{\mbox{erf}}
+\begin{equation}
+  B^*(\R) = \frac{1}{\sqrt{2 \pi}}  \int_{\R}^\infty e^{-\frac{x^2}{2\realT}}dx
+  = \frac{1}{2} \paren{1-\erf\paren{\frac{R}{\sqrt{2\realT}}}}
+\end{equation}
+The final potential function that correspond to
+\begin{equation}
+  \finalPotR^*(\R) = (B^*(\R))^{-1} = \frac{2}{1-\erf\paren{\frac{\R}{\sqrt{2\realT}}}}
+\end{equation}
+One can check that $\finalPotR^* \in \SP{4}$ and therefor Brownian motion is the optimal strategy and
+$$\pot^*(t,\R)= \E{\rho \sim {\cal N}(\R,\realT-t)}{\frac{2}{1-\erf\paren{\frac{\rho}{\sqrt{2\realT}}}}}$$
+The bound on the final potential is:
+\[
+  \pot^*(0,0) =  \E{\rho \sim {\cal N}(0,\realT)}{\frac{2}{1-\erf\paren{\frac{\rho}{\sqrt{2\realT}}}}}
+\]
+
+\fi
+
+\subsection{Anytime Potentials} \label{sec:stable}
