@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.4.7)  5 DEC 2022 17:31
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.4.7)  6 DEC 2022 14:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -470,7 +470,7 @@ mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2020/texm
 f-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2020/
 texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/20
 20/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on BrownianIsWorstCase.pdf (25 pages, 407857 bytes).
+Output written on BrownianIsWorstCase.pdf (25 pages, 407596 bytes).
 PDF statistics:
  199 PDF objects out of 1000 (max. 8388607)
  142 compressed objects within 2 object streams

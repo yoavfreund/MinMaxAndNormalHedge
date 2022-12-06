@@ -1338,18 +1338,18 @@ the same time.
 {\bf The NormalHedge value} is
 \begin{equation} \label{eqn:NormalHedge}
   \pot_{\mbox{\tiny NH}}(\R,t) = \begin{cases}
-    \frac{1}{\sqrt{t+\nu}}\exp\left(\frac{\R^2}{2(t+\nu)}\right)
+    \frac{1}{\sqrt{t+1}}\exp\left(\frac{\R^2}{2(t+1)}\right)
     & \mbox{if } \R \geq 0  \\
-  \frac{1}{\sqrt{t+\nu}} & \mbox{if } \R <0
+  \frac{1}{\sqrt{t+1}} & \mbox{if } \R <0
   \end{cases}
 \end{equation}
-Where $\nu>0$ is a small constant. The function $\pot_{\mbox{NH}}(\R,t)$,
+The function $\pot_{\mbox{NH}}(\R,t)$,
 restricted to $\R\geq 0$ is in $\SP{4}$ and is a constant for $\R \leq 0$.
 
 The regret bound we get is:
 \begin{equation}
-  \R_\epsilon \leq \sqrt{(t+\nu) \left(2 \ln \frac{1}{\epsilon}-
-      \frac{1}{2}\ln (t+\nu)\right)}
+  \R_\epsilon \leq \sqrt{(t+1) \left(2 \ln \frac{1}{2\epsilon}+
+      \ln (t+1)\right)}
 \end{equation}
 This bound is slightly larger than the bound for exponential weights,
 however, the NormalHedge bound holds simultaneously for all
