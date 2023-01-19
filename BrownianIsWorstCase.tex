@@ -77,7 +77,7 @@ the concept of simultaneous bounds:
 \begin{definition}[Simultaneous regret
   bound (SRB)] \label{def:unif-regret-bound} Let $G: \reals \to [0,1]$ be a
   non-increasing function which maps regret bounds to probabilities.
-  A distribution over regrets $\state$ is simultaneously bound by $G$ if
+  A distribution over the reals $\state$ is satisfies simultaneous regret bound by $G$ if
   \[
     \forall \R \in \reals \;\; \P{\rho \sim \state}{\rho \geq \R} \leq G(\R)
   \]
@@ -91,9 +91,9 @@ potential $\E{\R \sim \state}{\pot(\R)}$.
 
 \begin{definition}[Average potential bound (APB)] \label{def:aver-potential-bound}
   A distribution over he reals $\state$ satisfies the average
-  potential function $\pot$ if
+  potential bound for $\pot$ if
   $$\score \doteq \E{\R \sim \state}{\pot(\R)} \leq 1$$
-  Where $\pot: \reals \to \reals^+$ is a non decreasing function. The score $\score$ is as defined.
+  Where $\pot: \reals \to \reals^+$ is a non decreasing function.
 \end{definition}
 
 Potential functions have long been used to design and analyze online
@@ -101,8 +101,13 @@ learning algorithms. However, the choice of the potential function has
 been somewhat ad hoc.  Here we show a strong one to one relationship
 between SBR functions and potential functions:
 \begin{theorem}\label{thm:simulBoundAveragePot}
- A distribution $\state$ is simultaneously bounded by $B$ if and only
- if it satisfies the average potential bound with $\phi(\R) = B(\R)^{-1}$
+  ~\\
+  \begin{itemize}
+  \item $\state$ satisfies SRB for $G$ if it satisfies APB for $\pot(R) = G(R)^{-1}$.
+  \item A distribution $\state$ satisfies an APB for $\pot$ if it
+    satisfies SRB for $G$ and
+    $\int_{-\infty}^{\infty}\pot(\R) G(\R) d\R \leq 1$
+   \end{itemize}
 \end{theorem}
 The proof of the theorem is in Appendix~\ref{proof:simulBoundAveragePot}.
 
@@ -201,7 +206,7 @@ Until this point our theory holds for any final potential function in $\SP{4}$. 
   hold for all $t>0$ we eliminate the need to define a final
   potential. As a result we get an ``anytime'' learning algorithm that
   can be stopped at any time. The specific potential we analyze is
-  Normal-Hedge~\cite{}. NormalHedge is not min/max otimal for any
+  Normal-Hedge~\cite{}. NormalHedge is not min/max optimal for any
   time, but it is almost optimal for all times.
 \end{enumerate}
 
@@ -1311,49 +1316,71 @@ the Kolmogorov backwards PDE~(\ref{eqn:Kolmogorov}):
 The potential $\finalPotR \in \SP{4}$ defines a boundary condition of the PDE.
 
 We derive our anytime algorithm by finding solutions to the Kolmogorov
-PDE that are not restricted in time, and that have a fixed parametric form.
-In other words, the evolution of the potential with time is defined by changing the parameter values, without changing the form.
+PDE that are not restricted in time, and that have a fixed parametric
+form.  In other words, the evolution of the potential with time is
+defined by changing the parameter values, without changing the form.
 
-We consider two solutions to the PDE, the exponential potential and
-the NormalHedge potential. We give the form of the potential function
-that satisfies Kolmogorov Equation~\ref{eqn:Kolmogorov}, and derive
-the regret bound corresponding to it.
+We describe two potential functions that are solutions of PDE. In the following section we use our general results to prove simultanous regret bounds
 
 {\bf The exponential potential function} which corresponds to exponential
   weights algorithm corresponds to the following equation
-\[
+\begin{equation} \label{eqn:exponential-potential}
     \pot_{\mbox{\tiny exp}}(\R,t) = e^{\sqrt{2} \eta \R - \eta^2 t}
-  \]
-  Where $\eta>0$ is the learning rate parameter.
-  
-Given $\epsilon$ we choose $\eta = \sqrt{\frac{\ln (1/\epsilon)}{t}}$
-we get the regret bound that holds for any $t>0$
+\end{equation}
+
+Equation~\ref{eqn:exponential-potential}.
+
+For the standard (non simultanous) bound we fix $\epsilon$ and $t$,
+choose $\eta = \sqrt{\frac{\ln (1/\epsilon)}{t}}$
+and get a bound of the form 
   \begin{equation}
     \R_\epsilon \leq \sqrt{2 t \ln \frac{1}{\epsilon}}
   \end{equation}
-Note that the algorithm depends on the choice of $\epsilon$, in other
-words, the bound does {\em not} hold for all values of $\epsilon$ at
-the same time.
 
-{\bf The NormalHedge value} is
+  To derive a simultanous regret bound we fix the learning rate $\eta$ and take the reciprocal of the potential:
+ \[
+    G(R,t) \leq e^{\eta^2 t - \sqrt{2}\eta R}
+ \]
+Which holds for any $t$ and $R$. The bound $G(R,t)$ depends on $\eta$.
+
+  
+{\bf The NormalHedge potential function} parametrized by $\nu>0$ is:
 \begin{equation} \label{eqn:NormalHedge}
-  \pot_{\mbox{\tiny NH}}(\R,t) = \begin{cases}
-    \frac{1}{\sqrt{t+1}}\exp\left(\frac{\R^2}{2(t+1)}\right)
+  \pot_{\mbox{\tiny NH$(\nu)$}}(\R,t) = \begin{cases}
+    \frac{1}{\sqrt{t+\nu}}\exp\left(\frac{\R^2}{2(t+\nu)}\right)
     & \mbox{if } \R \geq 0  \\
-  \frac{1}{\sqrt{t+1}} & \mbox{if } \R <0
+  \frac{1}{\sqrt{t+\nu}} & \mbox{if } \R <0
   \end{cases}
 \end{equation}
-The function $\pot_{\mbox{NH}}(\R,t)$,
-restricted to $\R\geq 0$ is in $\SP{4}$ and is a constant for $\R \leq 0$.
 
-The regret bound we get is:
+The function $\pot_{\mbox{NH}}(\R,t)$ is not in $\SP{4}$, however, the
+positive part $\R\geq 0$ is in $\SP{4}$ while the negative part
+$\R \leq 0$ is a constant. A constant potential corresponds to zero weight which means that actions whose regret is negative are ignored by the learner. In this case the optimal adversarial is not unconstrained brownian motion, instead it is brownian motion with a reflective boundary at $R=0$.
+
+\section{Upper and lower bounds on the simultanous regret}
+Plan: (1) first order bound with Variable $\nu$ to show optimality.
+(2) Second order bound with $\nu=1$
+
+We now combine Theorems \ref{thm:simulBoundAveragePot} and~\ref{thm:variancebound} with
+the Normal-Hedge potential~(\ref{eqn:NormalHedge}) to derive a second order bound on the regret of NormalHedge.
 \begin{equation}
-  \R_\epsilon \leq \sqrt{(t+1) \left(2 \ln \frac{1}{2\epsilon}+
-      \ln (t+1)\right)}
+  \R_{\mbox{\tiny NH$(\nu)$}}(\epsilon) \leq \sqrt{(t_i+\nu) \left(2 \ln \frac{1}{2\epsilon}+
+      \ln (t_i+\nu)\right)}
 \end{equation}
-This bound is slightly larger than the bound for exponential weights,
-however, the NormalHedge bound holds simultaneously for all
-$\epsilon>0$ and the algorithm requires no tuning.
+Where $t_i = \nu+\sum_{j=1}^{i}\deltat_j$
+\begin{equation}
+  \deltat_i=
+  \E{\R \sim \state(t_i)}{H(t_i,\R) \;\; \E{y \sim \adversM(t_i,\R)}{(y-\ell(t_i))^2}}
+\end{equation}
+and 
+\begin{eqnarray}
+  W(t_i,\R)&=& e^{\frac{R^2}{2t_i}} \left(\frac{1}{t^{3/2}} + \frac{R^2}{t^{5/2}} \right)\\
+  H(t_i,\R)&=& \frac{W(t_i,R)}{\E{\rho \sim \state(t_i)}{W(t_i,\rho)}}
+\end{eqnarray}
+
+The initial potential is $1/\sqrt{\nu}$ and it remains this way in the continuous case. In the discrete case it is $1/\nu + O(1/n)$ where $n$ is the number of steps We can upper bound the potential by
+$1/\nu+1$
+
 
 \bibliographystyle{plain}
 \bibliography{ref.bib,bib.bib}
@@ -1361,10 +1388,11 @@ $\epsilon>0$ and the algorithm requires no tuning.
 \appendix
 \section{Proof of Theorem~\ref{thm:simulBoundAveragePot} \label{proof:simulBoundAveragePot}}
 \proof
-  \begin{itemize}
+~\\
+\begin{itemize}
   \item
-  {\bf $\state$ satisfies a simultaneous bound for $B$ if it satisfies an
-  average potential bound for $\pot = B^{-1}$}\\
+  {\bf A distribution $\state$ satisfies SRB for $G$ if it satisfies APB
+  for $\pot(R) = G(R)^{-1}$}\\
 Assume by contradiction that $\state$ does not satisfy the simultaneous bound. In
 other words there exists $a \in \reals$ such that
 $\P{\R \sim \state}{\R > a} > B(a)$. From Markov inequality and the fact
@@ -1375,20 +1403,14 @@ that $\phi$ is non decreasing we get
 \]
 but $ \E{\R \sim \state}{\pot(\R)} >1$ contradicts the average potential
 assumption for the potential $\phi(\R) = B(\R)^{-1}$
-\item
-{\bf $\state$ satisfies an
-  average potential bound for $\pot = B^{-1}$ if it satisfies a simultaneous bound for $B$}\\
-As $\phi$ is a non-decreasing function, and assuming $\R,\R'$ are drawn
-independently at random according to $\state$:
-\begin{eqnarray}
-  \E{\R \sim \state}{\pot(\R)} & = & \E{\R \sim \state}{\pot(\R)
-                                  \P{\R' \sim \state}{\phi(R') \geq \phi(\R)}} \\
-                            & \leq & \E{\R \sim \state}{\pot(\R)
-                                     \P{\R' \sim \state}{R' \geq \R}} \\
-                            & < & \E{\R \sim \state}{\pot(\R) B(\R)} \\
-                            & = & \E{\R \sim \state}{\frac{B(\R)}{B(\R)}}
-                                  = \E{\R \sim \state}{1} = 1
-\end{eqnarray}
+\item {\bf A distribution $\state$ satisfies an
+    APB for $\pot$ if it satisfies SRB for $G$ and $\int_{-\infty}^{\infty}\pot(\R) G(\R) d\R \leq 1$}\\
+  From the SRB condition we have
+  $$\forall R, \P{\rho \sim \state}{\rho \geq \R} \leq G(\R)$$
+  From the condition  $\int_{-\infty}^{\infty}\pot(\R) G(\R) d\R \leq 1$ we get
+  $$1 \geq \int_{-\infty}^{\infty}\pot(\R) G(\R) d\R \geq
+  \int_{-\infty}^{\infty}\pot(\R) \P{\rho \sim \state}{\rho\geq \R}
+  d\R = \E{\R \sim \state}{\pot(\R)}$$
 \end{itemize}
 \qed
 

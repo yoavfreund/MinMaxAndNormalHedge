@@ -96,6 +96,7 @@
     "thm:variancebound"
     "eqn:Vn"
     "eqn:convol-with-normal"
+    "eqn:exponential-potential"
     "eqn:NormalHedge"
     "proof:simulBoundAveragePot"
     "sec:divdiff"
