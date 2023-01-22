@@ -24,13 +24,8 @@ with second order bounds that characterize easy sequences.
 \end{abstract}
 
 \section{Introduction}
-Online prediction with expert advise has been studied extensively over
-the years and the number of publications in the area is vast (see
-e.g.~\cite{vovk1990aggregating, feder1992universal,
-  littlestone1994weighted, cesa1997use, cesa2006prediction}.
-
-Here we focus on a simple variant of online prediction with expert
-advice called {\em the decision-theoretic online learning game}
+In this paper we study a popular variant of online learning called
+{\em the decision-theoretic online learning game}
 (DTOL)~\cite{freund1997decision}. DTOL (Figure~\ref{fig:DTOL}) is a
 repeated zero sum game between a {\em learner} and an {\em
   adversary}. The adversary controls the losses of $N$ actions, while
@@ -61,59 +56,99 @@ For $i=1,\ldots,T$
 \caption{Decision theoretic online learning \label{fig:DTOL}}
 \end{figure}
 
-The goal of the learner (in the percentile version of the game) is to
-perform almost as well as $k$ best actions. Specifically, we sort the
-regrets in decreasing order
-$\R_1^i \geq \R_2^i \geq \cdots \geq \R_k^i \geq \cdots$ and define
-$\R_k^i$ to as the regret relative to the $\epsilon=k/M$ top
-percentile, denote $\R_\epsilon^i$. Our goal is to find algorithms
-that guarantee small upper bounds on $\R_\epsilon^T$. Known bounds
-have the form $c \sqrt{T \ln {1/\epsilon}}$, but the algorithm has to
-be tuned based on prior knowledge of $\epsilon$. We seek algorithms
-with regret bounds that hold {\em simultaneously} for all values of
-$\epsilon$. In other words algorithms that do not need to know
-$\epsilon$ ahead of time. The following definition formalizes
-the concept of simultaneous bounds:
-\begin{definition}[Simultaneous regret
-  bound (SRB)] \label{def:unif-regret-bound} Let $G: \reals \to [0,1]$ be a
-  non-increasing function which maps regret bounds to probabilities.
-  A distribution over the reals $\state$ is satisfies simultaneous regret bound by $G$ if
+The work on DTOL is rich and diverse. In order to place our work in this context we identify four axis on which existing work lies.
+
+has been extended and refined in several dimensions. Our work combines these extension into a single simple algorithm. We descrive this dimensions below.
+\begin{enumerate}
+\item {\bf Zero-order vs Second order bounds:} Zero order regret
+  bounds \cite{freund1999adaptive} depend only on the number of
+  actions $N$ and the length of the sequence $T$ and have
+  the form
+\begin{equation} \label{eqn:0-order-bound}
+  \max_j \R_j^T < C \sqrt{T \ln N}
+\end{equation}
+Where $C$ is a small constant.
+
+Second order bounds take advantage of so-called ``easy sequences''
+where $|l_j^i|<1$. Roughly speaking, second order bounds replace the
+length of the sequence $T$ with a sum of squares that is smaller than $T$
+for easy sequences.  Several definitions for the sum of
+squares have been analyzed.  Cesa-Binachi et
+al.~\cite{cesa2007improved} propose two such quantities. The {\em
+  Quadratic Variation} $Q_j^T=\sum_{t=1}^T (l_j^t)^2$ measures the
+variation of the action $j$, and $Q^{*}$ is the quadratic variation of
+the best action at time $T$. The {\em cumulative variance} $V_T$ is defined as
+\[
+  \var_i = \sum_{j=1}^N P^i_j (l_j^i)^2 -  \left( \sum_{j=1}^N P^i_j
+    l_j^i \right)^2 \mbox{ and } \V_T= \sum_{i=1}^T \var_i
+\]
+Koolen and Van Erven~\cite{koolen2015second} propose a variant of the
+quadratic variation that uses $(l_j^t-\ell^t)^2$ instead of
+$(l_j^t)^2$. It remained unclear which of
+these variations is ``best'' or, indeed, if the notion of ``best'' is
+well defined. 
+
+\item {\bf Quantile based bounds}
+  It is possible to give regret bounds where the total loss of the
+  algorithm is compared to the total loss of the best $\epsilon$
+  fraction of the actions. Indeed many regret bounds hold when $N$ is
+  replaced with $1/\epsilon$.
+
+  Using quantiles allows actions sets that are uncountably infinite.
+  For example consider an action set that corresponds to linear
+  functions with real valued parameters.
+
+  We formalize uncountably infinite sets of actions by defining a
+  probability space $\Omega$ where $\omega \in \Omega$ is an action
+  and the loss that action $\omega$ incurs on iteration $t$ is a
+  random variable $l^t_\omega$. Note that this definition includes the
+  case where the number of actions is finite, as $\Omega$ can be a
+  finite space.
+
+  
+\item {\bf Potential based algorithms} Two main paradigms are known
+  for designing online learning algorithm: the {\em follow the leader}
+  paradigm and the {\em potential function}paradigm.  Our work here 
+  uses the potential paradigm. A potential function is a positive increasing function
+  $\pot:\reals \to \reals$. The main quantity that is analyzed is the
+  average potential the actions,
+  $\score = \E{\R \sim \state}{\pot(\R)}$. The regret bounds are
+  proved by combining an upper bound on the score with Markov
+  inequality:
   \[
-    \forall \R \in \reals \;\; \P{\rho \sim \state}{\rho \geq \R} \leq G(\R)
+    \P{\rho \sim \state}{\rho \geq R} \leq \frac{\E{\rho \sim \state}{\pot(\rho)}}{\pot(R)}
   \]
-\end{definition}
 
+\item {\bf parameter-free algorithms} Many DTOL algorithms require
+  setting a {\em learning rate} parameter. Setting this parameter, in
+  turn, requires having prior information about $N,T$,or
+  $\epsilon$. The resulting bounds hold only if the sequences of
+  losses conform to the a-priori assumption. In many cases ``doubling
+  tricks'' can be used to circumvent this dependence at the cost of
+  significant increases in constants. In contrast, several papers
+  ~\cite{chaudhuri2009parameter,orabona2016coin,cutkosky2018black,luo2015achieving}
+  presented so-called ``parameter free'' algorithms which do not
+  require tuning of parameters.
+  
+\end{enumerate}
 
-A potential function is an increasing function
-$\pot:\reals \to \reals$. Online learning algorithms based on
-potential functions control the regret by upper bounding the average
-potential $\E{\R \sim \state}{\pot(\R)}$. 
+Using these definitions, we describe the contributions of this paper.
+\begin{itemize}
+\item We provide min-max analysis for potential and quantile based online
+  algorithms with a finite known horizon and a potential function with
+  four strictly positive derivativs. In particular, we show that
+  Brownian motion is the optimal adversarial strategy for any such
+  potential function.
+\item We show how to remove the finite horizon assumption and derive
+  both exponential weights and NormalHedge potentials.
+\item We provide second order bounds on the parameter-free normal-Hedge algorithm
+  that depend only on the percentile $\epsilon$ and a variant of the cumulative
+  variance. We show that this bound is the optimal bound for any
+  potential based algorithm.
+\item We construct a lower bound that holds for any online algorithm
+  and is very close to the normal hedge upper bound.
+\end{itemize}
 
-\begin{definition}[Average potential bound (APB)] \label{def:aver-potential-bound}
-  A distribution over he reals $\state$ satisfies the average
-  potential bound for $\pot$ if
-  $$\score \doteq \E{\R \sim \state}{\pot(\R)} \leq 1$$
-  Where $\pot: \reals \to \reals^+$ is a non decreasing function.
-\end{definition}
-
-Potential functions have long been used to design and analyze online
-learning algorithms. However, the choice of the potential function has
-been somewhat ad hoc.  Here we show a strong one to one relationship
-between SBR functions and potential functions:
-\begin{theorem}\label{thm:simulBoundAveragePot}
-  ~\\
-  \begin{itemize}
-  \item $\state$ satisfies SRB for $G$ if it satisfies APB for $\pot(R) = G(R)^{-1}$.
-  \item A distribution $\state$ satisfies an APB for $\pot$ if it
-    satisfies SRB for $G$ and
-    $\int_{-\infty}^{\infty}\pot(\R) G(\R) d\R \leq 1$
-   \end{itemize}
-\end{theorem}
-The proof of the theorem is in Appendix~\ref{proof:simulBoundAveragePot}.
-
-Theorem~\ref{thm:simulBoundAveragePot} justifies our focus on
-potential functions and our quest to find the ``best'' potential
-function. 
 
 We start with the bounded horizon case. Fixing a potential function at
 the end of the game $\pot(T,\R)$ and the strategies used by the
@@ -234,50 +269,6 @@ we define potential functions for intermediate steps: $0 \leq t
   variants~\cite{cesa1996line,abernethy2006continuous,abernethy2008optimal}
   as well as drifting games~\cite{schapire2001drifting,freund2002drifting}.}
 
-Zero-order bounds on the regret ~\cite{freund1999adaptive} depend only on $N$
-and $T$ and typically have the form
-\begin{equation} \label{eqn:0-order-bound}
-  \max_j \R_j^T < C E \sqrt{T \ln N}
-\end{equation}
-for some small constant $C$ (typically smaller than 2).
-These bounds can be extended to infinite sets of actions by defining
-the $\epsilon$-regret of the algorithm as the regret with respect to
-the best (smallest-loss) $\epsilon$-percentile of the set of actions.
-
-this replaces the bound~(\ref{eqn:0-order-bound}) with 
-\begin{equation} \label{eqn:0-epsilon-order-bound}
-  \max_j \R_j^T < C E \sqrt{T \ln \frac{1}{\epsilon}}
-\end{equation}
-
-Lower bounds have been proven that match these upper bounds up to a
-constant. These lower bounds typically rely on constructions in which
-the losses $l_j^i$ are chosen independently at random to be either
-$+1$ or $-1$ with equal probabilities.
-
-
-
-Several algorithms with refined upper bounds on the regret have been
-studied. Of those, the most relevant to our work is a paper by 
-Cesa-Bianchi, Mansour and
-Stoltz~\cite{cesa2007improved} on second-order regret bounds.
-The bound given in Theorem~5 of ~\cite{cesa2007improved} can be
-written, in our notation, as:
-\begin{equation} \label{eqn:2nd-order-bound}
-  \max_j \R_j^T \leq 4\sqrt{V_T \ln N} +2 \ln N +1/2 
-\end{equation}
-Where
-\[
-  \var_i = \sum_{j=1}^N P^i_j (l_j^i)^2 -  \left( \sum_{j=1}^N P^i_j
-    l_j^i \right)^2 \mbox{ and } \V_T= \sum_{i=1}^T \var_i
-\]
-
-A few things are worth noting. First, as $|l_j^i|\leq 1$,
-$\var_j\leq 1$ and therefor $V_T\leq T$. However $\V_T/T$ can be
-arbitrarily small, in which case inequality~\ref{eqn:2nd-order-bound}
-provides a tighter bound than ~\ref{eqn:0-order-bound}. Intuitively,
-we can say that $\V_T$ replaces $T$ in the regret bound. This paper
-provides additional support for replacing $T$ with $\V_T$ and provides
-lower and upper bounds on the regret involving $\V_T$.
 
 \section{Main Results}
 \begin{enumerate}
@@ -1252,6 +1243,45 @@ Where
 \caption{The continuous time game and learner strategy\label{sec:contin-Time-Game}}
 \end{figure}
 
+
+\begin{figure}[ht!]
+\framebox{
+\begin{minipage}[t]{6.4in}
+Set $V_0=1$ \\
+For $i=0,1,2,\ldots$
+
+\begin{enumerate}
+\item The learner chooses a distribution
+
+\begin{equation} \label{eqn:learner-strat-cc}
+  \learnerM^{NH2}(V_i,\R) =  \frac{1}{Z} Re^{\frac{R^2}{2V_i}}
+  \mbox{ where } Z = \E{\R \sim \state_i}{Re^{\frac{R^2}{2V_i}}}
+\end{equation}
+
+\item The aggregate loss is calculated:
+  \begin{equation} %\label{eqn:ell-discrete}
+    \ell_i=\E{\R \sim \state(i)}{\learnerM^{NH2}(V_i,\R)
+      \Bias(V_i,\R)},\;\mbox{ where } \Bias(V_i,\R) \doteq \E{y \sim \adversM(V_i,\R)}{y}
+  \end{equation}
+  
+\item  Increment $V_{i+1}=V_i +Var_i$ where
+\begin{equation} \label{eqn:deltat}
+  Var_i=
+  \E{\R \sim \state(i)}{H(t_i,\R) \;\; \E{y \sim \adversM(i,\R)}{(y-\ell_i)^2}}
+\end{equation}
+\begin{eqnarray}
+    \mbox{ where } W(t_i,\R)&=& e^{\frac{(R+1)^2}{2t_i}} \left(\frac{1}{t^{3/2}} + \frac{(R+1)^2}{t^{5/2}} \right)\\
+   H(t_i,\R)&=& \frac{W(t_i,R)}{\E{\rho \sim \state(i)}{W(t_i,\rho)}}
+\end{eqnarray}
+
+\item The state is updated.
+  $$\state(i+1) = \E{\R \sim \state(i)}{\adversM(i,\R)\oplus (\R-\ell_i)}
+  $$
+\end{enumerate}
+\end{minipage}}
+\caption{NormalHedge.2 \label{fig:normalhedge2}}
+\end{figure}
+
 Our characterization applies to the limit where the $s_i$ are small. Formally, we define
 \begin{definition}
 We say that an instance of the discrete time game is
@@ -1281,7 +1311,7 @@ If we define
 
 \begin{equation} \label{eqn:Vn}
   V_n = t_n = \sum_{i=1}^n \deltat_i= 
-  \sum_{i=1}^n \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,\R)}{H(t_i,\R) ((y-\ell(t_i))^2)}}
+  \sum_{i=1}^n \E{\R \sim \state(i)}{\E{y \sim \adversM(t_i,\R)}{H(t_i,\R) ((y-\ell_i)^2)}}
 \end{equation}
 
 We can use $V_n$ instead of $T$ giving us a variance based bound.
@@ -1370,12 +1400,12 @@ the Normal-Hedge potential~(\ref{eqn:NormalHedge}) to derive a second order boun
 Where $t_i = \nu+\sum_{j=1}^{i}\deltat_j$
 \begin{equation}
   \deltat_i=
-  \E{\R \sim \state(t_i)}{H(t_i,\R) \;\; \E{y \sim \adversM(t_i,\R)}{(y-\ell(t_i))^2}}
+  \E{\R \sim \state(i)}{H(t_i,\R) \;\; \E{y \sim \adversM(t_i,\R)}{(y-\ell_i)^2}}
 \end{equation}
 and 
 \begin{eqnarray}
   W(t_i,\R)&=& e^{\frac{R^2}{2t_i}} \left(\frac{1}{t^{3/2}} + \frac{R^2}{t^{5/2}} \right)\\
-  H(t_i,\R)&=& \frac{W(t_i,R)}{\E{\rho \sim \state(t_i)}{W(t_i,\rho)}}
+  H(t_i,\R)&=& \frac{W(t_i,R)}{\E{\rho \sim \state(i)}{W(t_i,\rho)}}
 \end{eqnarray}
 
 The initial potential is $1/\sqrt{\nu}$ and it remains this way in the continuous case. In the discrete case it is $1/\nu + O(1/n)$ where $n$ is the number of steps We can upper bound the potential by
@@ -1581,7 +1611,7 @@ term in Eq.~(\ref{eqn:Taylor.F}) completes the proof.
 \proof {\em of Theorem~\ref{thm:variancebound}}\\
 We prove the claim by an upper bound on the increase of potential that holds for any iteration $1 \leq i \leq n$:
 \begin{equation} \label{proof:onestep}
-\score(\state(t_{i+1})) \leq \score(\state(t_i)) + a s_i^3 \mbox{ for some constant } a>0
+\score(\state(t_{i+1})) \leq \score(\state(i)) + a s_i^3 \mbox{ for some constant } a>0
 \end{equation}
 Summing inequality~(\ref{proof:onestep}) over all iterations we get that 
 \begin{equation} \label{proof:allsteps}
@@ -1687,24 +1717,24 @@ and therefor
         O(s^3) \label{eqn:Taylor}
 \end{eqnarray}
 
-Our next step is to consider the expected value of~(\ref{eqn:Taylor}) wrt $\R \sim \state(t_i)$,
+Our next step is to consider the expected value of~(\ref{eqn:Taylor}) wrt $\R \sim \state(i)$,
 $y \sim \adversM(t_i,\R)$ for an arbitrary adversarial strategy
 $\adversM$.
 
 We will show that the expected potential does not increase:
 \begin{equation} \label{eqn:deltatislargeenough}
-     \E{\R \sim \state(t_i)}{ \E{y \sim \adversM(t_i,\R)}{\pot(t_i+\deltat_i,\R+y-\ell(t_i))}} \leq \E{\R \sim \state(t_i)}{\pot(t_i,\R)}
+     \E{\R \sim \state(i)}{ \E{y \sim \adversM(t_i,\R)}{\pot(t_i+\deltat_i,\R+y-\ell_i)}} \leq \E{\R \sim \state(t_i)}{\pot(t_i,\R)}
 \end{equation}
 
 Plugging Eq~(\ref{eqn:Taylor}) into the LHS of
 Eq~(\ref{eqn:deltatislargeenough}) we get
 \begin{eqnarray}
-  \lefteqn{\E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,\R)}{\pot(t_i+\deltat_i,\R+y-\ell(t_i))}}} \\
+  \lefteqn{\E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,\R)}{\pot(t_i+\deltat_i,\R+y-\ell_i)}}} \\
   &=& \E{\R \sim \state(t_i)}{\pot(t_i,\R)} \label{eqn:contin0}\\
-  &+& \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,\R)}{\at{\frac{\partial}{\partial r}} (y-\ell(t_i))}} \label{eqn:contin1}\\
+  &+& \E{\R \sim \state(t_i)}{\E{y \sim \adversM(t_i,\R)}{\at{\frac{\partial}{\partial r}} (y-\ell_i)}} \label{eqn:contin1}\\
   &+& \E{\R \sim \state(t_i)}{\E{y \sim
       \adversM(t_i,\R)}{\at{\frac{\partial^2}{\partial r^2}}
-      ((y-\ell(t_i))^2 - \deltat_i)}}
+      ((y-\ell_i)^2 - \deltat_i)}}
   \label{eqn:contin2}\\
   &+& O(s^3) \label{eqn:contin3}
 \end{eqnarray}
@@ -1722,13 +1752,13 @@ terms~\ref{eqn:contin1} and \ref{eqn:contin2} are smaller or equal to
 zero.
 ~\\~\\~\\
 {\bf Term~(\ref{eqn:contin1}) is equal to zero:}\\
-As $\ell(t_i)$ is a constant
+As $\ell_i$ is a constant
 relative to $\R$ and $y$, and $\at{\frac{\partial}{\partial r}}$ is a
 constant with respect to $y$ we can rewrite~(\ref{eqn:contin1}) as
 \begin{equation} \label{eqnterm1.1}
   \E{\R \sim \state(t_i)}{\at{\frac{\partial}{\partial r}}
     \E{y \sim \adversM(t_i,\R)}{y} }
-- \ell(t_i) \E{\R \sim \state(t_i)}{\at{\frac{\partial}{\partial r}}}
+- \ell_i \E{\R \sim \state(t_i)}{\at{\frac{\partial}{\partial r}}}
 \end{equation}
 
 Combining the definitions of $\ell(t)$~(\ref{eqn:ell-discrete}) and~

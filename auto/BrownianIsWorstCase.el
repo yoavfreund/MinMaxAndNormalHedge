@@ -23,12 +23,7 @@
     "erf")
    (LaTeX-add-labels
     "fig:DTOL"
-    "def:unif-regret-bound"
-    "def:aver-potential-bound"
-    "thm:simulBoundAveragePot"
     "eqn:0-order-bound"
-    "eqn:0-epsilon-order-bound"
-    "eqn:2nd-order-bound"
     "sec:preliminaries"
     "lemma:SP-pos-comb"
     "eqn:path"
@@ -93,6 +88,7 @@
     "eqn:learner-strat-cc"
     "eqn:deltat"
     "sec:contin-Time-Game"
+    "fig:normalhedge2"
     "thm:variancebound"
     "eqn:Vn"
     "eqn:convol-with-normal"
@@ -134,6 +130,7 @@
     "eqnterm1.2"
     "eqn:term2.1"
     "eqn:lower-discrete"
+    "thm:simulBoundAveragePot"
     "sec:stable")
    (LaTeX-add-bibliographies
     "ref.bib"
