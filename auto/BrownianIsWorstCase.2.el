@@ -1,5 +1,5 @@
 (TeX-add-style-hook
- "BrownianIsWorstCase"
+ "BrownianIsWorstCase.2"
  (lambda ()
    (TeX-run-style-hooks
     "latex2e"
@@ -15,7 +15,6 @@
     '("gIter" 1)
     '("fIter" 1)
     '("iter" 1)
-    '("pospart" 1)
     "iterzero"
     "fIterzero"
     "gIterzero"
@@ -25,11 +24,6 @@
    (LaTeX-add-labels
     "fig:DTOL"
     "eqn:0-order-bound"
-    "eqn:percentile-bounds"
-    "fig:counterExample"
-    "eqn:learner-strat-cc"
-    "eqn:deltat"
-    "fig:normalhedge2"
     "sec:preliminaries"
     "lemma:SP-pos-comb"
     "eqn:path"
@@ -69,7 +63,6 @@
     "eqn:backward-iteration-upper-recursion-discrete"
     "eqn:adv-strat-dk"
     "eqn:learner-strat-1c"
-    "eqn:game-lattice"
     "lemma:discrete-step-bound"
     "thm:DescreteGameExactValues"
     "eqn:lower-potential-exact"
@@ -88,12 +81,14 @@
     "eqn:pot-recursion-diff"
     "eqn:recursion-as-difference"
     "lemma:divdiff"
-    "eqn:generalized-half-step"
-    "thm:min-max-limit"
+    "eqn:learner-strat-2c"
     "sec:continuous"
     "eqn:Kolmogorov"
     "sec:easy"
+    "eqn:learner-strat-cc"
+    "eqn:deltat"
     "sec:contin-Time-Game"
+    "fig:normalhedge2"
     "thm:variancebound"
     "eqn:Vn"
     "eqn:convol-with-normal"

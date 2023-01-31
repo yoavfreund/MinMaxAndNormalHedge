@@ -12,6 +12,12 @@ Jacob Abernethy, Manfred~K Warmuth, and Joel Yellin.
 \newblock In {\em Proceedings of The 21st Annual Conference on Learning
   Theory}, pages 437--446. Citeseer, 2008.
 
+\bibitem{billingsley1995central}
+P~Billingsley.
+\newblock The central limit theorem.
+\newblock {\em Probability and Measure, 3rd ed.; John Wiley \& Sons, Inc.:
+  Toronto, ON, Canada}, pages 357--363, 1995.
+
 \bibitem{butt2016generalization}
 Saad~Ihsan Butt, Josip Pe{\v{c}}ari{\'c}, and Ana Vukeli{\'c}.
 \newblock Generalization of popoviciu-type inequalities via fink’s identity.
@@ -36,6 +42,12 @@ Nicolo Cesa-Bianchi, Yishay Mansour, and Gilles Stoltz.
 Kamalika Chaudhuri, Yoav Freund, and Daniel~J Hsu.
 \newblock A parameter-free hedging algorithm.
 \newblock {\em Advances in neural information processing systems}, 22, 2009.
+
+\bibitem{chernov2009prediction}
+Alexey Chernov and Vladimir Vovk.
+\newblock Prediction with expert evaluators’ advice.
+\newblock In {\em International Conference on Algorithmic Learning Theory},
+  pages 8--22. Springer, 2009.
 
 \bibitem{de2005divided}
 Carl de~Boor.
@@ -65,6 +77,17 @@ Yoav Freund and Robert~E Schapire.
 \newblock Adaptive game playing using multiplicative weights.
 \newblock {\em Games and Economic Behavior}, 29(1-2):79--103, 1999.
 
+\bibitem{gaillard2014second}
+Pierre Gaillard, Gilles Stoltz, and Tim Van~Erven.
+\newblock A second-order bound with excess losses.
+\newblock In {\em Conference on Learning Theory}, pages 176--196. PMLR, 2014.
+
+\bibitem{hazan2010extracting}
+Elad Hazan and Satyen Kale.
+\newblock Extracting certainty from uncertainty: Regret bounded by variation in
+  costs.
+\newblock {\em Machine learning}, 80(2):165--188, 2010.
+
 \bibitem{kac1947random}
 Mark Kac.
 \newblock Random walk and the theory of brownian motion.
@@ -79,11 +102,6 @@ Wouter~M Koolen and Tim Van~Erven.
 Haipeng Luo and Robert~E Schapire.
 \newblock Achieving all with no parameters: Adanormalhedge.
 \newblock In {\em Conference on Learning Theory}, pages 1286--1304. PMLR, 2015.
-
-\bibitem{orabona2016coin}
-Francesco Orabona and D{\'a}vid P{\'a}l.
-\newblock Coin betting and parameter-free online learning.
-\newblock {\em Advances in Neural Information Processing Systems}, 29, 2016.
 
 \bibitem{popoviciu1965certaines}
 Tiberiu Popoviciu.

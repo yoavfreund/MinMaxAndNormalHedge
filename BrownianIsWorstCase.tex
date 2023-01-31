@@ -56,208 +56,131 @@ For $i=1,\ldots,T$
 \caption{Decision theoretic online learning \label{fig:DTOL}}
 \end{figure}
 
-The work on DTOL is rich and diverse. In order to place our work in this context we identify four axis on which existing work lies.
-
-has been extended and refined in several dimensions. Our work combines these extension into a single simple algorithm. We descrive this dimensions below.
-\begin{enumerate}
-\item {\bf Zero-order vs Second order bounds:} Zero order regret
-  bounds \cite{freund1999adaptive} depend only on the number of
-  actions $N$ and the length of the sequence $T$ and have
-  the form
+\cite{freund1997decision} presents the DTOL framework and applies
+multiplicative weights algorithm~\cite{} to give {\em zero-order}
+regret bounds of the form
 \begin{equation} \label{eqn:0-order-bound}
-  \max_j \R_j^T < C \sqrt{T \ln N}
+  \max_{j=1}^N \R(t,j) \prec \sqrt{t \ln N}
 \end{equation}
-Where $C$ is a small constant.
 
-Second order bounds take advantage of so-called ``easy sequences''
-where $|l_j^i|<1$. Roughly speaking, second order bounds replace the
-length of the sequence $T$ with a sum of squares that is smaller than $T$
-for easy sequences.  Several definitions for the sum of
-squares have been analyzed.  Cesa-Binachi et
-al.~\cite{cesa2007improved} propose two such quantities. The {\em
-  Quadratic Variation} $Q_j^T=\sum_{t=1}^T (l_j^t)^2$ measures the
-variation of the action $j$, and $Q^{*}$ is the quadratic variation of
-the best action at time $T$. The {\em cumulative variance} $V_T$ is defined as
-\[
-  \var_i = \sum_{j=1}^N P^i_j (l_j^i)^2 -  \left( \sum_{j=1}^N P^i_j
-    l_j^i \right)^2 \mbox{ and } \V_T= \sum_{i=1}^T \var_i
-\]
-Koolen and Van Erven~\cite{koolen2015second} propose a variant of the
-quadratic variation that uses $(l_j^t-\ell^t)^2$ instead of
-$(l_j^t)^2$. It remained unclear which of
-these variations is ``best'' or, indeed, if the notion of ``best'' is
-well defined. 
-
-\item {\bf Quantile based bounds}
-  It is possible to give regret bounds where the total loss of the
-  algorithm is compared to the total loss of the best $\epsilon$
-  fraction of the actions. Indeed many regret bounds hold when $N$ is
-  replaced with $1/\epsilon$.
-
-  Using quantiles allows actions sets that are uncountably infinite.
-  For example consider an action set that corresponds to linear
-  functions with real valued parameters.
-
-  We formalize uncountably infinite sets of actions by defining a
-  probability space $\Omega$ where $\omega \in \Omega$ is an action
-  and the loss that action $\omega$ incurs on iteration $t$ is a
-  random variable $l^t_\omega$. Note that this definition includes the
-  case where the number of actions is finite, as $\Omega$ can be a
-  finite space.
-
-  
-\item {\bf Potential based algorithms} Two main paradigms are known
-  for designing online learning algorithm: the {\em follow the leader}
-  paradigm and the {\em potential function}paradigm.  Our work here 
-  uses the potential paradigm. A potential function is a positive increasing function
-  $\pot:\reals \to \reals$. The main quantity that is analyzed is the
-  average potential the actions,
-  $\score = \E{\R \sim \state}{\pot(\R)}$. The regret bounds are
-  proved by combining an upper bound on the score with Markov
-  inequality:
-  \[
-    \P{\rho \sim \state}{\rho \geq R} \leq \frac{\E{\rho \sim \state}{\pot(\rho)}}{\pot(R)}
-  \]
-
-\item {\bf parameter-free algorithms} Many DTOL algorithms require
-  setting a {\em learning rate} parameter. Setting this parameter, in
-  turn, requires having prior information about $N,T$,or
-  $\epsilon$. The resulting bounds hold only if the sequences of
-  losses conform to the a-priori assumption. In many cases ``doubling
-  tricks'' can be used to circumvent this dependence at the cost of
-  significant increases in constants. In contrast, several papers
-  ~\cite{chaudhuri2009parameter,orabona2016coin,cutkosky2018black,luo2015achieving}
-  presented so-called ``parameter free'' algorithms which do not
-  require tuning of parameters.
-  
-\end{enumerate}
-
-Using these definitions, we describe the contributions of this paper.
+Many generalizations and refinements have been made over the years. We describe some of them below
 \begin{itemize}
-\item We provide min-max analysis for potential and quantile based online
-  algorithms with a finite known horizon and a potential function with
-  four strictly positive derivativs. In particular, we show that
-  Brownian motion is the optimal adversarial strategy for any such
-  potential function.
-\item We show how to remove the finite horizon assumption and derive
-  both exponential weights and NormalHedge potentials.
-\item We provide second order bounds on the parameter-free normal-Hedge algorithm
-  that depend only on the percentile $\epsilon$ and a variant of the cumulative
-  variance. We show that this bound is the optimal bound for any
-  potential based algorithm.
-\item We construct a lower bound that holds for any online algorithm
-  and is very close to the normal hedge upper bound.
+\item{\bf percentile-based bounds}
+\cite{freund1999adaptive} refines this bound by replacing the comparison to the best single action to
+a comparison to the regret to the top $\epsilon$-percentile of the actions. And give bounds of the form
+
+\begin{equation} \label{eqn:percentile-bounds}
+\R(t,\epsilon) \prec \sqrt{t \ln \frac{1}{\epsilon}}
+\end{equation}
+
+Using quantiles allows actions sets that are uncountably infinite.
+For example consider an action set that corresponds to linear
+functions with real valued parameters.
+
+\item{\bf Parameter-free algorithms}
+The multiplicative weights algorithm has a learning rate parameter
+$\eta>0$. The bounds above require a-priori knowledge of the length of
+the game, the number of actions, or te percentile $\epsilon$ in order
+to tune the learning rate. ``Parameter free'' algorithms ......
+remove the need for a-priori knowledge of the sequence.
+
+\item{\bf Second order bounds} take advantage of so-called ``easy
+  sequences'' where $|l_j^i|<1$ Roughly speaking, second order bounds
+  replace the length of the sequence $t$ with a a sum of squares that
+  is smaller than $t$ for easy sequences.  Several definitions for the
+  sum of squares have been analyzed.  Cesa-Binachi et
+  al.~\cite{cesa2007improved} propose two such quantities. The {\em
+    Quadratic Variation} $Q_j^t=\sum_{i=1}^t (l_j^i)^2$ measures the
+  cumulative variation of the action $j$ at. While the {\em cumulative
+    variance}
+  $V^t = \sum_{i=1}^t \sum_{j=1}^N P^i_j (l_j^i - \ell^i)^2$ is a
+  measure of the variance of all of the actions.
+
+  A large number variants of the quadratic variation bounds have been  proposed
+  ~\cite{chernov2009prediction,hazan2010extracting,gaillard2014second,koolen2015second}
+
+  We know of no prior work other than~\cite{cesa2007improved} and the
+  work presented here that is based on cumulative variance.
+  
+  \item {\bf Potential based Online learning algorithms} There are two
+    main paradigms for designing online learning algorithms: the {\em
+      follow the leader} paradigm and the {\em potential function}
+    paradigm.  Our work here is in the potential function paradigm. A
+    potential function is a positive increasing function
+    $\pot:\reals \to \reals$. The main quantity that is analyzed is
+    the score, the average potential the actions,
+    $\score_j = \frac{1}{N} \sum_{i=1}^N \phi(R_j^i)$. The regret
+    buonds are proven by combining an upper and lower bound on
+    $\score_t$.
 \end{itemize}
 
-
-We start with the bounded horizon case. Fixing a potential function at
-the end of the game $\pot(T,\R)$ and the strategies used by the
-learner and the adversary, we define potential functions $\pot(i,\R)$
-for iterations $i = T-1,T-2,\ldots,0$ such that the score $\score(t)$ is guaranteed to 
-be equal for all of the iterations.
-\[
-  \score(T) = \score(T-1)=\cdots=\score(0)
-\]
-This allows us to analyze the game one iteration at a time and
-construct good strategies for both sides. We name this potential based
-game the {\em Integer Time Game}, the analysis of this game is given
-in Section~\ref{sec:int-time-game}. The analysis assumes only that the
-final potential $\pot(T,\R)$ is strictly positive and has strictly positive
-first and second derivatives (We denote the set
-of functions that have $0,\ldots,k$ strictly positive derivatives by $\SP{k}$,
-the formal definition is given in Section~\ref{sec:preliminaries})
-
-The strategies yielded by the analysis guarantee bounds on the final
-score. The adversarial strategy guarantees
-$\lowerscore{} \leq \score(T)$, while the learner's strategy
-guarantees $\score(T) \leq \upperscore{}$. Unfortunately, these bounds
-don't match, i.e. $\lowerscore{}<\upperscore{}$. In other words our
-proposed strategies are not min-max optimal. The question of whether
-there exist min/max strategies for the integer time game is open.
-
-To find min/max strategies we expand the game. We call the expanded
-game the {\em discrete time game}. The expansion involves giving the
-more options to the adversary, but not to the learner. As a result,
-any upper bound $\upperscore{}$ that holds for a learner strategy in
-the discrete time game also holds in the integer time game.
-
-The added option for the adversary is to declare, at the beginning of
-each iteration, the range of values of the instantanous losses. In the
-integer time game this range is set to $[-1,+1]$. In the discrete time
-game the range is chosen by the adversary on iteration $i$ to be
-$[-s_i,+s_i]$ for $1\geq s_i >0$. To keep the game balanced between
-the adversary and the learner we replace the iteration number $i$ with
-real valued {\em time} parameter and let $t_{i+1}=t_i+s_i^2$. this and
-another necessary adjustment are described in
-Section~\ref{sec:discrete}. Section~\ref{sec:disc-game-strategies}
-describes strategies used for the discrete game which are scaled
-versions of the strategies for the integer time game.
-
-We fix the potential at the end of the game $\finalPotR \in \SP{4}$
-and consider a sequence of adversarial and learner strategies indexed
-by $k$: $\adversMdk,\learnerMdk$, where
-$\forall i,\; s^k_i = \frac{\sqrt{\realT}}{2^k}$ for some constant
-$\realT$. We prove two facts regarding the limit $k \to \infty$.  The
-first (Thm.~\ref{thm:seq-of-adv-strategies}) is that
-$\lim_{k \to \infty}\upperpotMdk - \lowerpotMdk \to 0$.  The second
-(Thm.~\ref{thm:smallerSteps}) is that, if $\pot(T,\R)$
-$$\forall k, \forall 0\leq i \leq 2^{2k},t_i=i 2^{-2k} \realT,\; \forall\R,\;\;\;
-,\lowerpotMdkpar{k+1}\left(t_i,R\right) >
-\lowerpotMdk\left(t_i,R\right)$$ Taken together these facts imply
-that, if the fixed potential function for the end of the game
-$\finalPotR$ is in $\SP{4}$, then there exists a potential function
-$\pot(t,\R)$. The adversarial strategy corresponding to this potential
-function corresponds to Brownian motion.  The backwards recursion used
-to computer the potential for $t \leq \realT$ is a partial
-differential equation known as the Kolmogorov Backward equation.
-
-The main result of this paper is that a {\em single} adversarial
-strategy, i.e. Brownian motion, is optimal for any
-sufficiently convex potential functions.
-
-The discrete time game presents the adversary with a dilemma.  On the
-one hand, The adversary has to declare, on each iteration, an upper bound on the
-range of the losses $[-s_i,s_i]$ where $s_i>0$. On the other hand, it
-wants to set $s_i$ as small as possible.~\footnote{The situation is
-  similar to a folklore game in which each player writes down a number
-  on a piece of paper and the player with the largest number wins.}
-
-We introduce a variant of the game called the {\em continuous time
-  game} to alleviate this dilemma. In this came the adversary does not
-announce the step size and the learner behaves as if
-the step size is infinitesimally small. In this case time is advanced according
-to the variance of the actual losses. This much more natural algorithm yields
-a regret bound that depends on the cumulative variance and is smaller
-for easy, low variance sequences.
-
-Until this point our theory holds for any final potential function in $\SP{4}$. We conclude by analyzing two specific potentials.
+Using these definitions, we describe our main results
 \begin{enumerate}
-\item We derive a potential function and a corresponding learning algorithm
-  that is min/max optimal for a given time horizon $\realT$.
-  The optimality is in the sense that the
-  simultanous regret bound for time $\realT$ has a matching
-  simultanous lower bound.
-\item By finding solutions to the Kolmogorov Backward equation that
-  hold for all $t>0$ we eliminate the need to define a final
-  potential. As a result we get an ``anytime'' learning algorithm that
-  can be stopped at any time. The specific potential we analyze is
-  Normal-Hedge~\cite{}. NormalHedge is not min/max optimal for any
-  time, but it is almost optimal for all times.
+\item {\bf Upper bound} We present a parameter-free potential-based algorithm 
+  such that for any $t,\epsilon$ the following regret bound holds. 
+  \begin{equation}
+\R(t,{\epsilon}) \leq \sqrt{(V_t+1) \left( \ln (V_t+1) + 2 \ln \frac{1}{\epsilon}\right)}
+\mbox{  where  } V_t=\frac{1}{N} \sum_{i=1}^t \sum_{j=1}^N H^i_j (l_j^i-\ell^i)^2
+\end{equation}
+Where for each iteration $i$, $(H_1^i,\ldots, H_N^i)$ is a distribution
+over the actions $1,\ldots,N$ (Different from $P_i^j$)
+
+\item {\bf Lower bound}
+  For the sake of comparing with the lower bound we express the upper bound using $\epsilon$ as a function of $R$
+  \begin{equation}
+    \forall t,R,\;\; \epsilon(t,R) \leq \sqrt{V_t+1} \exp \paren{\frac{-R^2}{2(V_t+1)}}
+  \end{equation}
+
+  Let $S_t = \sum_{i=1}^t \sigma_i^2$ for $0 \geq \sigma_i \leq 1$ be a sequence
+  such that $\lim_{t \to \infty}   S_t =\infty$. Then there is an adversarial strategy such that
+  $V_t=S_t$ and for any learner strategy (whether or no it is potential based):
+  \begin{equation}
+    \forall t,R,\;\; \epsilon(t,R) \geq
+    \left(\frac{\sqrt{V_t}}{\R} -  \left( \frac{\sqrt{V_t}}{\R} \right)^3 \right) \exp \paren{\frac{-R^2}{2V_t}}
+  \end{equation}
+  
+\item {\bf Characterization of the min/max solutions of the potential
+    game}
+
+  We formalize the notion of potential based learning by
+  defining an online game, similar to DTOL, where the goal of the
+  learner is to minimize the average potential. We derive the min-max
+  solution of this game for any potential function that has four
+  strictly positive derivatives.
 \end{enumerate}
 
+\section{The concept of state and  a critique of quadratic variation}
+Central to our analysis is the concept of the {\em state} of the DTOL
+game described in figure~\ref{fig:DTOL}. A state is a function of
+history that is minimally sufficient to compute the future of the
+game.  Clearly, a sufficient state of the game at time $t$ is the
+vector of $N$ cumulative regrets: $(R_1^t,\ldots,R_N^t)$. As the
+indexing of the actions is immaterial we can replace the vector with
+a distribution of regrets at time $t$ which we denote $\state(t)$.
 
-\section{related work}
-Most of the papers on potential based online algorithms consider
-one or a few potential functions. Most common is the exponential
-potential, but others have been considered~\cite{cesa2006prediction}.
-A natural question is what is the difference between potential
-functions and whether some potential function is ``best''.
+This definition of state is sufficient in two senses. First, the
+regret bounds at time $t$ depend only on $\state(t)$. Second, given
+$\state(t)$ and the actions of the learner and the adversary at time
+$t$ uniquely defines $\state(t)$. Other information about individual
+actions, such as the quadratic variation of individual actions, do not
+effect the progression of the states.
 
-In this paper we consider a large set of potential functions,
-specifically, potential functions that are strictly positive and have
-strictly positive derivatives of orders up to four. The exponential
-potential and the NormalHedge potential~\cite{chaudhuri2009parameter,luo2015achieving}
-are member of this set. 
+To sharpen this argument consider an example depicted in
+Figure~\ref{fig:counterExample}~\footnote{This example appeared in an
+  open problem in COLT2016} We compare two loss histories, each
+involving two actions. The first consists of the the blue and the red
+lines, the second consists of the blue and the green line. In both
+cases the total loss of both action at the end of phase 3 are
+equal. In other words, the state at the end of phase 3 is identical
+for the two examples. An algorithm that depends on quadratic variation
+would give different weights to the high and the low variation action
+even though the states are identical.~\footnote{One can argue for a
+  different game in which the state includes the quadratic
+  variation. However, we can't see a natural Way to define a game that
+  requires the expanded state.}
+\begin{figure*}[th] \label{fig:counterExample}
+\includegraphics[width=\columnwidth,height=3in]{OpenProblemFigure.pdf}
+\end{figure*}
 
 To analyze these potential functions we define a different
 game, which we call the ``potential game''. In this game the primary
@@ -269,20 +192,50 @@ we define potential functions for intermediate steps: $0 \leq t
   variants~\cite{cesa1996line,abernethy2006continuous,abernethy2008optimal}
   as well as drifting games~\cite{schapire2001drifting,freund2002drifting}.}
 
+\section{Upper bound}
+\newcommand{\pospart}[1]{[#1]^{+2}}
 
-\section{Main Results}
+\begin{figure}[ht!]
+\framebox{
+\begin{minipage}[t]{6.4in}
+Set $V_0=1$ \\
+For $t=0,1,2,\ldots$
+
 \begin{enumerate}
-\item {\bf Uniform regret bound} There exists an online learning
-  algorithm such that for any $\nu>0$ (set in advance) and any
-  $t,\epsilon$ (holds uniformly) the following regret bound holds.
-  \begin{equation}
-\R_\epsilon \leq \sqrt{(t+\nu) \left( \ln (t+\nu) + 2 \ln \frac{1}{\epsilon}\right)}
-\end{equation} 
-\item {\bf Second order bound}
-\item {\bf optimality of Brownian motion} For any potential function
-  in $\SP{4}$ the min/max value of any state $(t,R)$ is attained by
-  Brownian motion on the part of the adversary for any $s\geq t$.
+\item The learner chooses a distribution
+
+\begin{equation} \label{eqn:learner-strat-cc}
+  \learnerM^{NH2}(t,j) =  \frac{1}{Z^t} \pospart{R_j^t} \exp\paren{\frac{\pospart{R_j^t}}{2V_t}}
+  \mbox{ where } Z^t = \sum_{j=1}^N \pospart{R_j^t} \exp\paren{\frac{\pospart{R_j^t}}{2V_t}}
+\end{equation}
+
+\item The aggregate loss is calculated:
+  \begin{equation} %\label{eqn:ell-discrete}
+    \ell^t=\sum_{j=1}^N \learnerM^{NH2}(t,j) l_j^t,
+  \end{equation}
+  
+\item  Increment $V_{t+1}=V_t +Var_t$ where
+\begin{equation} \label{eqn:deltat}
+  Var_t=  \sum_{j=1}^N H(V_t+1,\R_j^t+1)(l_j^t-\ell_t)^2
+\end{equation}
+
+\begin{eqnarray}
+W(V,\R) = 
+  \exp\paren{\frac{\pospart{R}}{2V}} \left(\frac{1}{2V^{3/2}} + \frac{\pospart{R}}{V^{5/2}} \right),\;\;
+  H(V,\R) = \frac{W(V,R)}{\sum_{j=1}^N W(V,R_j)}
+\end{eqnarray}
+
+\item Update regrets $\forall j=1,\ldots N,\;\;\; R_j^{t+1} = R_j^t +l_j^t -\ell^t $
+
 \end{enumerate}
+\end{minipage}}
+\caption{NormalHedge.2 \label{fig:normalhedge2}}
+\end{figure}
+
+\section{Lower bound}
+
+We prove the lower bound using Lyapunov CLT 
+~\cite{billingsley1995central}
 
 
 \section{Preliminaries} \label{sec:preliminaries}
@@ -852,7 +805,9 @@ $$\Ilat{T}=\left\{ (i,2j-i) \left| 0 \leq i \leq T, 0 \leq j \leq i\right. \righ
 The $k$'th adversarial strategy $\adversMdk$ uses step size $s_k=\sqrt{\realT} 2^{-k}$ and time
 increments $s_k^2=\realT 2^{-2k}$. We define the {\em game lattice}
 for $k$ as the set of $(t,R)$ pairs that are reached by $\adversMdk$.
-$$\Klat{{\realT,k}}=\left\{ (t,\R) \left| t=i s_k^2, 0 \leq i \leq 2^{2k}, \R=(2j-i)s_k, 0 \leq j \leq i\right. \right\}$$
+\begin{equation}  \label{eqn:game-lattice}
+  \Klat{{\realT,k}}=\left\{ (t,\R) \left| t=i s_k^2, 0 \leq i \leq 2^{2k}, \R=(2j-i)s_k, 0 \leq j \leq i\right. \right\}
+  \end{equation}
 $\Ilat{T}$ is a special case of $\Klat{\realT,k}$ because setting
 $\realT=T=2^{2k}$ we get that $s_k=s_k^2=1$ and  $\Klat{\realT,k} = \Ilat{T}$.
 
@@ -995,7 +950,7 @@ Section~\ref{sec:disc-game-strategies}.
 
 \begin{theorem}\label{thm:smallerSteps}
   If $ \finalPotR \in \SP{4}$, and $\realT>0$  
-  then for any $k>0$, any $t \in [0,\realT]$ and any $\R$
+  then for any $k\geq 0$, any $t \in [0,\realT]$ and any $\R$
   $$\lowerpotMdkpar{k+1}(t,\R) >  \lowerpotMdkpar{k}(t,\R)$$
 \end{theorem}
 
@@ -1007,12 +962,11 @@ dividing a single time step of duration $\tau$ into four time steps of duration 
   $$\lowerpotMdkpar{1}(0,\R) >  \lowerpotMdkpar{0}(0,\R)$$
 \end{lemma}
   
-\proof The step size is $s_k=2^{-k}\sqrt{\tau}$, therefor
-$s_0=\sqrt{\tau}, s_1=\frac{\sqrt{\tau}}{2}$. The time icrement is
-$\Delta t_k = s_k^2$, therefor
-$\Delta t_0=\tau, \Delta t_1=\frac{\tau}{4}$. In other words,
-$k=0$ corresponds to a single step of size , while $k=1$ corresponds
-to four steps of size $\frac{1}{2}$.
+\proof The step sizes for $k=0,1$ are
+$s_0=\sqrt{\tau}, s_1=\frac{\sqrt{\tau}}{2}$ and the time icrements
+are $\Delta t_0=\tau, \Delta t_1=\frac{\tau}{4}$. 
+In other words $k=0$ corresponds to a single step of size $\sqrt{\tau}$, while $k=1$ corresponds
+to {\em four} steps of size $\frac{\sqrt{\tau}}{2}$.
 
 By definition $\finalPotTau(R)=\lowerpotMdkpar{0}(\tau,\R)=\lowerpotMdkpar{1}(\tau,\R)$
 
@@ -1074,54 +1028,57 @@ where $a=2 s_1=\sqrt{\tau}$
 
 The function $g_a(\R)$ has a special form called ``divided
 differences''. The proof of the following lemma uses this fact to show that 
-Eqn~(\ref{eqn:recursion-as-difference}) is strictly postive.
+Eqn~(\ref{eqn:recursion-as-difference}) is strictly positive.
 \begin{lemma} \label{lemma:divdiff}
-If $\finalPotTau \in \SP{4}$ and $\tau>0$, then $\forall \R, g_s(\R)>0$
+If $\finalPotTau \in \SP{4}$ and $\tau>0$, then $\forall \R, g_a(\R)>0$
 \end{lemma}
 The proof of Lemma~\ref{lemma:divdiff} is given in appendix~\ref{sec:divdiff}
 
 \proof  of Theorem~\ref{thm:smallerSteps} \\
-The proof is by double induction over $k$ and over $t_i$.
-For $k=1,2,\ldots$ we consider the the loss step $s=2^{-k-1}\sqrt{\realT}$ and the time step 
-$\Delta t = s^2=2^{-2k-2} \realT$. For each game iteration $i=0,\ldots,2^{2k}-1$
-we fix the potential at time $t_1=(i+1) 2^{-2k}\realT$ and 
-We consider the difference between the potential at $t_0=(i+1) 2^{-2k}\realT$
 
-we take a finite backward induction over
-$t=T-2^{-2k},T-2 \times 2^{-2k},T-3 \times 2^{-2k},\cdots,0$.
-Our inductive claims are that $\pot_{k+1}(t,\R) > \pot_{k}(t,\R)$ and
-$\pot_{k+1}(t,\R)$,$\pot_{k}(t,\R)$ are continuous, strongly convex and
-have a strongly positive fourth derivative. That these claims carry over
-from $t=T-i \times 2^{-2k}$ to  $t=T-(i+1) \times 2^{-2k}$ follows
-directly from Lemma~\ref{lemma:n-strictly-convex}.
+Let $ \Klat{{\realT,k}}$ be the game lattices defined in
+Equation~\ref{eqn:game-lattice}. The statement of
+Lemma~\ref{lemma:half-step} can be trivially generalized as follows. Fix $k\geq 0$ and $t=i s_k^2$
+then 
+\begin{equation} \label{eqn:generalized-half-step}
+  \mbox{ if } \phi((i+1) s_k^2,\R) \in \SP{4} \mbox{ then }
+  \lowerpotMdkpar{k+1}(i s_k^2,\R) >  \lowerpotMdkpar{k}(i s_k^2,\R)
+\end{equation}
+The proof of the theorem is by double induction, first on $k=0,1,2,\ldots$ and then on
+$t=\tau-s_k^2,\tau-2s_k^2,\ldots,0$.
+
+The base case $k=0,t=\tau$ follows directly from Lemma ~\ref{lemma:half-step}.
+
+For $k>0$ we use a second induction $t=\tau-s_{k-1}^2,\tau-2s_{k-1}^2,\ldots,0$, which, combined with 
+~\ref{eqn:generalized-half-step} holds for $k-1$, shows that for any $(t,\R) \in \Klat{{\realT,k-1}}$
+we have $ \lowerpotMdkpar{k}(t,\R) >  \lowerpotMdkpar{k-1}(t,\R)$
+
+% we take a finite backward induction over
+% $t=T-2^{-2k},T-2 \times 2^{-2k},T-3 \times 2^{-2k},\cdots,0$.
+% Our inductive claims are that $\pot_{k+1}(t,\R) > \pot_{k}(t,\R)$ and
+% $\pot_{k+1}(t,\R)$,$\pot_{k}(t,\R)$ are in $SP{4}$. That these claims carry over
+% from $t=T-i \times 2^{-2k}$ to  $t=T-(i+1) \times 2^{-2k}$ follows
+% directly from Lemma~\ref{lemma:n-strictly-convex}.
 
 The theorem follows by forward induction on $k$.
-
 \qed
 
+Combining Theorems~\ref{thm:seq-of-adv-strategies}
+and~\ref{thm:smallerSteps} we get our characterization of the min/max
+solution for the potential game.
 
-\iffalse
-Next, we consider the discrete time version of $\learnerM^2$:
-(Eq~\ref{eqn:learner-strat-2})
-\begin{eqnarray} \label{eqn:learner-strat-2c}
-  \learnerM^{2d}(t_{i},\R) =  \frac{1}{Z^{2d}}
-  \left. \frac{\partial}{\partial r} \right|_{r=\R}
-  \pot(t_{i}+s_{i}^2,r)
-  \\
-  \mbox{ where } Z^{2d} = \E{\R \sim
-  \state(t_i)}{\left. \frac{\partial}{\partial r} \right|_{r=\R} \pot(t_{i}+s_{i}^2,r)} \nonumber
-\end{eqnarray}
-\fi
-
-Theorem~\ref{thm:seq-of-adv-strategies} characterizes the limit
-%for any  $0 < t \leq \realT$ and any $\R_0$:
-\begin{equation} \label{eqn:k-limit}
-  \lim_{k \to \infty} \upperpotMdk(t,\R_0) =
-  \lim_{k \to \infty}\lowerpotMdk(t,\R_0)=
-  {\cal N}(\R_0,\realT-t) \odot \finalPotR
-\end{equation}
-
-Theorem~\ref{thm:smallerSteps} states that increasing $k$ is always advantageous to the adversary.
+\begin{theorem} \label{thm:min-max-limit}
+Let $\realT>0$ and $\finalPotR \in \SP{4}$, define $\phi^*(t,\R) = {\cal N}(\R_0,\realT-t) \odot \finalPotR$
+Fix a state at time $t<\realT$ $\state(t)$ and define the score of this state
+to be $\score(t) = \state(t) \odot \pot(t)$. Then for any $\epsilon>0$ there exists
+\begin{itemize}
+\item A learner strategy that guarantees $\score(T) \odot \finalPotR \leq \score(t)+\epsilon$ against any adversarial strategy and
+  \item an adversarial strategy that guarantees  $\score(T) \odot \finalPotR \geq \score(t)-\epsilon$
+\end{itemize}
+\end{theorem}
+\proof
+From Theorem~\ref{thm:seq-of-adv-strategies} we know that the  $k \to \infty$.
+From Theorem~\ref{thm:smallerSteps} we know that the small step limit maximizes the 
 
 Together these theorems show that the the min/max optimal potential function is $ {\cal N}(\R_0,\realT-t) \odot \finalPotR$.
 
@@ -1244,44 +1201,8 @@ Where
 \end{figure}
 
 
-\begin{figure}[ht!]
-\framebox{
-\begin{minipage}[t]{6.4in}
-Set $V_0=1$ \\
-For $i=0,1,2,\ldots$
 
-\begin{enumerate}
-\item The learner chooses a distribution
-
-\begin{equation} \label{eqn:learner-strat-cc}
-  \learnerM^{NH2}(V_i,\R) =  \frac{1}{Z} Re^{\frac{R^2}{2V_i}}
-  \mbox{ where } Z = \E{\R \sim \state_i}{Re^{\frac{R^2}{2V_i}}}
-\end{equation}
-
-\item The aggregate loss is calculated:
-  \begin{equation} %\label{eqn:ell-discrete}
-    \ell_i=\E{\R \sim \state(i)}{\learnerM^{NH2}(V_i,\R)
-      \Bias(V_i,\R)},\;\mbox{ where } \Bias(V_i,\R) \doteq \E{y \sim \adversM(V_i,\R)}{y}
-  \end{equation}
-  
-\item  Increment $V_{i+1}=V_i +Var_i$ where
-\begin{equation} \label{eqn:deltat}
-  Var_i=
-  \E{\R \sim \state(i)}{H(t_i,\R) \;\; \E{y \sim \adversM(i,\R)}{(y-\ell_i)^2}}
-\end{equation}
-\begin{eqnarray}
-    \mbox{ where } W(t_i,\R)&=& e^{\frac{(R+1)^2}{2t_i}} \left(\frac{1}{t^{3/2}} + \frac{(R+1)^2}{t^{5/2}} \right)\\
-   H(t_i,\R)&=& \frac{W(t_i,R)}{\E{\rho \sim \state(i)}{W(t_i,\rho)}}
-\end{eqnarray}
-
-\item The state is updated.
-  $$\state(i+1) = \E{\R \sim \state(i)}{\adversM(i,\R)\oplus (\R-\ell_i)}
-  $$
-\end{enumerate}
-\end{minipage}}
-\caption{NormalHedge.2 \label{fig:normalhedge2}}
-\end{figure}
-
+\iffalse
 Our characterization applies to the limit where the $s_i$ are small. Formally, we define
 \begin{definition}
 We say that an instance of the discrete time game is
@@ -1293,16 +1214,14 @@ while $t_n$ depends on the variance. $t_n = T$
 is the dominant term in the regret bound, while $\tau$ controls the
 error term.
 
-\newpage
+\fi
 
 \begin{theorem} \label{thm:variancebound} Let $\pot \in \SP{\infty}$
   be a potential function that satisfies the Kolmogorov backward
-  equation~(\ref{eqn:Kolmogorov}).
-  Fix the total time $\tau$ and let $G_n$ be an $(n,
-  \sqrt{\frac{\tau}{n}},\tau)$-bounded game. Let $n \to \infty$.
+  equation~(\ref{eqn:Kolmogorov})
 
 Then 
-$$\score(\state(\tau)) \leq \score(\state(0))+O\paren{\frac{1}{\sqrt{n}}}$$
+$$\score(\state(\tau)) \leq \score(\state(0))$$
 \end{theorem}
 
 The proof is given in appendix~\ref{appendix:ProofOfVarianceBound}
@@ -1924,3 +1843,124 @@ The bound on the final potential is:
 \fi
 
 \subsection{Anytime Potentials} \label{sec:stable}
+
+
+
+\iffalse
+\begin{itemize}
+\item We provide min-max analysis for potential and quantile based online
+  algorithms with a finite known horizon and a potential function with
+  four strictly positive derivativs. In particular, we show that
+  Brownian motion is the optimal adversarial strategy for any such
+  potential function.
+\item We show how to remove the finite horizon assumption and derive
+  both exponential weights and NormalHedge potentials.
+\item We provide second order bounds on the parameter-free normal-Hedge algorithm
+  that depend only on the percentile $\epsilon$ and a variant of the cumulative
+  variance. We show that this bound is the optimal bound for any
+  potential based algorithm.
+\item We construct a lower bound that holds for any online algorithm
+  and is very close to the normal hedge upper bound.
+\end{itemize}
+
+We start with the bounded horizon case. Fixing a potential function at
+the end of the game $\pot(T,\R)$ and the strategies used by the
+learner and the adversary, we define potential functions $\pot(i,\R)$
+for iterations $i = T-1,T-2,\ldots,0$ such that the score $\score(t)$ is guaranteed to 
+be equal for all of the iterations.
+\[
+  \score(T) = \score(T-1)=\cdots=\score(0)
+\]
+This allows us to analyze the game one iteration at a time and
+construct good strategies for both sides. We name this potential based
+game the {\em Integer Time Game}, the analysis of this game is given
+in Section~\ref{sec:int-time-game}. The analysis assumes only that the
+final potential $\pot(T,\R)$ is strictly positive and has strictly positive
+first and second derivatives (We denote the set
+of functions that have $0,\ldots,k$ strictly positive derivatives by $\SP{k}$,
+the formal definition is given in Section~\ref{sec:preliminaries})
+
+The strategies yielded by the analysis guarantee bounds on the final
+score. The adversarial strategy guarantees
+$\lowerscore{} \leq \score(T)$, while the learner's strategy
+guarantees $\score(T) \leq \upperscore{}$. Unfortunately, these bounds
+don't match, i.e. $\lowerscore{}<\upperscore{}$. In other words our
+proposed strategies are not min-max optimal. The question of whether
+there exist min/max strategies for the integer time game is open.
+
+To find min/max strategies we expand the game. We call the expanded
+game the {\em discrete time game}. The expansion involves giving the
+more options to the adversary, but not to the learner. As a result,
+any upper bound $\upperscore{}$ that holds for a learner strategy in
+the discrete time game also holds in the integer time game.
+
+The added option for the adversary is to declare, at the beginning of
+each iteration, the range of values of the instantanous losses. In the
+integer time game this range is set to $[-1,+1]$. In the discrete time
+game the range is chosen by the adversary on iteration $i$ to be
+$[-s_i,+s_i]$ for $1\geq s_i >0$. To keep the game balanced between
+the adversary and the learner we replace the iteration number $i$ with
+real valued {\em time} parameter and let $t_{i+1}=t_i+s_i^2$. this and
+another necessary adjustment are described in
+Section~\ref{sec:discrete}. Section~\ref{sec:disc-game-strategies}
+describes strategies used for the discrete game which are scaled
+versions of the strategies for the integer time game.
+
+We fix the potential at the end of the game $\finalPotR \in \SP{4}$
+and consider a sequence of adversarial and learner strategies indexed
+by $k$: $\adversMdk,\learnerMdk$, where
+$\forall i,\; s^k_i = \frac{\sqrt{\realT}}{2^k}$ for some constant
+$\realT$. We prove two facts regarding the limit $k \to \infty$.  The
+first (Thm.~\ref{thm:seq-of-adv-strategies}) is that
+$\lim_{k \to \infty}\upperpotMdk - \lowerpotMdk \to 0$.  The second
+(Thm.~\ref{thm:smallerSteps}) is that, if $\pot(T,\R)$
+$$\forall k, \forall 0\leq i \leq 2^{2k},t_i=i 2^{-2k} \realT,\; \forall\R,\;\;\;
+,\lowerpotMdkpar{k+1}\left(t_i,R\right) >
+\lowerpotMdk\left(t_i,R\right)$$ Taken together these facts imply
+that, if the fixed potential function for the end of the game
+$\finalPotR$ is in $\SP{4}$, then there exists a potential function
+$\pot(t,\R)$. The adversarial strategy corresponding to this potential
+function corresponds to Brownian motion.  The backwards recursion used
+to computer the potential for $t \leq \realT$ is a partial
+differential equation known as the Kolmogorov Backward equation.
+
+The main result of this paper is that a {\em single} adversarial
+strategy, i.e. Brownian motion, is optimal for any
+sufficiently convex potential functions.
+
+The discrete time game presents the adversary with a dilemma.  On the
+one hand, The adversary has to declare, on each iteration, an upper bound on the
+range of the losses $[-s_i,s_i]$ where $s_i>0$. On the other hand, it
+wants to set $s_i$ as small as possible.~\footnote{The situation is
+  similar to a folklore game in which each player writes down a number
+  on a piece of paper and the player with the largest number wins.}
+
+We introduce a variant of the game called the {\em continuous time
+  game} to alleviate this dilemma. In this came the adversary does not
+announce the step size and the learner behaves as if
+the step size is infinitesimally small. In this case time is advanced according
+to the variance of the actual losses. This much more natural algorithm yields
+a regret bound that depends on the cumulative variance and is smaller
+for easy, low variance sequences.
+
+Until this point our theory holds for any final potential function in $\SP{4}$. We conclude by analyzing two specific potentials.
+\begin{enumerate}
+\item We derive a potential function and a corresponding learning algorithm
+  that is min/max optimal for a given time horizon $\realT$.
+  The optimality is in the sense that the
+  simultanous regret bound for time $\realT$ has a matching
+  simultanous lower bound.
+\item By finding solutions to the Kolmogorov Backward equation that
+  hold for all $t>0$ we eliminate the need to define a final
+  potential. As a result we get an ``anytime'' learning algorithm that
+  can be stopped at any time. The specific potential we analyze is
+  Normal-Hedge~\cite{}. NormalHedge is not min/max optimal for any
+  time, but it is almost optimal for all times.
+\end{enumerate}
+
+
+
+
+\section{Main Results}
+
+\fi
